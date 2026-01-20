@@ -76,19 +76,15 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
             <ArrowRight className="w-6 h-6 text-slate-600" />
           </div>
 
-          {/* Step 3: AI Layer (Optional) */}
+          {/* Step 3: AI Layer */}
           <div className="flex-1 flex flex-col">
-            <div className="bg-purple-500/10 border-2 border-purple-500/40 rounded-xl p-5 flex-1 flex flex-col justify-center relative">
-              {/* Optional badge */}
-              <div className="absolute -top-3 right-4 bg-purple-600 text-white text-sm font-bold px-3 py-1 rounded-full">
-                OPTIONAL
-              </div>
+            <div className="bg-purple-500/10 border-2 border-purple-500/40 rounded-xl p-5 flex-1 flex flex-col justify-center">
               <div className="flex items-center gap-3 mb-2">
                 <Sparkles className="w-7 h-7 text-purple-400" />
                 <span className="text-2xl font-bold text-purple-400">AI LAYER</span>
               </div>
               <div className="text-xl text-slate-400">
-                GUID → human names
+                Summarize + translate
               </div>
               <div className="text-lg text-slate-500 mt-2">
                 a93f2... → "Finance Team"
@@ -130,10 +126,10 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
         {/* Key Insight */}
         <div className="flex-1 bg-emerald-500/10 border border-emerald-500/40 rounded-xl px-6 py-4">
           <div className="text-2xl font-bold text-emerald-400">
-            GPT-4 summarizes. Math decides.
+            AI summarizes. Math decides.
           </div>
           <div className="text-xl text-slate-400">
-            Change detection is deterministic. AI just makes output readable.
+            Change detection is deterministic. AI makes output readable.
           </div>
         </div>
 

@@ -208,20 +208,20 @@ export const slides = [
 → Walk through the 4-step flow left to right
 "Your baseline — stored configuration snapshot. This is YOUR truth, not Microsoft's defaults."
 "Compare — pure math. Set difference. What's in current that wasn't in baseline? What's missing? What changed?"
-"AI layer — notice it says OPTIONAL. GUID to human names. It formats the output. It never decides what changed."
+"AI layer — translates GUIDs to human names. Makes the output readable. But notice: it never decides what changed."
 "Alert — ticket in your PSA, email to your team."
 
 **The Key Line** (10 sec)
 → Point to the green callout
-"GPT-4 summarizes. Math decides. Deterministic core, probabilistic enhancement."
+"AI summarizes. Math decides. This is the guardrail sandwich in action — deterministic detection, AI enhancement."
 
 **Dual Triggers** (10 sec)
-"Two triggers: cron every 42 minutes, plus real-time webhook. Microsoft webhooks are best-effort. The cron is your safety net."
+"Two triggers: scheduled check every 42 minutes, plus real-time webhook from Microsoft's audit log. Defense in depth."
 
 **Transition** (5 sec)
 "Let me show you what this actually catches..."
 
-⏱ ~55 seconds | 👁 "GPT-4 summarizes, math decides" is the quotable line` },
+⏱ ~55 seconds | 👁 "AI summarizes, math decides" is the quotable line` },
 
   { type: 'caCrateExample', notes: `**The Scenario** (15 sec)
 "Block Legacy Authentication — one of the most critical CA policies. It stops password spray attacks that MFA can't help with."

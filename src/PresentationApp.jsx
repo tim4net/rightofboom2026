@@ -353,14 +353,14 @@ const PresentationApp = () => {
       <div className={`fixed top-0 right-0 w-[600px] h-[600px] ${t.accentBg}/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none`} />
       <div className={`fixed bottom-0 left-0 w-[600px] h-[600px] ${t.accentBg}/5 blur-[150px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none`} />
 
-      {/* Logo - bottom right corner with subtle glow behind */}
-      <div className="fixed -bottom-5 -right-5 w-[350px] h-[180px] pointer-events-none"
-           style={{ background: 'radial-gradient(ellipse at 100% 100%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 35%, rgba(255,255,255,0.7) 50%, transparent 65%)' }} />
-      <img
-        src="/images/rob-logo-horiz.webp"
-        alt="Right of Boom"
-        className="fixed bottom-4 right-4 z-50 h-[60px] w-auto object-contain"
-      />
+      {/* Logo - bottom right corner with white pill behind */}
+      <div className="fixed bottom-3 right-3 bg-white/90 rounded-xl px-4 py-2 z-40">
+        <img
+          src="/images/rob-logo-horiz.webp"
+          alt="Right of Boom"
+          className="h-[50px] w-auto object-contain"
+        />
+      </div>
 
       {/* Theme Switcher */}
       <button
