@@ -1,174 +1,151 @@
 import React from 'react';
-import { Database, GitCompare, Sparkles, Bell, ArrowRight, Clock, Webhook } from 'lucide-react';
+import { Database, GitCompare, Sparkles, Bell, ArrowDown, AlertTriangle } from 'lucide-react';
 
 /**
  * Rewst Crate: CA Policy Monitor - Architecture Slide
  *
- * Shows the guardrail sandwich in action with readable text at 30+ feet
+ * Shows the guardrail sandwich in action with a VERTICAL flow for better spacing.
+ * Designed for 30+ foot readability with dramatic action highlighting.
  */
 export const M365ConfigDriftDemo = ({ theme: t }) => {
   return (
-    <div className="w-full h-full flex flex-col px-8 py-6">
-      {/* Header */}
-      <div className="text-center mb-4">
+    <div className="w-full h-full flex flex-col px-12 py-6">
+      {/* Header - Compact */}
+      <div className="text-center mb-6">
         <div className="text-xl text-amber-400 font-semibold tracking-wider mb-1">
           REWST CRATE
         </div>
-        <h2 className={`text-5xl font-black ${t.textOnPage} mb-1`}>
+        <h2 className={`text-5xl font-black ${t.textOnPage}`}>
           Conditional Access <span className="text-amber-400">Monitor</span>
         </h2>
-        <p className="text-2xl text-slate-400">
-          The guardrail sandwich in action
-        </p>
       </div>
 
-      {/* The Flow: 4-step horizontal process */}
-      <div className="flex-1 flex items-center justify-center">
-        <div className="flex items-stretch gap-4 w-full max-w-[95%]">
+      {/* The Flow: 2x2 Grid Layout for better spacing */}
+      <div className="flex-1 grid grid-cols-2 gap-6 max-w-6xl mx-auto w-full">
 
-          {/* Step 1: INPUT GUARD - Baseline */}
-          <div className="flex-1 flex flex-col">
-            <div className="bg-amber-500/10 border-2 border-amber-500/40 rounded-xl p-5 flex-1 flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <Database className="w-8 h-8 text-amber-400" />
-                <span className="text-2xl font-bold text-amber-400">INPUT GUARD</span>
-              </div>
-              <div className="text-xl text-slate-300 mb-4">
-                Stored baseline snapshot
-              </div>
-              <div className="bg-black/40 rounded-lg p-4 flex-1">
-                <div className="text-xl text-amber-300 font-mono">12 policies</div>
-                <div className="text-lg text-slate-400 mt-2">Last checked: Jan 15</div>
-                <div className="mt-4 pt-3 border-t border-slate-700">
-                  <div className="text-lg text-slate-400">"Block Legacy Auth"</div>
-                  <div className="text-xl text-emerald-400 font-semibold">Enabled</div>
-                </div>
-              </div>
+        {/* Step 1: INPUT GUARD */}
+        <div className="bg-amber-500/10 border-2 border-amber-500/50 rounded-2xl p-6 flex flex-col">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+              <Database className="w-7 h-7 text-amber-400" />
             </div>
-            <div className="text-center mt-3 text-lg text-amber-400 font-semibold">
-              Deterministic
+            <div>
+              <div className="text-lg text-amber-400/70 font-medium">STEP 1</div>
+              <div className="text-2xl font-black text-amber-400">INPUT GUARD</div>
             </div>
           </div>
-
-          {/* Arrow */}
-          <div className="flex items-center px-1">
-            <ArrowRight className="w-8 h-8 text-slate-600" />
-          </div>
-
-          {/* Step 2: COMPARE */}
-          <div className="flex-1 flex flex-col">
-            <div className="bg-slate-800/60 border-2 border-slate-600/50 rounded-xl p-5 flex-1 flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <GitCompare className="w-8 h-8 text-slate-300" />
-                <span className="text-2xl font-bold text-slate-200">COMPARE</span>
-              </div>
-              <div className="text-xl text-slate-400 mb-4">
-                Math-based diff
-              </div>
-              <div className="bg-black/40 rounded-lg p-4 flex-1 font-mono">
-                <div className="text-lg text-slate-500">current − baseline =</div>
-                <div className="mt-3 space-y-1">
-                  <div className="text-xl text-emerald-400">+ added: 0</div>
-                  <div className="text-xl text-red-400">− removed: 0</div>
-                  <div className="text-xl text-amber-400">~ modified: 1</div>
-                </div>
-                <div className="mt-3 pt-3 border-t border-slate-700 text-lg text-slate-400">
-                  "Block Legacy Auth" changed
-                </div>
-              </div>
-            </div>
-            <div className="text-center mt-3 text-lg text-amber-400 font-semibold">
-              Deterministic
+          <div className="bg-black/40 rounded-xl p-5 flex-1">
+            <div className="text-xl text-slate-400 mb-2">Stored Baseline</div>
+            <div className="text-2xl text-amber-300 font-mono font-bold">12 CA Policies</div>
+            <div className="mt-4 pt-4 border-t border-slate-700">
+              <div className="text-xl text-slate-300">"Block Legacy Auth"</div>
+              <div className="text-2xl text-emerald-400 font-bold mt-1">Enabled</div>
             </div>
           </div>
-
-          {/* Arrow */}
-          <div className="flex items-center px-1">
-            <ArrowRight className="w-8 h-8 text-slate-600" />
+          <div className="text-center mt-3 text-lg text-amber-400 font-semibold tracking-wide">
+            DETERMINISTIC
           </div>
+        </div>
 
-          {/* Step 3: AI Layer */}
-          <div className="flex-1 flex flex-col">
-            <div className="bg-purple-500/10 border-2 border-purple-500/40 rounded-xl p-5 flex-1 flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <Sparkles className="w-8 h-8 text-purple-400" />
-                <span className="text-2xl font-bold text-purple-400">AI</span>
-              </div>
-              <div className="text-xl text-slate-400 mb-4">
-                Translate + analyze
-              </div>
-              <div className="bg-black/40 rounded-lg p-4 flex-1">
-                <div className="text-lg text-slate-500">GUID → Name</div>
-                <div className="text-xl text-purple-300 font-mono mt-1">
-                  a93f2b4e... → <span className="text-emerald-400">"Finance Team"</span>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-700">
-                  <div className="text-lg text-slate-500">Security Impact</div>
-                  <div className="text-2xl text-red-400 font-bold mt-1">↓ LESS SECURE</div>
-                  <div className="text-lg text-slate-400">Legacy auth now allowed</div>
-                </div>
-              </div>
+        {/* Step 2: COMPARE */}
+        <div className="bg-slate-700/40 border-2 border-slate-500/50 rounded-2xl p-6 flex flex-col">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-600/40 flex items-center justify-center">
+              <GitCompare className="w-7 h-7 text-slate-300" />
             </div>
-            <div className="text-center mt-3 text-lg text-purple-400 font-semibold">
-              Probabilistic
+            <div>
+              <div className="text-lg text-slate-400 font-medium">STEP 2</div>
+              <div className="text-2xl font-black text-slate-200">COMPARE</div>
             </div>
           </div>
-
-          {/* Arrow */}
-          <div className="flex items-center px-1">
-            <ArrowRight className="w-8 h-8 text-slate-600" />
+          <div className="bg-black/40 rounded-xl p-5 flex-1 font-mono">
+            <div className="text-xl text-slate-400">current - baseline =</div>
+            <div className="mt-3 space-y-2">
+              <div className="text-2xl text-amber-400 font-bold">~ modified: 1</div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-slate-700">
+              <div className="text-xl text-slate-300">"Block Legacy Auth"</div>
+              <div className="text-xl text-amber-400 mt-1">state changed</div>
+            </div>
           </div>
+          <div className="text-center mt-3 text-lg text-amber-400 font-semibold tracking-wide">
+            DETERMINISTIC
+          </div>
+        </div>
 
-          {/* Step 4: OUTPUT GUARD */}
-          <div className="flex-1 flex flex-col">
-            <div className="bg-red-500/10 border-2 border-red-500/40 rounded-xl p-5 flex-1 flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
-                <Bell className="w-8 h-8 text-red-400" />
-                <span className="text-2xl font-bold text-red-400">OUTPUT GUARD</span>
-              </div>
-              <div className="text-xl text-slate-400 mb-4">
-                PSA ticket + email
-              </div>
-              <div className="bg-black/40 rounded-lg p-4 flex-1 border border-red-500/30">
-                <div className="text-xl text-red-300 font-bold">CA POLICY CHANGED</div>
-                <div className="text-lg text-slate-300 mt-2">"Block Legacy Auth"</div>
-                <div className="text-xl text-slate-300 mt-1">
-                  Enabled → <span className="text-amber-400 font-semibold">Report-Only</span>
-                </div>
-                <div className="mt-3 pt-3 border-t border-slate-700 text-lg text-slate-500">
-                  Changed by: IT-Admin
+        {/* Step 3: AI Layer */}
+        <div className="bg-purple-500/10 border-2 border-purple-500/50 rounded-2xl p-6 flex flex-col">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+              <Sparkles className="w-7 h-7 text-purple-400" />
+            </div>
+            <div>
+              <div className="text-lg text-purple-400/70 font-medium">STEP 3</div>
+              <div className="text-2xl font-black text-purple-400">AI ANALYSIS</div>
+            </div>
+          </div>
+          <div className="bg-black/40 rounded-xl p-5 flex-1">
+            <div className="text-xl text-slate-400 mb-2">GUID Translation</div>
+            <div className="text-xl text-purple-300 font-mono">
+              a93f2b4e... <span className="text-slate-500">→</span> <span className="text-emerald-400">"Finance Team"</span>
+            </div>
+            <div className="mt-4 pt-4 border-t border-slate-700">
+              <div className="text-xl text-slate-400 mb-2">Security Impact</div>
+              {/* THE BIG ACTION - Make it POP */}
+              <div className="bg-red-500/20 border-2 border-red-500/60 rounded-xl p-3 mt-2">
+                <div className="flex items-center justify-center gap-3">
+                  <AlertTriangle className="w-8 h-8 text-red-400" />
+                  <span className="text-3xl font-black text-red-400">LESS SECURE</span>
+                  <ArrowDown className="w-8 h-8 text-red-400" />
                 </div>
               </div>
             </div>
-            <div className="text-center mt-3 text-lg text-emerald-400 font-semibold">
-              Actionable
+          </div>
+          <div className="text-center mt-3 text-lg text-purple-400 font-semibold tracking-wide">
+            PROBABILISTIC
+          </div>
+        </div>
+
+        {/* Step 4: OUTPUT GUARD */}
+        <div className="bg-red-500/10 border-2 border-red-500/50 rounded-2xl p-6 flex flex-col">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
+              <Bell className="w-7 h-7 text-red-400" />
             </div>
+            <div>
+              <div className="text-lg text-red-400/70 font-medium">STEP 4</div>
+              <div className="text-2xl font-black text-red-400">OUTPUT GUARD</div>
+            </div>
+          </div>
+          <div className="bg-black/40 rounded-xl p-5 flex-1 border-2 border-red-500/40">
+            <div className="text-2xl text-red-300 font-bold mb-3">CA POLICY ALERT</div>
+            <div className="text-xl text-slate-300">"Block Legacy Auth"</div>
+            <div className="mt-4 pt-4 border-t border-slate-700">
+              {/* State Change - Dramatic */}
+              <div className="flex items-center gap-3 text-2xl">
+                <span className="text-emerald-400 font-bold">Enabled</span>
+                <span className="text-slate-500">→</span>
+                <span className="text-red-400 font-bold">Report-Only</span>
+              </div>
+              <div className="text-lg text-slate-500 mt-2">
+                PSA ticket + email sent
+              </div>
+            </div>
+          </div>
+          <div className="text-center mt-3 text-lg text-emerald-400 font-semibold tracking-wide">
+            ACTIONABLE
           </div>
         </div>
       </div>
 
-      {/* Bottom: Key Insight + Triggers */}
-      <div className="mt-4 flex gap-6 w-full max-w-[95%] mx-auto">
-        <div className="flex-1 bg-emerald-500/10 border border-emerald-500/40 rounded-xl px-6 py-4">
-          <div className="text-2xl font-bold text-emerald-400">
+      {/* Bottom: Key Insight */}
+      <div className="mt-6 max-w-4xl mx-auto w-full">
+        <div className="bg-emerald-500/10 border-2 border-emerald-500/50 rounded-xl px-8 py-4 text-center">
+          <div className="text-3xl font-black text-emerald-400">
             AI summarizes. Math decides.
           </div>
-          <div className="text-xl text-slate-400">
+          <div className="text-xl text-slate-400 mt-1">
             Deterministic detection wrapped in readable, analyzed output.
-          </div>
-        </div>
-
-        <div className="bg-slate-800/60 border border-slate-600/50 rounded-xl px-6 py-4">
-          <div className="text-xl font-semibold text-slate-300 mb-2">Triggers</div>
-          <div className="flex gap-6 text-lg">
-            <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-amber-400" />
-              <span className="text-slate-300">Every 42 min</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Webhook className="w-5 h-5 text-amber-400" />
-              <span className="text-slate-300">MS audit log</span>
-            </div>
           </div>
         </div>
       </div>
