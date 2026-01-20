@@ -2,6 +2,8 @@
 
 Interactive security conference presentation for the "Think Like an Attacker" CPE masterclass. Built with React, Vite, and xterm.js.
 
+**[Download PDF](https://github.com/tim4net/rightofboom2026/releases/latest/download/presentation.pdf)** - Static version for viewing without running the app
+
 ## Quick Start
 
 ### Windows (PowerShell)
