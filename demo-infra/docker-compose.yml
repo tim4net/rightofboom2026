@@ -1,0 +1,123 @@
+# Right of Boom 2026 - AI Security Demo Infrastructure
+# ====================================================
+# This runs the entire demo stack offline for conference reliability
+#
+# Usage:
+#   podman-compose up -d      # Start all services
+#   podman-compose down -v    # Stop and clean up
+#   ./scripts/reset-demo.sh   # Reset to clean state between runs
+#
+# Services:
+#   - vulnerable-app: Intentionally vulnerable web app (port 8080)
+#   - ollama: Local LLM for offline AI inference (port 11434)
+#   - siem: Mock SIEM/log aggregator (port 8081)
+#   - attacker: Attack tooling container (for demo scripts)
+
+services:
+  # ============================================
+  # Vulnerable Target Application
+  # ============================================
+  vulnerable-app:
+    build:
+      context: ./vulnerable-app
+      dockerfile: Dockerfile
+    container_name: acmecorp-portal
+    ports:
+      - "8080:5000"
+    volumes:
+      - app-data:/data
+      - app-logs:/var/log/app
+    environment:
+      - FLASK_ENV=development
+      - SECRET_KEY=super_secret_key_123
+      - DATABASE_URL=sqlite:///data/users.db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - demo-net
+
+  # ============================================
+  # Local LLM (Ollama)
+  # ============================================
+  # Pre-pull models before demo: ollama pull llama3.2:3b
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-local
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - demo-net
+    # GPU support (uncomment for NVIDIA)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  # ============================================
+  # Mock SIEM / Log Aggregator
+  # ============================================
+  siem:
+    build:
+      context: ./siem
+      dockerfile: Dockerfile
+    container_name: mock-siem
+    ports:
+      - "8081:8081"
+    volumes:
+      - app-logs:/logs:ro
+      - siem-data:/data
+    environment:
+      - LOG_PATH=/logs
+      - SIEM_PORT=8081
+    depends_on:
+      - vulnerable-app
+    networks:
+      - demo-net
+
+  # ============================================
+  # Attacker Container (for scripted attacks)
+  # ============================================
+  attacker:
+    build:
+      context: ./attacker
+      dockerfile: Dockerfile
+    container_name: red-team
+    volumes:
+      - ./scripts:/scripts:ro
+      - attack-results:/results
+    environment:
+      - TARGET_URL=http://vulnerable-app:5000
+      - OLLAMA_URL=http://ollama:11434
+    depends_on:
+      - vulnerable-app
+      - ollama
+    networks:
+      - demo-net
+    # Keep container running for interactive use
+    command: ["tail", "-f", "/dev/null"]
+
+volumes:
+  app-data:
+  app-logs:
+  ollama-models:
+  siem-data:
+  attack-results:
+
+networks:
+  demo-net:
+    driver: bridge
