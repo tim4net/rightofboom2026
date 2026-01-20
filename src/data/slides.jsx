@@ -164,7 +164,43 @@ export const slides = [
   // "Same tools, your advantage"
   // ============================================
 
-  { type: 'bridge' },                   // Slide 7
+  { type: 'bridge', notes: `**Transition** (5 sec)
+"So we have the architecture — input guards, AI reasoning, output guards. But here's the question: why does this work BETTER for defenders than attackers?"
+
+**The attacker column** (15 sec)
+→ Gesture to left column
+"Attackers have real advantages. Speed — they automate at scale. Surprise — they pick the time and place. AI-generated attacks — infinite variations. Recon tools probing from outside."
+"These are real. I'm not going to pretend otherwise."
+
+**The defender column** (20 sec)
+→ Gesture to right column, land on Ground Truth
+"But look what YOU have. And this is the one that matters—"
+→ Tap the Ground Truth card
+"GROUND TRUTH. You know what your environment is supposed to look like. Your configs. Your baselines. What normal behavior looks like in your logs."
+"Attackers are guessing. You KNOW."
+
+**Connect to the sandwich** (15 sec)
+"This is why the guardrail sandwich actually works for you:"
+"Input guards work because you can validate against KNOWN GOOD — your asset inventory, your approved sources."
+"Output guards work because you can verify against OBSERVABLE REALITY — did the action achieve the intended state?"
+
+**The caveat — be honest** (10 sec)
+→ Point to bottom statement, note the "until they're in"
+"Now — I said 'until they're in.' That's intentional. Once an attacker achieves persistence, this asymmetry erodes. They get dwell time. They enumerate your environment. They read your runbooks."
+"The sandwich is most powerful EARLY — before they have ground truth parity. Which is why detection speed matters so much."
+
+**Bridge to demos** (10 sec)
+"Every demo I'm about to show you exploits this asymmetry while you still have it."
+"Config drift — keeping your baselines current, not stale."
+"Endpoint validation — verifying defenses against observable behavior."
+"Segmentation testing — proving isolation works."
+"These only work if you maintain your ground truth. Stale baselines are worse than no baselines — they create false confidence."
+
+⏱ ~75 seconds | 👁 The caveat builds credibility — experienced folks will nod instead of mentally composing counterexamples
+
+**Q&A Prep:**
+- "What about APTs with dwell time?" → "You're right — that's why detection speed matters. The sandwich is most powerful when combined with continuous monitoring."
+- "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },                   // Slide 9
   { type: 'm365Drift' },                // Slide 8
   { type: 'endpointValidation' },       // Slide 9
   { type: 'networkSeg' },               // Slide 10

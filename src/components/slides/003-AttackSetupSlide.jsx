@@ -55,7 +55,7 @@ const AttackSetupSlide = ({ theme: t }) => {
               After AI
             </div>
             <div className={`text-7xl md:text-8xl font-black ${t.accentColorOnDark} mb-8`}>
-              2025
+              2026
             </div>
             <div className="space-y-4 text-left">
               <div className="text-3xl text-slate-300">Basic English</div>

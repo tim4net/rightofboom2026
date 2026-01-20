@@ -1,91 +1,117 @@
 import React from 'react';
-import { TrendingUp, Clock, Database, Eye, Zap } from 'lucide-react';
 
 /**
- * BridgeSlide - "Why Defenders Win"
+ * BridgeSlide - "The Defender's Edge"
  *
- * REDESIGNED for projection-scale typography (30+ feet)
- * - Removed cramped 4-column pattern grid
- * - Simplified to core message + key stats
- * - All text now 24px+ minimum
+ * Core teaching point: Defenders have ground truth. Attackers don't.
+ * That's what makes the guardrail sandwich actually work.
+ *
+ * This slide bridges from the Sandwich architecture (slides 7-8)
+ * to Part 2: Defensive Automation demos.
+ *
+ * Design: Two-column comparison with "GROUND TRUTH" as the visual hero.
+ * Typography optimized for 30+ foot viewing.
  */
 const BridgeSlide = ({ theme: t }) => {
-  const title = "Why Defenders Win";
-  const subtitle = "Context, baselines, and legitimate access";
-
-  // Defender advantages - simplified to 3 with bigger text
-  const advantages = [
-    {
-      icon: Database,
-      title: "Context",
-      desc: "You know your environment"
-    },
-    {
-      icon: Eye,
-      title: "Visibility",
-      desc: "Legitimate access to everything"
-    },
-    {
-      icon: Zap,
-      title: "Speed",
-      desc: "Prepare before attacks arrive"
-    }
-  ];
-
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-16">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h2 className={`text-5xl md:text-7xl font-black mb-4 ${t.textOnPage}`}>
-          {title}
+    <div className="w-full h-full flex flex-col px-16 py-10">
+      {/* Header - The core insight as headline */}
+      <div className="text-center mb-8">
+        <h2 className={`text-6xl md:text-7xl font-black ${t.textOnPage} mb-3`}>
+          Why the Sandwich <span className="text-emerald-400">Works</span>
         </h2>
-        <p className={`text-2xl md:text-3xl ${t.accentColor} font-medium`}>
-          {subtitle}
+        <p className="text-3xl text-slate-400">
+          You have something attackers must work hard to match
         </p>
       </div>
 
-      <div className="max-w-6xl w-full">
-        {/* Key Stats - Two big numbers */}
-        <div className="grid grid-cols-2 gap-8 mb-10">
-          <div className={`${t.cardBg} p-8 rounded-2xl border border-emerald-500/50 flex items-center gap-6`}>
-            <div className="p-4 rounded-xl bg-emerald-500/20">
-              <TrendingUp className="w-12 h-12 text-emerald-400" />
-            </div>
-            <div>
-              <div className="text-5xl md:text-6xl font-black text-emerald-400">$2M</div>
-              <div className="text-2xl text-slate-300 mt-2">Reduced breach costs with AI</div>
-              <div className="text-xl text-slate-500 mt-1">IBM 2024</div>
+      {/* Main content: Two-column comparison */}
+      <div className="flex-1 flex gap-8 max-w-6xl mx-auto w-full">
+
+        {/* ATTACKERS column - muted, disadvantaged */}
+        <div className="flex-1 flex flex-col">
+          <div className="text-center mb-6">
+            <div className="text-3xl font-bold text-red-400/80 tracking-wider">
+              ATTACKERS HAVE
             </div>
           </div>
-          <div className={`${t.cardBg} p-8 rounded-2xl border border-emerald-500/50 flex items-center gap-6`}>
-            <div className="p-4 rounded-xl bg-emerald-500/20">
-              <Clock className="w-12 h-12 text-emerald-400" />
-            </div>
-            <div>
-              <div className="text-5xl md:text-6xl font-black text-emerald-400">80 Days</div>
-              <div className="text-2xl text-slate-300 mt-2">Faster incident response</div>
-              <div className="text-xl text-slate-500 mt-1">IBM 2024</div>
-            </div>
+
+          <div className="flex-1 flex flex-col justify-center space-y-4">
+            {[
+              { text: "Speed", detail: "automated at scale" },
+              { text: "Surprise", detail: "pick time & place" },
+              { text: "AI-generated attacks", detail: "infinite variations" },
+              { text: "Recon tools", detail: "probe from outside" },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="bg-slate-800/50 border border-slate-600/50 rounded-xl p-5"
+              >
+                <div className="text-2xl font-semibold text-slate-200">{item.text}</div>
+                <div className="text-xl text-slate-400 mt-1">{item.detail}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Defender Advantages - 3 columns, bigger text */}
-        <div className="grid grid-cols-3 gap-6 mb-10">
-          {advantages.map((adv, i) => (
-            <div key={i} className={`${t.cardBg} p-6 rounded-xl border ${t.cardBorder} text-center`}>
-              <adv.icon className={`w-12 h-12 ${t.accentColor} mx-auto mb-4`} />
-              <div className={`text-3xl font-bold ${t.accentColor} mb-2`}>{adv.title}</div>
-              <div className="text-2xl text-slate-400">{adv.desc}</div>
-            </div>
-          ))}
+        {/* VS divider - minimal */}
+        <div className="flex flex-col items-center justify-center px-4">
+          <div className="w-px h-16 bg-slate-700" />
+          <div className="text-2xl font-bold text-slate-600 py-4">vs</div>
+          <div className="w-px flex-1 bg-slate-700" />
         </div>
 
-        {/* Bottom message */}
-        <div className={`text-center p-6 rounded-xl border ${t.cardBorder} ${t.cardBg}`}>
-          <p className="text-2xl text-slate-300">
-            <span className={`${t.accentColor} font-bold`}>70% of SOCs</span> are experimenting with AI.
-            The question isn't <em>whether</em> to automate — it's how fast you can do it{' '}
-            <span className={`${t.accentColor} font-bold`}>responsibly</span>.
+        {/* DEFENDERS column - bright, advantaged */}
+        <div className="flex-1 flex flex-col">
+          <div className="text-center mb-6">
+            <div className="text-3xl font-bold text-emerald-400 tracking-wider">
+              YOU HAVE
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col justify-center space-y-4">
+            {[
+              {
+                text: "Ground truth",
+                detail: "your configs, your reality",
+                highlight: true
+              },
+              { text: "Baselines", detail: "what normal looks like" },
+              { text: "Logs", detail: "observable behavior" },
+              { text: "Access to verify", detail: "check anything, anytime" },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className={`rounded-xl p-5 ${
+                  item.highlight
+                    ? 'bg-emerald-500/20 border-2 border-emerald-500/60 ring-2 ring-emerald-500/20'
+                    : 'bg-emerald-500/10 border border-emerald-500/40'
+                }`}
+              >
+                <div className={`text-2xl font-bold ${
+                  item.highlight ? 'text-emerald-300' : 'text-emerald-400'
+                }`}>
+                  {item.text}
+                </div>
+                <div className={`text-xl mt-1 ${
+                  item.highlight ? 'text-emerald-400/80' : 'text-emerald-500/70'
+                }`}>
+                  {item.detail}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bridge statement - setup for demos */}
+      <div className="mt-8 text-center">
+        <div className="inline-block bg-slate-800/60 border border-emerald-500/30 rounded-2xl px-10 py-6">
+          <p className="text-2xl md:text-3xl text-slate-200">
+            Every demo you're about to see exploits one thing:
+          </p>
+          <p className="text-3xl md:text-4xl font-bold text-emerald-400 mt-3">
+            You can verify every AI decision against your environment.
           </p>
         </div>
       </div>
