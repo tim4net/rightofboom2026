@@ -1,119 +1,112 @@
 import React from 'react';
-import { ArrowRight, Clock, Zap, Bell } from 'lucide-react';
+import { ArrowRight, Clock, Zap, Bell, FileText } from 'lucide-react';
 
 /**
  * Rewst Crate: CA Policy Monitor - Architecture Slide
- * Three-Card Flow: TRIGGERS → DETECTS → ALERTS
- * Redesigned for visual impact and brand compliance
+ * Shows the 4-step flow: Baseline → Compare → AI → Alert
+ * Follows presentation visual language from slides 7-9
  */
-export const M365ConfigDriftDemo = () => {
+export const M365ConfigDriftDemo = ({ theme: t }) => {
   return (
-    <div className="w-full h-full flex flex-col bg-ops-indigo-900 px-12 py-8">
-      {/* Header with Rewst Logo */}
-      <div className="flex items-center justify-center gap-8 mb-8">
-        <img
-          src="/images/rewst-logo.png"
-          alt="Rewst"
-          className="h-16 object-contain"
-        />
-        <div className="text-center">
-          <div className="text-2xl text-trigger-amber-400 font-semibold tracking-wider mb-1">
+    <div className="w-full h-full flex flex-col px-12 py-8">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <div className="flex items-center justify-center gap-4 mb-2">
+          <img
+            src="/images/rewst-logo.png"
+            alt="Rewst"
+            className="h-10 object-contain"
+          />
+          <span className="text-xl text-amber-400 font-semibold tracking-wider">
             REWST CRATE
-          </div>
-          <h2 className="text-5xl font-black text-white">
-            Conditional Access <span className="text-bot-teal-400">Policy Monitor</span>
-          </h2>
+          </span>
+        </div>
+        <h2 className={`text-5xl font-bold ${t.textOnPage}`}>
+          Conditional Access <span className="text-amber-400">Policy Monitor</span>
+        </h2>
+      </div>
+
+      {/* Dual Triggers - compact */}
+      <div className="flex justify-center gap-4 mb-6">
+        <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg">
+          <Clock className="w-5 h-5 text-slate-400" />
+          <span className="text-xl text-slate-300">Scheduled check</span>
+        </div>
+        <div className="text-2xl text-slate-500 flex items-center">+</div>
+        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
+          <Zap className="w-5 h-5 text-emerald-400" />
+          <span className="text-xl text-emerald-300 font-semibold">MS Audit Webhook</span>
+        </div>
+        <div className="text-2xl text-slate-500 flex items-center">=</div>
+        <div className="px-4 py-2 bg-emerald-500/30 border border-emerald-500/60 rounded-lg">
+          <span className="text-xl text-emerald-200 font-bold">No blind spots</span>
         </div>
       </div>
 
-      {/* Three-Card Flow - Main Visual */}
-      <div className="flex-1 flex items-center justify-center gap-6">
-        {/* Card 1: TRIGGERS */}
-        <div className="w-80 bg-ops-indigo-800/60 border-2 border-bot-teal-400 rounded-2xl p-6 shadow-lg shadow-bot-teal-400/10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-bot-teal-400/20">
-              <Zap className="w-8 h-8 text-bot-teal-400" />
-            </div>
-            <div className="text-3xl font-bold text-bot-teal-400">TRIGGERS</div>
+      {/* 4-Step Flow */}
+      <div className="flex-1 flex items-center justify-center gap-4 max-w-6xl mx-auto w-full">
+        {/* Step 1: BASELINE */}
+        <div className="flex-1 bg-amber-500/10 border-2 border-amber-500/40 rounded-2xl p-5">
+          <div className="text-2xl font-bold text-amber-400 mb-3">BASELINE</div>
+          <div className="text-xl text-slate-300">
+            Your stored config snapshot
           </div>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <Clock className="w-6 h-6 text-cloud-gray-300" />
-              <span className="text-2xl text-cloud-gray-200">Scheduled checks</span>
-            </div>
-            <div className="text-2xl text-cloud-gray-400 pl-9">+</div>
-            <div className="flex items-center gap-3">
-              <Zap className="w-6 h-6 text-bot-teal-400" />
-              <span className="text-2xl text-bot-teal-300 font-semibold">MS Audit Webhook</span>
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t border-bot-teal-400/30">
-            <div className="text-2xl text-bot-teal-400 font-bold">= No blind spots</div>
+          <div className="text-xl text-slate-400 mt-2">
+            = your ground truth
           </div>
         </div>
 
-        {/* Arrow 1 */}
-        <ArrowRight className="w-12 h-12 text-cloud-gray-500 flex-shrink-0" />
+        <ArrowRight className="w-8 h-8 text-slate-600 flex-shrink-0" />
 
-        {/* Card 2: DETECTS */}
-        <div className="w-80 bg-ops-indigo-800/60 border-2 border-trigger-amber-400 rounded-2xl p-6 shadow-lg shadow-trigger-amber-400/10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-trigger-amber-400/20">
-              <svg className="w-8 h-8 text-trigger-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div className="text-3xl font-bold text-trigger-amber-400">DETECTS</div>
+        {/* Step 2: COMPARE */}
+        <div className="flex-1 bg-amber-500/10 border-2 border-amber-500/40 rounded-2xl p-5">
+          <div className="text-2xl font-bold text-amber-400 mb-3">COMPARE</div>
+          <div className="text-xl text-slate-300">
+            Set difference math
           </div>
-          <div className="space-y-2">
-            <div className="text-2xl text-cloud-gray-200">Every policy field</div>
-            <div className="text-2xl text-cloud-gray-200">Every change type</div>
-            <div className="flex gap-4 mt-3 font-mono text-xl">
-              <span className="text-bot-teal-400">+ Added</span>
-              <span className="text-alert-coral-400">− Removed</span>
-              <span className="text-trigger-amber-400">~ Changed</span>
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t border-trigger-amber-400/30">
-            <div className="text-2xl text-trigger-amber-400 font-bold">Your baseline = truth</div>
+          <div className="flex gap-3 mt-2 font-mono text-xl">
+            <span className="text-emerald-400">+</span>
+            <span className="text-red-400">−</span>
+            <span className="text-amber-400">~</span>
           </div>
         </div>
 
-        {/* Arrow 2 */}
-        <ArrowRight className="w-12 h-12 text-cloud-gray-500 flex-shrink-0" />
+        <ArrowRight className="w-8 h-8 text-slate-600 flex-shrink-0" />
 
-        {/* Card 3: ALERTS */}
-        <div className="w-80 bg-ops-indigo-800/60 border-2 border-alert-coral-400 rounded-2xl p-6 shadow-lg shadow-alert-coral-400/10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-alert-coral-400/20">
-              <Bell className="w-8 h-8 text-alert-coral-400" />
-            </div>
-            <div className="text-3xl font-bold text-alert-coral-400">ALERTS</div>
+        {/* Step 3: AI */}
+        <div className="flex-1 bg-purple-500/10 border-2 border-purple-500/40 rounded-2xl p-5">
+          <div className="text-2xl font-bold text-purple-400 mb-3">AI LAYER</div>
+          <div className="text-xl text-slate-300">
+            Translates GUIDs to names
           </div>
-          <div className="space-y-3">
-            <div className="text-2xl text-cloud-gray-200">PSA ticket created</div>
-            <div className="text-2xl text-cloud-gray-200">Email notification</div>
-            <div className="text-2xl text-cloud-gray-200">Full before/after diff</div>
+          <div className="text-xl text-slate-300 mt-1">
+            Explains the risk
           </div>
-          <div className="mt-4 pt-4 border-t border-alert-coral-400/30">
-            <div className="text-2xl text-alert-coral-400 font-bold">+ Who made the change</div>
+        </div>
+
+        <ArrowRight className="w-8 h-8 text-slate-600 flex-shrink-0" />
+
+        {/* Step 4: ALERT */}
+        <div className="flex-1 bg-red-500/10 border-2 border-red-500/40 rounded-2xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <Bell className="w-6 h-6 text-red-400" />
+            <span className="text-2xl font-bold text-red-400">ALERT</span>
           </div>
+          <div className="text-xl text-slate-300">PSA ticket</div>
+          <div className="text-xl text-slate-300">Email notification</div>
         </div>
       </div>
 
-      {/* Tagline */}
-      <div className="text-center mt-6 mb-4">
-        <div className="text-3xl text-cloud-gray-100 font-medium">
-          <span className="text-bot-teal-400 font-bold">Rules</span> catch changes.{' '}
-          <span className="text-trigger-amber-400 font-bold">AI</span> explains risks.
+      {/* Key insight */}
+      <div className="mt-6 flex justify-center gap-6">
+        <div className="bg-emerald-500/10 border border-emerald-500/40 rounded-xl px-6 py-4">
+          <div className="text-2xl font-bold text-emerald-400">
+            AI summarizes. Math decides.
+          </div>
         </div>
-      </div>
-
-      {/* Footer */}
-      <div className="flex justify-center">
-        <div className="bg-ops-indigo-700/50 border border-ops-indigo-500 rounded-xl px-8 py-3">
-          <div className="text-2xl text-cloud-gray-200">
-            Runs across <span className="text-trigger-amber-400 font-bold">all your tenants</span> automatically
+        <div className="bg-amber-500/10 border border-amber-500/40 rounded-xl px-6 py-4">
+          <div className="text-2xl text-slate-300">
+            Runs across <span className="text-amber-400 font-bold">all your tenants</span>
           </div>
         </div>
       </div>
