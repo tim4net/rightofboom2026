@@ -5,6 +5,7 @@ import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
 
 const SLIDE_COUNT = 26; // Total slides (0-25)
+const SKIP_SLIDES = [3]; // Slide indices to skip (attackLab demo)
 const OUTPUT_FILE = 'presentation.pdf';
 const URL = process.env.URL || 'http://localhost:2026';
 
@@ -34,10 +35,33 @@ async function generatePDF() {
   await page.waitForSelector('[class*="h-screen"]', { timeout: 10000 });
   await new Promise(r => setTimeout(r, 1000));
 
+  // Hide navigation UI (footer buttons, theme switcher, progress bar)
+  await page.addStyleTag({
+    content: `
+      footer { display: none !important; }
+      button[title^="Theme"] { display: none !important; }
+      .fixed.bottom-3.left-3 { display: none !important; }
+      .fixed.bottom-0.left-0.right-0.h-1 { display: none !important; }
+    `
+  });
+
   const screenshots = [];
+  const slidesToCapture = SLIDE_COUNT - SKIP_SLIDES.length;
+  let capturedCount = 0;
 
   for (let i = 0; i < SLIDE_COUNT; i++) {
-    console.log(`Capturing slide ${i + 1}/${SLIDE_COUNT}...`);
+    if (SKIP_SLIDES.includes(i)) {
+      console.log(`Skipping slide ${i + 1} (demo slide)...`);
+      // Still need to navigate past it
+      if (i < SLIDE_COUNT - 1) {
+        await page.keyboard.press('ArrowRight');
+        await new Promise(r => setTimeout(r, 300));
+      }
+      continue;
+    }
+
+    capturedCount++;
+    console.log(`Capturing slide ${capturedCount}/${slidesToCapture}...`);
 
     // Wait for any animations to complete
     await new Promise(r => setTimeout(r, 500));
@@ -77,7 +101,7 @@ async function generatePDF() {
   const pdfBytes = await pdfDoc.save();
   fs.writeFileSync(OUTPUT_FILE, pdfBytes);
 
-  console.log(`PDF saved to ${OUTPUT_FILE}`);
+  console.log(`PDF saved to ${OUTPUT_FILE} (${slidesToCapture} slides)`);
 }
 
 generatePDF().catch(err => {

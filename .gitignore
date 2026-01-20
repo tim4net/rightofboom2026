@@ -42,3 +42,6 @@ coverage/
 # Misc
 *.tgz
 .tmp/
+
+# Generated files
+presentation.pdf
