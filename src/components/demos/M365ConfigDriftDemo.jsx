@@ -100,19 +100,23 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
                 <Sparkles className="w-6 h-6 text-purple-400" />
                 <span className="text-xl font-bold text-purple-400">AI</span>
               </div>
-              <div className="text-lg text-slate-400 mb-3">
-                Summarize + translate
+              <div className="text-lg text-slate-400 mb-2">
+                Translate + analyze
               </div>
-              {/* GUID to human translation */}
-              <div className="bg-black/40 rounded-lg p-3 text-sm flex-1">
-                <div className="text-slate-500 text-xs mb-2">GUID → Name</div>
-                <div className="font-mono">
-                  <div className="text-slate-500 text-xs truncate">a93f2b4e-8c7d...</div>
-                  <div className="text-purple-300">↓</div>
-                  <div className="text-emerald-400">"Finance Team"</div>
+              {/* AI analysis */}
+              <div className="bg-black/40 rounded-lg p-3 text-sm flex-1 space-y-2">
+                <div>
+                  <div className="text-slate-500 text-xs">GUID → Name</div>
+                  <div className="text-emerald-400 text-xs">a93f2... → "Finance Team"</div>
                 </div>
-                <div className="text-slate-500 text-xs mt-2">
-                  Readable summary
+                <div className="border-t border-slate-700 pt-2">
+                  <div className="text-slate-500 text-xs">Security Impact</div>
+                  <div className="text-red-400 text-sm font-semibold">
+                    ↓ LESS SECURE
+                  </div>
+                  <div className="text-slate-400 text-xs">
+                    Legacy auth now allowed
+                  </div>
                 </div>
               </div>
             </div>
