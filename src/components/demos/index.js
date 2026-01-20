@@ -5,6 +5,7 @@ export { EvolutionRace } from './EvolutionRace';
 export { TokenHeistDemo } from './TokenHeistDemo';
 export { DeterminismDemo } from './DeterminismDemo';
 export { M365ConfigDriftDemo } from './M365ConfigDriftDemo';
+export { CACrateExampleSlide } from './CACrateExampleSlide';
 export { NetworkSegmentationDemo } from './NetworkSegmentationDemo';
 export { AlertTriageDemo } from './AlertTriageDemo';
 export { EndpointValidationDemo } from './EndpointValidationDemo';

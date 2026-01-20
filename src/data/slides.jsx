@@ -204,35 +204,45 @@ export const slides = [
   { type: 'm365Drift', notes: `**Callback to Bridge** (5 sec)
 "Remember what you have that attackers don't? Ground truth. This is the first demo of that principle in action."
 
-**The Architecture** (30 sec)
+**The Architecture** (25 sec)
 → Walk through the 4-step flow left to right
 "Your baseline — stored configuration snapshot. This is YOUR truth, not Microsoft's defaults."
 "Compare — pure math. Set difference. What's in current that wasn't in baseline? What's missing? What changed?"
-"AI layer — notice it says OPTIONAL. GPT-4 just translates GUIDs to human names. It formats the output. It never decides what changed."
-"Alert — ticket in your PSA, email to your team. Human-readable, actionable."
+"AI layer — notice it says OPTIONAL. GUID to human names. It formats the output. It never decides what changed."
+"Alert — ticket in your PSA, email to your team."
 
-**The Key Line** (15 sec)
+**The Key Line** (10 sec)
 → Point to the green callout
-"GPT-4 summarizes. Math decides. This is the architecture you want. Deterministic core, probabilistic enhancement."
-"If someone asks 'could the AI hide a change?' — no. Changes are detected and logged before AI touches them."
+"GPT-4 summarizes. Math decides. Deterministic core, probabilistic enhancement."
 
-**Dual Triggers** (15 sec)
-"Notice two triggers: cron every 42 minutes, plus real-time webhook from Microsoft's audit log."
-"Why both? Microsoft webhooks are best-effort, not guaranteed. Audit logs have documented delays of 5-30 minutes. The cron is your safety net."
+**Dual Triggers** (10 sec)
+"Two triggers: cron every 42 minutes, plus real-time webhook. Microsoft webhooks are best-effort. The cron is your safety net."
 
-**The Example** (10 sec)
-"Block Legacy Auth set to Report-Only. This exact drift has been involved in multiple M365 compromises."
-"Someone was 'just testing' or 'helping a vendor' and forgot to re-enable. Attackers specifically look for this gap."
+**Transition** (5 sec)
+"Let me show you what this actually catches..."
+
+⏱ ~55 seconds | 👁 "GPT-4 summarizes, math decides" is the quotable line` },
+
+  { type: 'caCrateExample', notes: `**The Scenario** (15 sec)
+"Block Legacy Authentication — one of the most critical CA policies. It stops password spray attacks that MFA can't help with."
+→ Point to the before/after
+"Someone set it to Report-Only. Probably 'just testing' or helping a vendor."
+
+**The Risk** (15 sec)
+"Report-Only means legacy auth is ALLOWED — it just gets logged. Attackers know this. They specifically look for this gap."
+"This exact drift has been involved in multiple real M365 breaches."
+
+**The Attribution** (10 sec)
+→ Point to "Changed by"
+"Notice: we know WHO made the change, WHEN, and from what. That's your ground truth at work."
+"No guessing. No 'the AI thinks someone changed something.' Math found the diff. AI just made it readable."
 
 **Landing** (5 sec)
-"Your baseline. Your rules. AI makes it readable. That's the pattern for every demo that follows."
+"This is what continuous validation looks like. Your baseline catches drift before attackers exploit it."
 
-⏱ ~80 seconds | 👁 "GPT-4 summarizes, math decides" is the quotable line — pause after it
+⏱ ~45 seconds | 👁 The before/after visual should hit hard — legacy auth is a known attack vector` },
 
-**Q&A Prep:**
-- "What if attacker modifies the baseline?" → "Critical point. Baseline integrity is the foundation. That's why baseline changes should require approval, not auto-accept."
-- "42 minutes is a long gap" → "You're right — that's the tradeoff between API cost and detection speed. The webhook is your real-time layer."` },                // Slide 10
-  { type: 'endpointValidation' },       // Slide 9
+  { type: 'endpointValidation' },
   { type: 'networkSeg' },               // Slide 10
   { type: 'alertTriage' },              // Slide 11
   { type: 'evolutionRace' },            // Slide 12

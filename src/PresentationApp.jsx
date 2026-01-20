@@ -53,8 +53,8 @@ import {
   AttackLabDemo
 } from './DemoComponents';
 
-// M365ConfigDriftDemo is now a proper slide component
-import { M365ConfigDriftDemo } from './components/demos';
+// CA Policy Monitor crate slides
+import { M365ConfigDriftDemo, CACrateExampleSlide } from './components/demos';
 
 // Data
 import { slides, themes } from './data/slides';
@@ -258,6 +258,13 @@ const PresentationApp = () => {
           </div>
         );
 
+      case 'caCrateExample':
+        return (
+          <div className="animate-in fade-in duration-500">
+            <CACrateExampleSlide theme={t} />
+          </div>
+        );
+
       case 'networkSeg':
         return (
           <div className="animate-in fade-in duration-500">
@@ -346,11 +353,13 @@ const PresentationApp = () => {
       <div className={`fixed top-0 right-0 w-[600px] h-[600px] ${t.accentBg}/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none`} />
       <div className={`fixed bottom-0 left-0 w-[600px] h-[600px] ${t.accentBg}/5 blur-[150px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none`} />
 
-      {/* Logo - bottom right corner */}
+      {/* Logo - bottom right corner with subtle glow behind */}
+      <div className="fixed -bottom-5 -right-5 w-[350px] h-[180px] pointer-events-none"
+           style={{ background: 'radial-gradient(ellipse at 100% 100%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 35%, rgba(255,255,255,0.7) 50%, transparent 65%)' }} />
       <img
         src="/images/rob-logo-horiz.webp"
         alt="Right of Boom"
-        className="fixed bottom-4 right-4 z-50 h-12 w-auto object-contain drop-shadow-[0_0_12px_rgba(255,255,255,0.8)] brightness-150"
+        className="fixed bottom-4 right-4 z-50 h-[60px] w-auto object-contain"
       />
 
       {/* Theme Switcher */}
