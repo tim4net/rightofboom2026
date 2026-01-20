@@ -45,7 +45,6 @@ import {
   EvolutionRace,
   TokenHeistDemo,
   DeterminismDemo,
-  M365ConfigDriftDemo,
   NetworkSegmentationDemo,
   AlertTriageDemo,
   EndpointValidationDemo,
@@ -53,6 +52,9 @@ import {
   ClaudeCodeDemo,
   AttackLabDemo
 } from './DemoComponents';
+
+// M365ConfigDriftDemo is now a proper slide component
+import { M365ConfigDriftDemo } from './components/demos';
 
 // Data
 import { slides, themes } from './data/slides';
@@ -348,7 +350,7 @@ const PresentationApp = () => {
       <img
         src="/images/rob-logo-horiz.webp"
         alt="Right of Boom"
-        className="fixed bottom-4 right-4 h-16 w-auto object-contain z-50"
+        className="fixed bottom-4 right-4 z-50 h-12 w-auto object-contain drop-shadow-[0_0_12px_rgba(255,255,255,0.8)] brightness-150"
       />
 
       {/* Theme Switcher */}

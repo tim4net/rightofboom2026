@@ -201,7 +201,37 @@ export const slides = [
 **Q&A Prep:**
 - "What about APTs with dwell time?" → "You're right — that's why detection speed matters. The sandwich is most powerful when combined with continuous monitoring."
 - "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },                   // Slide 9
-  { type: 'm365Drift' },                // Slide 8
+  { type: 'm365Drift', notes: `**Callback to Bridge** (5 sec)
+"Remember what you have that attackers don't? Ground truth. This is the first demo of that principle in action."
+
+**The Architecture** (30 sec)
+→ Walk through the 4-step flow left to right
+"Your baseline — stored configuration snapshot. This is YOUR truth, not Microsoft's defaults."
+"Compare — pure math. Set difference. What's in current that wasn't in baseline? What's missing? What changed?"
+"AI layer — notice it says OPTIONAL. GPT-4 just translates GUIDs to human names. It formats the output. It never decides what changed."
+"Alert — ticket in your PSA, email to your team. Human-readable, actionable."
+
+**The Key Line** (15 sec)
+→ Point to the green callout
+"GPT-4 summarizes. Math decides. This is the architecture you want. Deterministic core, probabilistic enhancement."
+"If someone asks 'could the AI hide a change?' — no. Changes are detected and logged before AI touches them."
+
+**Dual Triggers** (15 sec)
+"Notice two triggers: cron every 42 minutes, plus real-time webhook from Microsoft's audit log."
+"Why both? Microsoft webhooks are best-effort, not guaranteed. Audit logs have documented delays of 5-30 minutes. The cron is your safety net."
+
+**The Example** (10 sec)
+"Block Legacy Auth set to Report-Only. This exact drift has been involved in multiple M365 compromises."
+"Someone was 'just testing' or 'helping a vendor' and forgot to re-enable. Attackers specifically look for this gap."
+
+**Landing** (5 sec)
+"Your baseline. Your rules. AI makes it readable. That's the pattern for every demo that follows."
+
+⏱ ~80 seconds | 👁 "GPT-4 summarizes, math decides" is the quotable line — pause after it
+
+**Q&A Prep:**
+- "What if attacker modifies the baseline?" → "Critical point. Baseline integrity is the foundation. That's why baseline changes should require approval, not auto-accept."
+- "42 minutes is a long gap" → "You're right — that's the tradeoff between API cost and detection speed. The webhook is your real-time layer."` },                // Slide 10
   { type: 'endpointValidation' },       // Slide 9
   { type: 'networkSeg' },               // Slide 10
   { type: 'alertTriage' },              // Slide 11
