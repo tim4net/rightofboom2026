@@ -40,7 +40,7 @@ const TitleSlide = ({ theme: t }) => {
           </div>
         ))}
       </div>
-      <p className="text-slate-500 font-mono text-2xl tracking-[0.3em] uppercase">{venue}</p>
+      <p className="text-cloud-gray-400 font-mono text-2xl tracking-[0.3em] uppercase">{venue}</p>
     </div>
   );
 };

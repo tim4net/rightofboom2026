@@ -1,6 +1,21 @@
 /**
  * Typography Configuration for Right of Boom 2026 Presentation
- * Centralizes font definitions for consistency across components
+ *
+ * Rewst Brand Typography (from Visual Guidelines PDF, pages 8-9)
+ * =============================================================================
+ *
+ * GOLDPLAY BOLD
+ * - Use: Titles, Buttons, Links
+ * - Weights: Medium (500), SemiBold (600), Bold (700), Black (900)
+ *
+ * MONTSERRAT (Google Fonts)
+ * - Use: Body text, paragraphs, subtitles
+ * - Weights: Light (300), Regular (400), Medium (500), Bold (700), Black (900)
+ * - URL: https://fonts.google.com/specimen/Montserrat
+ *
+ * DESIGN RULES
+ * - Buttons: Pill-shaped with maximum border radius
+ * - Rounded corners: 12.5% radius relative to object height
  */
 
 // =============================================================================
@@ -8,21 +23,25 @@
 // =============================================================================
 
 export const FONTS = {
-  // Primary monospace stack (used for headings and terminal aesthetic)
+  // Goldplay - Rewst brand title font
+  display: "'Goldplay', 'Montserrat', system-ui, sans-serif",
+
+  // Montserrat - Rewst brand body font
+  sans: "'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+
+  // Monospace for terminal/code (kept for code blocks)
   mono: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
 
-  // Terminal-specific font stack (for actual terminal components)
+  // Terminal-specific font stack
   terminal: "'Menlo', 'Monaco', 'Courier New', monospace",
-
-  // System sans-serif fallback
-  sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
 };
 
 // Tailwind-compatible font family classes
 export const FONT_CLASSES = {
-  mono: 'font-mono',
-  terminal: 'font-mono', // Uses same Tailwind class, but can be extended
-  sans: 'font-sans',
+  display: 'font-display',  // Goldplay for titles
+  sans: 'font-sans',        // Montserrat for body
+  mono: 'font-mono',        // Monospace for code
+  terminal: 'font-mono',    // Terminal text
 };
 
 // =============================================================================
@@ -76,6 +95,7 @@ export const LETTER_SPACING = {
   standard: 'tracking-wide',    // 0.025em - standard for body
   heading: 'tracking-wider',    // 0.05em - for terminal theme headings
   terminal: 'tracking-tight',   // -0.025em - tighter for code
+  title: 'tracking-normal',     // 0em - Goldplay titles
 };
 
 // =============================================================================
@@ -83,40 +103,49 @@ export const LETTER_SPACING = {
 // =============================================================================
 
 export const WEIGHTS = {
-  normal: 'font-normal',
-  medium: 'font-medium',
-  semibold: 'font-semibold',
-  bold: 'font-bold',
-  extrabold: 'font-extrabold',
-  black: 'font-black',
+  light: 'font-light',        // 300 - Montserrat Light
+  normal: 'font-normal',      // 400 - Montserrat Regular
+  medium: 'font-medium',      // 500 - Montserrat/Goldplay Medium
+  semibold: 'font-semibold',  // 600 - Goldplay SemiBold
+  bold: 'font-bold',          // 700 - Goldplay Bold / Montserrat Bold
+  extrabold: 'font-extrabold', // 800
+  black: 'font-black',        // 900 - Goldplay Black / Montserrat Black
 };
 
 // =============================================================================
-// TEXT STYLES - Pre-composed combinations
+// TEXT STYLES - Pre-composed combinations (Rewst Brand)
 // =============================================================================
 
 export const TEXT_STYLES = {
-  // Headings
-  heading1: 'font-mono font-black text-[clamp(3rem,8vw,7rem)] leading-tight tracking-wide',
-  heading2: 'font-mono font-bold text-[clamp(2rem,5vw,4rem)] leading-snug tracking-wide',
-  heading3: 'font-mono font-bold text-[clamp(1.5rem,3vw,2.5rem)] leading-normal tracking-wide',
+  // Headings - Goldplay Bold
+  heading1: 'font-display font-black text-[clamp(3rem,8vw,7rem)] leading-tight tracking-normal',
+  heading2: 'font-display font-bold text-[clamp(2rem,5vw,4rem)] leading-snug tracking-normal',
+  heading3: 'font-display font-bold text-[clamp(1.5rem,3vw,2.5rem)] leading-normal tracking-normal',
 
-  // Body
-  body: 'text-[clamp(1.25rem,2vw,1.75rem)] leading-relaxed',
-  bodyLarge: 'text-xl leading-relaxed',
+  // Subtitles - Montserrat Black
+  subtitle: 'font-sans font-black text-xl leading-relaxed tracking-wide uppercase',
 
-  // Terminal/Code
+  // Body - Montserrat
+  body: 'font-sans text-[clamp(1.25rem,2vw,1.75rem)] leading-relaxed',
+  bodyLight: 'font-sans font-light text-[clamp(1.25rem,2vw,1.75rem)] leading-relaxed',
+  bodyLarge: 'font-sans text-xl leading-relaxed',
+
+  // Terminal/Code - Monospace (unchanged)
   terminalOutput: 'font-mono text-xs leading-relaxed',
   codeInline: 'font-mono text-sm',
 
-  // UI
-  label: 'text-sm font-medium text-slate-400',
-  badge: 'text-xs font-bold uppercase',
-  stat: 'text-3xl font-black',
-  statLabel: 'text-sm text-slate-400',
+  // UI Elements
+  label: 'font-sans text-sm font-medium text-cloud-gray-400',
+  badge: 'font-display text-xs font-bold uppercase',
+  stat: 'font-display text-3xl font-black',
+  statLabel: 'font-sans text-sm text-cloud-gray-400',
 
-  // Links
-  link: 'text-blue-400 hover:text-blue-300 underline underline-offset-2',
+  // Buttons - Goldplay Bold, pill-shaped
+  button: 'font-display font-bold rounded-full px-6 py-2',
+  buttonLarge: 'font-display font-bold rounded-full px-8 py-3 text-lg',
+
+  // Links - Goldplay Bold
+  link: 'font-display font-bold text-bot-teal-400 hover:text-bot-teal-300 underline underline-offset-2',
 };
 
 // =============================================================================
@@ -136,18 +165,37 @@ export const TERMINAL_CONFIG = {
 
 export const CHAT_CONFIG = {
   // Avatar
-  avatarSize: 'w-14 h-14',      // Tailwind width/height classes
-  avatarTextSize: 'text-2xl',   // Emoji/icon size
+  avatarSize: 'w-14 h-14',
+  avatarTextSize: 'text-2xl',
 
-  // Role label (ATTACKER / AI ASSISTANT)
+  // Role label
   labelSize: 'text-base',
+  labelFont: 'font-display font-bold',
 
   // Message content
   contentSize: 'text-xl',
   contentLineHeight: 'leading-relaxed',
+  contentFont: 'font-sans',
 
   // Code blocks inside messages
   codeSize: 'text-base',
+  codeFont: 'font-mono',
+};
+
+// =============================================================================
+// DESIGN RULES (from Rewst Visual Guidelines)
+// =============================================================================
+
+export const DESIGN_RULES = {
+  // Buttons: Pill-shaped with maximum border radius
+  buttonRadius: 'rounded-full',
+
+  // Rounded corners: 12.5% radius relative to object height
+  // For most cards, use rounded-xl or rounded-2xl as approximation
+  cardRadius: 'rounded-xl',
+
+  // Large cards/modals
+  modalRadius: 'rounded-2xl',
 };
 
 // =============================================================================
@@ -156,6 +204,8 @@ export const CHAT_CONFIG = {
 
 export const tailwindExtend = {
   fontFamily: {
+    display: FONTS.display.split(', '),
+    sans: FONTS.sans.split(', '),
     mono: FONTS.mono.split(', '),
     terminal: FONTS.terminal.split(', '),
   },
@@ -178,5 +228,6 @@ export default {
   TEXT_STYLES,
   TERMINAL_CONFIG,
   CHAT_CONFIG,
+  DESIGN_RULES,
   tailwindExtend,
 };

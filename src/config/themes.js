@@ -2,128 +2,117 @@
  * Theme Configuration - Right of Boom 2026
  *
  * =============================================================================
- * DESIGN PHILOSOPHY: "Cyber Authority"
+ * DESIGN PHILOSOPHY: "Rewst Brand Authority"
  * =============================================================================
  *
- * This is a cybersecurity conference presentation about AI-enabled attacks.
- * The aesthetic must convey: authority, technical credibility, and controlled urgency.
+ * This presentation uses Rewst brand guidelines for visual identity.
+ *
+ * BRAND COLORS (from Rewst Visual Guidelines)
+ * -------------------------------------------
+ * - Bot Teal (#1EAFAF): Primary brand color - 50% usage
+ * - Ops Indigo (#504384): Dark backgrounds - 15% usage
+ * - Trigger Amber (#F9A100): Highlights, CTAs - 10% usage
+ * - Alert Coral (#F15B5B): Warnings, errors - 5% usage
+ * - Cloud Gray (#E6E6E6): Neutral elements - 20% usage
  *
  * DARK-FIRST DESIGN
  * -----------------
- * Professional security presentations (CrowdStrike, Mandiant, Palo Alto keynotes)
- * all use dark backgrounds. Why:
- * - Matches the terminal/code aesthetic security professionals live in
- * - Reduces eye strain in dimmed conference rooms
- * - Projects authority and seriousness
- * - Makes accent colors pop
+ * Dark Ops Indigo backgrounds with high-contrast white text.
+ * Bot Teal serves as the primary accent throughout.
  *
- * COLOR HIERARCHY
- * ---------------
- * 1. Page Background: Deep slate (slate-950) - the "canvas"
- * 2. Cards: Slightly elevated (slate-900 with subtle border) - content containers
- * 3. Primary Text: White/slate-100 - maximum readability
- * 4. Secondary Text: slate-400 - supporting information
- * 5. Accent: Amber/orange - the "signal" color (warnings, highlights, CTAs)
- *    - Amber reads as "alert" in security contexts (vs. teal = "tech startup")
- *    - High contrast against dark backgrounds
- *    - Supports the threat narrative without being cartoonish
- *
- * CONTRAST RATIOS (WCAG AA = 4.5:1, AAA = 7:1)
- * - White on slate-950: 17.4:1 (AAA)
- * - slate-100 on slate-950: 15.1:1 (AAA)
- * - slate-400 on slate-950: 5.9:1 (AA)
- * - amber-500 on slate-950: 8.2:1 (AAA)
+ * WCAG COMPLIANT TEXT/BACKGROUND PAIRINGS
+ * ---------------------------------------
+ * - Ops Indigo bg (#141121) + White text (AAA)
+ * - Bot Teal bg (#1EAFAF) + Dark teal text (#005655) (AA)
+ * - Cloud Gray bg (#E6E6E6) + Bot Teal text (#1EAFAF) (AA)
  *
  * THEME VARIANTS
  * --------------
- * - corporate: Amber signal (default, professional)
- * - sherweb: Blue signal (partner branding)
- * - dramatic: Red signal (attack demos)
+ * - rewst: Bot Teal signal (default, branded)
+ * - dramatic: Alert Coral signal (attack demos)
  * - terminal: Green signal (live code/terminal)
- * - highlight: Cyan signal (data visualization)
- * - warning: Orange signal (failure modes)
+ * - highlight: Bot Teal light signal (data visualization)
+ * - warning: Trigger Amber signal (failure modes)
  *
- * All variants share the same dark foundation for consistency.
+ * All variants share the same Ops Indigo dark foundation.
  */
 
 export const themes = {
   // ==========================================================================
-  // CORPORATE (Default) - "Cyber Authority"
-  // Amber signal: Connotes alerting, security warnings, professional urgency
+  // REWST (Default) - Bot Teal branded
+  // Primary brand experience with teal accents
   // ==========================================================================
-  corporate: {
-    name: 'Corporate',
-    // Backgrounds - deep dark for authority
-    bg: 'bg-slate-950',
-    cardBg: 'bg-slate-900/80',
-    cardBorder: 'border-slate-700/50',
+  rewst: {
+    name: 'Rewst',
+    // Backgrounds - Ops Indigo for brand consistency
+    bg: 'bg-ops-indigo-900',
+    cardBg: 'bg-ops-indigo-800/80',
+    cardBorder: 'border-ops-indigo-600/50',
     // Text hierarchy - high contrast
     textOnPage: 'text-white',
-    textOnPageMuted: 'text-slate-400',
+    textOnPageMuted: 'text-cloud-gray-400',
     // Text on cards (same dark context)
     textPrimary: 'text-white',
-    textSecondary: 'text-slate-200',
-    textMuted: 'text-slate-400',
-    // Accent - amber for security "signal"
-    accent: 'amber',
-    accentColor: 'text-amber-400',
-    accentColorOnDark: 'text-amber-400',
-    accentBg: 'bg-amber-500',
-    accentBorder: 'border-amber-500/60',
+    textSecondary: 'text-cloud-gray-200',
+    textMuted: 'text-cloud-gray-400',
+    // Accent - Bot Teal for brand signal
+    accent: 'bot-teal',
+    accentColor: 'text-bot-teal-400',
+    accentColorOnDark: 'text-bot-teal-400',
+    accentBg: 'bg-bot-teal-400',
+    accentBorder: 'border-bot-teal-400/60',
     // Effects
-    gradient: 'from-slate-950 via-slate-900 to-slate-950',
-    terminalBorder: 'border-amber-500/40',
-    highlightBg: 'bg-amber-500/10',
-    accentGlow: 'shadow-amber-500/20',
+    gradient: 'from-ops-indigo-900 via-ops-indigo-800 to-ops-indigo-900',
+    terminalBorder: 'border-bot-teal-400/40',
+    highlightBg: 'bg-bot-teal-400/10',
+    accentGlow: 'shadow-bot-teal-400/20',
   },
 
-  // ==========================================================================
-  // SHERWEB - Partner branding with blue signal
-  // ==========================================================================
-  sherweb: {
-    name: 'Sherweb',
-    bg: 'bg-slate-950',
-    cardBg: 'bg-slate-900/80',
-    cardBorder: 'border-slate-700/50',
+  // Legacy alias for existing code
+  corporate: {
+    name: 'Rewst',
+    bg: 'bg-ops-indigo-900',
+    cardBg: 'bg-ops-indigo-800/80',
+    cardBorder: 'border-ops-indigo-600/50',
     textOnPage: 'text-white',
-    textOnPageMuted: 'text-slate-400',
+    textOnPageMuted: 'text-cloud-gray-400',
     textPrimary: 'text-white',
-    textSecondary: 'text-slate-200',
-    textMuted: 'text-slate-400',
-    accent: 'blue',
-    accentColor: 'text-blue-400',
-    accentColorOnDark: 'text-blue-400',
-    accentBg: 'bg-blue-500',
-    accentBorder: 'border-blue-500/60',
-    gradient: 'from-slate-950 via-blue-950/30 to-slate-950',
-    terminalBorder: 'border-blue-500/40',
-    highlightBg: 'bg-blue-500/10',
-    accentGlow: 'shadow-blue-500/20',
+    textSecondary: 'text-cloud-gray-200',
+    textMuted: 'text-cloud-gray-400',
+    accent: 'bot-teal',
+    accentColor: 'text-bot-teal-400',
+    accentColorOnDark: 'text-bot-teal-400',
+    accentBg: 'bg-bot-teal-400',
+    accentBorder: 'border-bot-teal-400/60',
+    gradient: 'from-ops-indigo-900 via-ops-indigo-800 to-ops-indigo-900',
+    terminalBorder: 'border-bot-teal-400/40',
+    highlightBg: 'bg-bot-teal-400/10',
+    accentGlow: 'shadow-bot-teal-400/20',
   },
 
   // ==========================================================================
-  // DRAMATIC - Attack demos with red signal
-  // Red = danger, breach, compromise
+  // DRAMATIC - Attack demos with Alert Coral signal
+  // Coral = danger, breach, compromise
   // ==========================================================================
   dramatic: {
     name: 'Dramatic',
-    bg: 'bg-slate-950',
-    cardBg: 'bg-slate-900/80',
-    cardBorder: 'border-red-900/50',
+    bg: 'bg-ops-indigo-900',
+    cardBg: 'bg-ops-indigo-800/80',
+    cardBorder: 'border-alert-coral-700/50',
     textOnPage: 'text-white',
-    textOnPageMuted: 'text-slate-400',
+    textOnPageMuted: 'text-cloud-gray-400',
     textPrimary: 'text-white',
-    textSecondary: 'text-slate-200',
-    textMuted: 'text-slate-400',
-    accent: 'red',
-    accentColor: 'text-red-400',
-    accentColorOnDark: 'text-red-400',
-    accentBg: 'bg-red-600',
-    accentBorder: 'border-red-500/60',
-    gradient: 'from-slate-950 via-red-950/20 to-slate-950',
-    terminalBorder: 'border-red-500/40',
-    highlightBg: 'bg-red-500/10',
-    accentGlow: 'shadow-red-500/20',
+    textSecondary: 'text-cloud-gray-200',
+    textMuted: 'text-cloud-gray-400',
+    accent: 'alert-coral',
+    accentColor: 'text-alert-coral-400',
+    accentColorOnDark: 'text-alert-coral-400',
+    accentBg: 'bg-alert-coral-400',
+    accentBorder: 'border-alert-coral-400/60',
+    gradient: 'from-ops-indigo-900 via-alert-coral-900/20 to-ops-indigo-900',
+    terminalBorder: 'border-alert-coral-400/40',
+    highlightBg: 'bg-alert-coral-400/10',
+    accentGlow: 'shadow-alert-coral-400/20',
   },
 
   // ==========================================================================
@@ -133,7 +122,7 @@ export const themes = {
   terminal: {
     name: 'Terminal',
     bg: 'bg-black',
-    cardBg: 'bg-slate-950/90',
+    cardBg: 'bg-ops-indigo-950/90',
     cardBorder: 'border-emerald-900/50',
     textOnPage: 'text-emerald-400',
     textOnPageMuted: 'text-emerald-600',
@@ -152,59 +141,83 @@ export const themes = {
   },
 
   // ==========================================================================
-  // HIGHLIGHT - Data visualization with cyan signal
-  // Cyan = data, information, analysis
+  // HIGHLIGHT - Data visualization with Bot Teal light signal
+  // Teal light = data, information, analysis
   // ==========================================================================
   highlight: {
     name: 'Highlight',
-    bg: 'bg-slate-950',
-    cardBg: 'bg-slate-900/80',
-    cardBorder: 'border-slate-700/50',
+    bg: 'bg-ops-indigo-900',
+    cardBg: 'bg-ops-indigo-800/80',
+    cardBorder: 'border-ops-indigo-600/50',
     textOnPage: 'text-white',
-    textOnPageMuted: 'text-slate-400',
+    textOnPageMuted: 'text-cloud-gray-400',
     textPrimary: 'text-white',
-    textSecondary: 'text-slate-200',
-    textMuted: 'text-slate-400',
-    accent: 'cyan',
-    accentColor: 'text-cyan-400',
-    accentColorOnDark: 'text-cyan-400',
-    accentBg: 'bg-cyan-500',
-    accentBorder: 'border-cyan-500/60',
-    gradient: 'from-slate-950 via-cyan-950/20 to-slate-950',
-    terminalBorder: 'border-cyan-500/40',
-    highlightBg: 'bg-cyan-500/10',
-    accentGlow: 'shadow-cyan-500/20',
+    textSecondary: 'text-cloud-gray-200',
+    textMuted: 'text-cloud-gray-400',
+    accent: 'bot-teal',
+    accentColor: 'text-bot-teal-200',
+    accentColorOnDark: 'text-bot-teal-200',
+    accentBg: 'bg-bot-teal-400',
+    accentBorder: 'border-bot-teal-200/60',
+    gradient: 'from-ops-indigo-900 via-bot-teal-900/20 to-ops-indigo-900',
+    terminalBorder: 'border-bot-teal-200/40',
+    highlightBg: 'bg-bot-teal-200/10',
+    accentGlow: 'shadow-bot-teal-200/20',
   },
 
   // ==========================================================================
-  // WARNING - Failure modes with orange signal
-  // Orange = caution, failure, lessons learned
+  // WARNING - Failure modes with Trigger Amber signal
+  // Amber = caution, failure, lessons learned
   // ==========================================================================
   warning: {
     name: 'Warning',
-    bg: 'bg-slate-950',
-    cardBg: 'bg-slate-900/80',
-    cardBorder: 'border-orange-900/50',
+    bg: 'bg-ops-indigo-900',
+    cardBg: 'bg-ops-indigo-800/80',
+    cardBorder: 'border-trigger-amber-700/50',
     textOnPage: 'text-white',
-    textOnPageMuted: 'text-slate-400',
+    textOnPageMuted: 'text-cloud-gray-400',
     textPrimary: 'text-white',
-    textSecondary: 'text-slate-200',
-    textMuted: 'text-slate-400',
-    accent: 'orange',
-    accentColor: 'text-orange-400',
-    accentColorOnDark: 'text-orange-400',
-    accentBg: 'bg-orange-500',
-    accentBorder: 'border-orange-500/60',
-    gradient: 'from-slate-950 via-orange-950/20 to-slate-950',
-    terminalBorder: 'border-orange-500/40',
-    highlightBg: 'bg-orange-500/10',
-    accentGlow: 'shadow-orange-500/20',
+    textSecondary: 'text-cloud-gray-200',
+    textMuted: 'text-cloud-gray-400',
+    accent: 'trigger-amber',
+    accentColor: 'text-trigger-amber-400',
+    accentColorOnDark: 'text-trigger-amber-400',
+    accentBg: 'bg-trigger-amber-400',
+    accentBorder: 'border-trigger-amber-400/60',
+    gradient: 'from-ops-indigo-900 via-trigger-amber-900/20 to-ops-indigo-900',
+    terminalBorder: 'border-trigger-amber-400/40',
+    highlightBg: 'bg-trigger-amber-400/10',
+    accentGlow: 'shadow-trigger-amber-400/20',
+  },
+
+  // ==========================================================================
+  // SHERWEB - Partner branding with blue signal (kept for compatibility)
+  // ==========================================================================
+  sherweb: {
+    name: 'Sherweb',
+    bg: 'bg-ops-indigo-900',
+    cardBg: 'bg-ops-indigo-800/80',
+    cardBorder: 'border-ops-indigo-600/50',
+    textOnPage: 'text-white',
+    textOnPageMuted: 'text-cloud-gray-400',
+    textPrimary: 'text-white',
+    textSecondary: 'text-cloud-gray-200',
+    textMuted: 'text-cloud-gray-400',
+    accent: 'blue',
+    accentColor: 'text-blue-400',
+    accentColorOnDark: 'text-blue-400',
+    accentBg: 'bg-blue-500',
+    accentBorder: 'border-blue-500/60',
+    gradient: 'from-ops-indigo-900 via-blue-950/30 to-ops-indigo-900',
+    terminalBorder: 'border-blue-500/40',
+    highlightBg: 'bg-blue-500/10',
+    accentGlow: 'shadow-blue-500/20',
   },
 };
 
 // Utilities
 export function getTheme(themeName) {
-  return themes[themeName] || themes.corporate;
+  return themes[themeName] || themes.rewst;
 }
 
 export function getThemeNames() {
