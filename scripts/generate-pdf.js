@@ -6,6 +6,7 @@ import fs from 'fs';
 
 const SLIDE_COUNT = 26; // Total slides (0-25)
 const SKIP_SLIDES = [3]; // Slide indices to skip (attackLab demo)
+const SELF_NAVIGATING_SLIDES = [3]; // Slides that capture ArrowRight (use Escape to exit)
 const OUTPUT_FILE = 'presentation.pdf';
 const URL = process.env.URL || 'http://localhost:2026';
 
@@ -52,11 +53,13 @@ async function generatePDF() {
   for (let i = 0; i < SLIDE_COUNT; i++) {
     if (SKIP_SLIDES.includes(i)) {
       console.log(`Skipping slide ${i + 1} (demo slide)...`);
-      // Still need to navigate past it
-      if (i < SLIDE_COUNT - 1) {
+      // Self-navigating slides need Escape to exit, not ArrowRight
+      if (SELF_NAVIGATING_SLIDES.includes(i)) {
+        await page.keyboard.press('Escape');
+      } else {
         await page.keyboard.press('ArrowRight');
-        await new Promise(r => setTimeout(r, 300));
       }
+      await new Promise(r => setTimeout(r, 300));
       continue;
     }
 
@@ -75,6 +78,7 @@ async function generatePDF() {
 
     // Navigate to next slide (unless we're on the last one)
     if (i < SLIDE_COUNT - 1) {
+      // Check if NEXT slide is self-navigating (we need ArrowRight to GET there)
       await page.keyboard.press('ArrowRight');
       await new Promise(r => setTimeout(r, 300));
     }
