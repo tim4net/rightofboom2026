@@ -117,6 +117,12 @@ const PresentationApp = () => {
       const currentSlideType = slides[currentSlide]?.type;
       const isSelfNavigating = selfNavigatingSlides.includes(currentSlideType);
 
+      // PageDown always advances (used by PDF generation to skip demo internals)
+      if (e.key === 'PageDown') {
+        nextSlide();
+        return;
+      }
+
       // For demo slides that handle their own navigation, only allow certain keys
       if (isSelfNavigating) {
         // Only intercept non-navigation keys (notes, timer, etc.)
