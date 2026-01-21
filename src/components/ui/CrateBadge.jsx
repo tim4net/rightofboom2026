@@ -22,7 +22,7 @@ export function CrateBadge({ name, variant = 'default', className = '' }) {
           <img
             src="/images/rewst-logo.png"
             alt="Rewst"
-            className="h-12 w-auto"
+            className="h-16 w-auto"
           />
           <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/50 rounded-lg">
             <Package className="w-6 h-6 text-amber-400" />
@@ -43,7 +43,7 @@ export function CrateBadge({ name, variant = 'default', className = '' }) {
         <img
           src="/images/rewst-logo.png"
           alt="Rewst"
-          className="h-8 w-auto"
+          className="h-12 w-auto"
         />
         <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/20 border border-amber-500/50 rounded-lg">
           <Package className="w-5 h-5 text-amber-400" />
