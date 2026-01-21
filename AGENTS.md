@@ -103,6 +103,7 @@ const MySlide = ({ slide, theme: t }) => {
 3. **No walls of text** - Maximum 4-5 bullet points per slide
 4. **Generous spacing** - Use `gap-6`, `gap-8`, `space-y-6` minimum
 5. **Full width layouts** - Use `w-full`, never `max-w-*` constraints on slides
+6. **The Photo Test** - If a conference attendee takes a photo of a slide, will they find meaning in it when they get home? Every slide must be self-contained and comprehensible without the speaker's narration.
 
 ## Speaker Notes Guidelines
 
