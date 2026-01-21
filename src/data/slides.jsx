@@ -201,6 +201,26 @@ export const slides = [
 **Q&A Prep:**
 - "What about APTs with dwell time?" → "You're right — that's why detection speed matters. The sandwich is most powerful when combined with continuous monitoring."
 - "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },                   // Slide 9
+
+  { type: 'caCrateIntro', notes: `**Transition** (5 sec)
+"First demo: Let me show you the guardrail sandwich applied to something you deal with every day."
+
+**What is a Crate** (15 sec)
+"Rewst Crates are reusable automation packages. Deploy once, runs across all your tenants."
+"This one monitors Conditional Access policies — the gates that control who can access M365."
+
+**The Sandwich Connection** (15 sec)
+→ Point to the bottom formula
+"Notice how this maps: Your baseline is the INPUT — deterministic, you stored it."
+"Math comparison is deterministic — set difference, no AI involved in detecting the change."
+"AI comes in ONLY to translate and explain — probabilistic, but constrained."
+"The alert fires based on the math, not the AI's opinion."
+
+**Bridge** (5 sec)
+"Let me show you how this flow actually works..."
+
+⏱ ~40 seconds | 👁 Emphasize "your baseline" — that's the ground truth callback` },
+
   { type: 'm365Drift', notes: `**Callback to Bridge** (5 sec)
 "Remember what you have that attackers don't? Ground truth. This is the first demo of that principle in action."
 
