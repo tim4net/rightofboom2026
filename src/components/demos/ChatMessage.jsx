@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { CHAT_CONFIG } from '../../config/typography';
 
@@ -10,6 +10,12 @@ export function ChatMessage({ role, content, animate = false, onComplete, onTypi
   const [displayedContent, setDisplayedContent] = useState(animate ? '' : content);
   const [isComplete, setIsComplete] = useState(!animate);
   const [copiedIndex, setCopiedIndex] = useState(null);
+
+  // Use refs for callbacks to avoid effect re-runs when they change
+  const onCompleteRef = useRef(onComplete);
+  const onTypingProgressRef = useRef(onTypingProgress);
+  onCompleteRef.current = onComplete;
+  onTypingProgressRef.current = onTypingProgress;
 
   useEffect(() => {
     if (!animate) {
@@ -33,8 +39,8 @@ export function ChatMessage({ role, content, animate = false, onComplete, onTypi
         setIsComplete(true);
         // Defer scroll until after React commits the DOM update
         requestAnimationFrame(() => {
-          onTypingProgress?.();
-          onComplete?.();
+          onTypingProgressRef.current?.();
+          onCompleteRef.current?.();
         });
         clearInterval(timer);
       } else {
@@ -43,13 +49,13 @@ export function ChatMessage({ role, content, animate = false, onComplete, onTypi
         const now = Date.now();
         if (now - lastScrollTime >= 100) {
           lastScrollTime = now;
-          requestAnimationFrame(() => onTypingProgress?.());
+          requestAnimationFrame(() => onTypingProgressRef.current?.());
         }
       }
     }, 15);
 
     return () => clearInterval(timer);
-  }, [content, animate, onComplete, onTypingProgress]);
+  }, [content, animate]);
 
   // Copy code to clipboard
   const copyCode = async (code, index) => {
