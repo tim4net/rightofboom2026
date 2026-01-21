@@ -61,13 +61,13 @@ const SourcesSlide = ({ theme: t }) => {
             <div key={i} className={`${t.cardBg} p-5 rounded-xl border ${t.cardBorder}`}>
               <div className="flex items-center gap-2 mb-4">
                 <BookOpen className={`w-5 h-5 ${t.accentColor}`} />
-                <div className={`font-bold text-lg ${t.accentColor}`}>{cat.category}</div>
+                <div className={`font-bold text-xl ${t.accentColor}`}>{cat.category}</div>
               </div>
               <ul className="space-y-2">
                 {cat.sources.map((source, j) => (
-                  <li key={j} className="flex items-center justify-between text-sm">
+                  <li key={j} className="flex items-center justify-between text-xl">
                     <span className="text-slate-300">{source.name}</span>
-                    <span className="text-slate-500 text-xs">{source.year}</span>
+                    <span className="text-slate-500 text-xl">{source.year}</span>
                   </li>
                 ))}
               </ul>
@@ -77,34 +77,34 @@ const SourcesSlide = ({ theme: t }) => {
 
         {/* Framework References */}
         <div className={`mt-6 ${t.cardBg} p-5 rounded-xl border ${t.cardBorder}`}>
-          <div className="text-lg font-bold text-slate-200 mb-4">Key Frameworks Referenced</div>
+          <div className="text-xl font-bold text-slate-200 mb-4">Key Frameworks Referenced</div>
           <div className="grid grid-cols-5 gap-4 text-center">
             <div className="p-3 rounded-lg bg-slate-800/50">
               <div className={`font-bold ${t.accentColor}`}>NIST AI RMF</div>
-              <div className="text-xs text-slate-500">Risk Management</div>
+              <div className="text-xl text-slate-500">Risk Management</div>
             </div>
             <div className="p-3 rounded-lg bg-slate-800/50">
               <div className={`font-bold ${t.accentColor}`}>ISO 42001</div>
-              <div className="text-xs text-slate-500">AI Management</div>
+              <div className="text-xl text-slate-500">AI Management</div>
             </div>
             <div className="p-3 rounded-lg bg-slate-800/50">
               <div className={`font-bold ${t.accentColor}`}>CIS Controls</div>
-              <div className="text-xs text-slate-500">Security Baselines</div>
+              <div className="text-xl text-slate-500">Security Baselines</div>
             </div>
             <div className="p-3 rounded-lg bg-slate-800/50">
               <div className={`font-bold ${t.accentColor}`}>OWASP Top 10</div>
-              <div className="text-xs text-slate-500">Agentic AI</div>
+              <div className="text-xl text-slate-500">Agentic AI</div>
             </div>
             <div className="p-3 rounded-lg bg-slate-800/50">
               <div className={`font-bold ${t.accentColor}`}>ATT&CK</div>
-              <div className="text-xs text-slate-500">Threat Mapping</div>
+              <div className="text-xl text-slate-500">Threat Mapping</div>
             </div>
           </div>
         </div>
 
         {/* Contact */}
         <div className={`mt-6 text-center p-4 rounded-xl border ${t.cardBorder} ${t.cardBg}`}>
-          <p className="text-slate-400 text-sm">
+          <p className="text-slate-400 text-xl">
             Full source links and downloadable resources available at session QR code
           </p>
         </div>

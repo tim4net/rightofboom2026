@@ -59,9 +59,9 @@ const LearningPathSlide = ({ theme: t }) => {
                   <phase.icon className={`w-8 h-8 ${phase.color}`} />
                 </div>
                 <div className={`text-2xl font-black ${phase.color} mb-1`}>{phase.name}</div>
-                <div className="text-sm text-slate-500 mb-3">{phase.duration}</div>
-                <div className="text-lg font-bold text-slate-200 mb-2">{phase.focus}</div>
-                <div className="text-sm text-slate-400">{phase.activity}</div>
+                <div className="text-xl text-slate-500 mb-3">{phase.duration}</div>
+                <div className="text-xl font-bold text-slate-200 mb-2">{phase.focus}</div>
+                <div className="text-xl text-slate-400">{phase.activity}</div>
               </div>
               {i < phases.length - 1 && (
                 <ArrowRight className={`w-8 h-8 ${t.accentColor} flex-shrink-0`} />
@@ -74,8 +74,8 @@ const LearningPathSlide = ({ theme: t }) => {
         <div className={`${t.cardBg} p-6 rounded-xl border ${t.cardBorder} mb-6`}>
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <div className="text-lg font-bold text-slate-200 mb-3">The Shift</div>
-              <div className="space-y-2 text-slate-300">
+              <div className="text-2xl font-bold text-slate-200 mb-3">The Shift</div>
+              <div className="space-y-2 text-slate-300 text-xl">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-red-500" />
                   <span><span className="text-red-400 font-bold">50%</span> of L1 tasks replaced by AI by 2028</span>
@@ -87,8 +87,8 @@ const LearningPathSlide = ({ theme: t }) => {
               </div>
             </div>
             <div>
-              <div className="text-lg font-bold text-slate-200 mb-3">Hiring Implications</div>
-              <div className="space-y-2 text-slate-300 text-sm">
+              <div className="text-2xl font-bold text-slate-200 mb-3">Hiring Implications</div>
+              <div className="space-y-2 text-slate-300 text-xl">
                 <div>✓ Probably don't need to hire — upskill existing</div>
                 <div>✓ Identify one "Automation Champion" (curious L2)</div>
                 <div>✓ Hire for: curiosity, judgment, communication</div>
@@ -104,7 +104,7 @@ const LearningPathSlide = ({ theme: t }) => {
             "You don't need to become <span className={`${t.accentColor} font-bold`}>AI experts</span>.
             <br />You need to become <span className={`${t.accentColor} font-bold`}>AI supervisors</span>."
           </p>
-          <p className="text-slate-500 text-sm mt-3">— Gartner, 2025</p>
+          <p className="text-slate-500 text-xl mt-3">— Gartner, 2025</p>
         </div>
       </div>
     </div>

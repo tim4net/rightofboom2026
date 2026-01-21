@@ -28,7 +28,7 @@ const BreakSlide = ({ theme: t }) => {
       </div>
 
       <p className="mt-8 text-slate-600 font-mono text-xl">
-        [CPE Reminder: Sign the attendance sheet]
+        
       </p>
     </div>
   );

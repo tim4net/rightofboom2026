@@ -63,11 +63,11 @@ const OperationalizationSlide = ({ theme: t }) => {
         {steps.map((step, i) => (
           <div key={i} className={`${t.cardBg} p-6 rounded-xl border ${t.cardBorder} hover:scale-105 transition-transform`}>
             <div className={`${t.accentColor} mb-4`}>{step.icon}</div>
-            <h3 className="text-white font-bold text-lg mb-4">{step.title}</h3>
+            <h3 className="text-white font-bold text-2xl mb-4">{step.title}</h3>
             <ul className="space-y-2">
               {step.points.map((point, j) => (
-                <li key={j} className="flex items-start gap-2 text-sm text-slate-400">
-                  <CheckCircle2 className={`w-4 h-4 ${t.accentColor} shrink-0 mt-0.5`} />
+                <li key={j} className="flex items-start gap-2 text-xl text-slate-400">
+                  <CheckCircle2 className={`w-5 h-5 ${t.accentColor} shrink-0 mt-0.5`} />
                   {point}
                 </li>
               ))}
@@ -80,8 +80,8 @@ const OperationalizationSlide = ({ theme: t }) => {
         <div className="flex items-start gap-4">
           <AlertCircle className="w-6 h-6 text-amber-400 shrink-0 mt-1" />
           <div>
-            <h4 className="text-amber-400 font-bold mb-2">Ethics & Safety First</h4>
-            <p className="text-slate-400 text-sm">
+            <h4 className="text-amber-400 font-bold text-xl mb-2">Ethics & Safety First</h4>
+            <p className="text-slate-400 text-xl">
               Always test in controlled environments. Never run offensive tools against production without explicit authorization.
               Document everything. Your testing program should be auditable and defensible.
             </p>

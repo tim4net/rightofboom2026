@@ -71,9 +71,9 @@ const GovernanceSlide = ({ theme: t }) => {
               <div className="space-y-3">
                 <div className="flex items-start gap-2">
                   <HelpCircle className={`w-5 h-5 ${s.color} mt-0.5 flex-shrink-0`} />
-                  <p className="text-lg text-slate-200 font-medium">"{s.question}"</p>
+                  <p className="text-xl text-slate-200 font-medium">"{s.question}"</p>
                 </div>
-                <p className="text-sm text-slate-400 pl-7">{s.subtext}</p>
+                <p className="text-xl text-slate-400 pl-7">{s.subtext}</p>
               </div>
             </div>
           ))}
@@ -83,15 +83,15 @@ const GovernanceSlide = ({ theme: t }) => {
         <div className={`${t.cardBg} p-5 rounded-xl border ${t.cardBorder}`}>
           <div className="flex items-center gap-2 mb-4">
             <AlertCircle className="w-5 h-5 text-red-400" />
-            <span className="text-sm font-semibold text-red-400 uppercase tracking-wide">Regulatory Pressure</span>
+            <span className="text-xl font-semibold text-red-400 uppercase tracking-wide">Regulatory Pressure</span>
           </div>
 
           <div className="grid grid-cols-4 gap-4">
             {regulations.map((reg, i) => (
               <div key={i} className="text-center">
-                <div className={`text-lg font-bold ${t.accentColor}`}>{reg.name}</div>
-                <div className="text-sm text-slate-300">{reg.date}</div>
-                <div className="text-xs text-slate-500 mt-1">{reg.detail}</div>
+                <div className={`text-2xl font-bold ${t.accentColor}`}>{reg.name}</div>
+                <div className="text-xl text-slate-300">{reg.date}</div>
+                <div className="text-xl text-slate-500 mt-1">{reg.detail}</div>
               </div>
             ))}
           </div>
@@ -99,7 +99,7 @@ const GovernanceSlide = ({ theme: t }) => {
 
         {/* Bottom message */}
         <div className="text-center mt-6">
-          <p className="text-lg text-slate-400">
+          <p className="text-2xl text-slate-400">
             Without answers, you face <span className="text-red-400 font-semibold">denied claims</span>,
             <span className="text-red-400 font-semibold"> failed audits</span>, and
             <span className="text-red-400 font-semibold"> lost clients</span>.

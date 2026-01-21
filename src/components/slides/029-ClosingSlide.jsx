@@ -43,11 +43,11 @@ const ClosingSlide = ({ theme: t }) => {
             </div>
             <span className="font-black text-3xl text-white">{p.name}</span>
             <span className={`text-xl ${t.accentColor} font-mono`}>{p.role}</span>
-            <span className="text-sm text-slate-400">Scan to connect on LinkedIn</span>
+            <span className="text-xl text-slate-400">Scan to connect on LinkedIn</span>
           </div>
         ))}
       </div>
-      <p className="text-slate-500 font-mono text-sm tracking-[0.3em] uppercase">{venue}</p>
+      <p className="text-slate-500 font-mono text-xl tracking-[0.3em] uppercase">{venue}</p>
     </div>
   );
 };

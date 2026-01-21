@@ -59,28 +59,28 @@ const FailureModesSlide = ({ theme: t }) => {
                 <div className="grid grid-cols-[200px_1fr_1fr_1fr] items-center">
                   {/* Incident Name */}
                   <div className={`${colors.bg} p-4 h-full flex flex-col justify-center border-r ${colors.border}`}>
-                    <div className={`font-black text-xl ${colors.text}`}>{incident.name}</div>
-                    <div className="text-slate-500 text-sm">{incident.date}</div>
+                    <div className={`font-black text-2xl ${colors.text}`}>{incident.name}</div>
+                    <div className="text-slate-500 text-xl">{incident.date}</div>
                   </div>
 
                   {/* What Happened */}
                   <div className="p-4">
-                    <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">What Happened</div>
-                    <div className="text-slate-300 text-sm">{incident.what}</div>
+                    <div className="text-xl text-slate-500 uppercase tracking-wide mb-1">What Happened</div>
+                    <div className="text-slate-300 text-xl">{incident.what}</div>
                   </div>
 
                   {/* Damage */}
                   <div className="p-4">
-                    <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Damage</div>
-                    <div className={`${colors.text} text-sm font-bold`}>{incident.damage}</div>
+                    <div className="text-xl text-slate-500 uppercase tracking-wide mb-1">Damage</div>
+                    <div className={`${colors.text} text-xl font-bold`}>{incident.damage}</div>
                   </div>
 
                   {/* Fix */}
                   <div className="p-4">
-                    <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Guardrail Fix</div>
+                    <div className="text-xl text-slate-500 uppercase tracking-wide mb-1">Guardrail Fix</div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                      <span className="text-emerald-400 text-sm">{incident.fix}</span>
+                      <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                      <span className="text-emerald-400 text-xl">{incident.fix}</span>
                     </div>
                   </div>
                 </div>
@@ -93,18 +93,18 @@ const FailureModesSlide = ({ theme: t }) => {
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className={`${t.cardBg} p-4 rounded-xl border ${t.cardBorder} text-center`}>
             <XCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-            <div className="text-sm text-slate-400">Bad update auto-deployed</div>
-            <div className="text-xs text-emerald-400 mt-2">→ Staged rollouts</div>
+            <div className="text-xl text-slate-400">Bad update auto-deployed</div>
+            <div className="text-xl text-emerald-400 mt-2">→ Staged rollouts</div>
           </div>
           <div className={`${t.cardBg} p-4 rounded-xl border ${t.cardBorder} text-center`}>
             <XCircle className="w-8 h-8 text-amber-400 mx-auto mb-2" />
-            <div className="text-sm text-slate-400">False positive triggers action</div>
-            <div className="text-xs text-emerald-400 mt-2">→ Human approval gates</div>
+            <div className="text-xl text-slate-400">False positive triggers action</div>
+            <div className="text-xl text-emerald-400 mt-2">→ Human approval gates</div>
           </div>
           <div className={`${t.cardBg} p-4 rounded-xl border ${t.cardBorder} text-center`}>
             <XCircle className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-            <div className="text-sm text-slate-400">Compromised agent in chain</div>
-            <div className="text-xs text-emerald-400 mt-2">→ Least privilege + monitoring</div>
+            <div className="text-xl text-slate-400">Compromised agent in chain</div>
+            <div className="text-xl text-emerald-400 mt-2">→ Least privilege + monitoring</div>
           </div>
         </div>
 

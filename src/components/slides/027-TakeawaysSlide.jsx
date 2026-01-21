@@ -32,7 +32,7 @@ export const TakeawaysSlide = ({ theme }) => {
     <div className="w-full max-w-[90vw] mx-auto">
       <div className="text-center mb-8">
         <h2 className={`text-5xl md:text-7xl font-black mb-4 ${theme.textOnPage}`}>
-          CPE Takeaways Package
+          Takeaways
         </h2>
         <p className={`text-xl md:text-2xl ${theme.accentColor}`}>
           Everything you need to implement what you learned today
@@ -48,10 +48,10 @@ export const TakeawaysSlide = ({ theme }) => {
           <div className="space-y-2 max-h-64 overflow-y-auto">
             {cisControls.map(c => (
               <div key={c.num} className="flex items-start gap-3 p-2 bg-black/30 rounded-lg">
-                <span className={`${theme.accentColor} font-bold text-lg w-8`}>#{c.num}</span>
+                <span className={`${theme.accentColor} font-bold text-xl w-10`}>#{c.num}</span>
                 <div className="flex-1">
-                  <div className="text-white font-medium text-sm">{c.name}</div>
-                  <div className="text-slate-500 text-xs">{c.demos.join(' - ')}</div>
+                  <div className="text-white font-medium text-xl">{c.name}</div>
+                  <div className="text-slate-500 text-xl">{c.demos.join(' - ')}</div>
                 </div>
               </div>
             ))}
@@ -68,8 +68,8 @@ export const TakeawaysSlide = ({ theme }) => {
               <div key={i} className="flex items-center gap-3 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-colors cursor-pointer">
                 <span className="text-2xl">{r.icon}</span>
                 <div className="flex-1">
-                  <div className="text-white font-medium text-sm">{r.name}</div>
-                  <div className="text-slate-500 text-xs">{r.desc}</div>
+                  <div className="text-white font-medium text-xl">{r.name}</div>
+                  <div className="text-slate-500 text-xl">{r.desc}</div>
                 </div>
               </div>
             ))}
@@ -88,7 +88,7 @@ export const TakeawaysSlide = ({ theme }) => {
                 alt="GitHub QR"
                 className="w-36 h-36 rounded-xl mx-auto mb-2"
               />
-              <span className="text-slate-400 text-sm">GitHub Repo</span>
+              <span className="text-slate-400 text-xl">GitHub Repo</span>
             </div>
             <div className="text-center">
               <img
@@ -96,7 +96,7 @@ export const TakeawaysSlide = ({ theme }) => {
                 alt="Rewst Docs QR"
                 className="w-36 h-36 rounded-xl mx-auto mb-2"
               />
-              <span className="text-slate-400 text-sm">Rewst Docs</span>
+              <span className="text-slate-400 text-xl">Rewst Docs</span>
             </div>
             <div className="text-center">
               <img
@@ -104,10 +104,10 @@ export const TakeawaysSlide = ({ theme }) => {
                 alt="CIS v8 QR"
                 className="w-36 h-36 rounded-xl mx-auto mb-2"
               />
-              <span className="text-slate-400 text-sm">CIS v8 Controls</span>
+              <span className="text-slate-400 text-xl">CIS v8 Controls</span>
             </div>
           </div>
-          <p className="text-center text-slate-600 mt-4 font-mono text-xs">
+          <p className="text-center text-slate-600 mt-4 font-mono text-xl">
             [CPE Credit: Sign attendance sheet and complete post-session survey]
           </p>
         </div>

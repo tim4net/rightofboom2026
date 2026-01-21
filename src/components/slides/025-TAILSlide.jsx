@@ -64,7 +64,7 @@ const TAILSlide = ({ theme: t }) => {
         <p className={`text-xl md:text-2xl ${t.accentColor} font-medium`}>
           {subtitle}
         </p>
-        <p className="text-sm text-slate-500 mt-2">Original framework by Tim Fournet & Roddy Bergeron</p>
+        <p className="text-xl text-slate-500 mt-2">Original framework by Tim Fournet & Roddy Bergeron</p>
       </div>
 
       <div className="max-w-6xl mx-auto">
@@ -75,8 +75,8 @@ const TAILSlide = ({ theme: t }) => {
               <div className={`${item.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3`}>
                 <span className={`text-4xl font-black ${item.color}`}>{item.letter}</span>
               </div>
-              <div className={`text-lg font-bold ${item.color} mb-2`}>{item.word}</div>
-              <div className="text-sm text-slate-400">{item.meaning}</div>
+              <div className={`text-2xl font-bold ${item.color} mb-2`}>{item.word}</div>
+              <div className="text-xl text-slate-400">{item.meaning}</div>
             </div>
           ))}
         </div>
@@ -85,13 +85,13 @@ const TAILSlide = ({ theme: t }) => {
         <div className={`${t.cardBg} p-6 rounded-xl border ${t.cardBorder} mb-6`}>
           <div className="flex items-center gap-2 mb-4">
             <HelpCircle className={`w-6 h-6 ${t.accentColor}`} />
-            <div className="text-lg font-bold text-slate-200">The Three Questions Every Client Asks</div>
+            <div className="text-2xl font-bold text-slate-200">The Three Questions Every Client Asks</div>
           </div>
           <div className="grid grid-cols-3 gap-4">
             {clientQuestions.map((q, i) => (
               <div key={i} className="p-4 rounded-lg bg-slate-800/50">
-                <div className="text-slate-300 font-medium mb-2">{q.question}</div>
-                <div className={`text-sm ${t.accentColor}`}>→ {q.answer}</div>
+                <div className="text-xl text-slate-300 font-medium mb-2">{q.question}</div>
+                <div className={`text-xl ${t.accentColor}`}>→ {q.answer}</div>
               </div>
             ))}
           </div>

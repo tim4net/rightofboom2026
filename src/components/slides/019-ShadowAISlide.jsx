@@ -61,7 +61,7 @@ const ShadowAISlide = ({ theme: t }) => {
               <div className={`text-2xl font-black ${i === 2 ? 'text-red-400' : t.accentColor}`}>
                 {stat.value}
               </div>
-              <div className="text-xs text-slate-400 mt-1">{stat.label}</div>
+              <div className="text-xl text-slate-400 mt-1">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -75,21 +75,21 @@ const ShadowAISlide = ({ theme: t }) => {
                   <phase.icon className={`w-6 h-6 ${phase.color}`} />
                 </div>
                 <div>
-                  <div className="text-slate-500 text-xs">Step {phase.step}</div>
-                  <div className={`text-xl font-black ${phase.color}`}>{phase.name}</div>
+                  <div className="text-slate-500 text-xl">Step {phase.step}</div>
+                  <div className={`text-2xl font-black ${phase.color}`}>{phase.name}</div>
                 </div>
               </div>
               <ul className="space-y-2 mb-4">
                 {phase.items.map((item, j) => (
-                  <li key={j} className="flex items-center gap-2 text-slate-300 text-sm">
-                    <CheckCircle className="w-4 h-4 text-slate-600" />
+                  <li key={j} className="flex items-center gap-2 text-slate-300 text-xl">
+                    <CheckCircle className="w-5 h-5 text-slate-600" />
                     {item}
                   </li>
                 ))}
               </ul>
               <div className="pt-3 border-t border-slate-700">
-                <div className="text-xs text-slate-500">Tools:</div>
-                <div className={`text-xs ${phase.color}`}>{phase.tools}</div>
+                <div className="text-xl text-slate-500">Tools:</div>
+                <div className={`text-xl ${phase.color}`}>{phase.tools}</div>
               </div>
             </div>
           ))}
