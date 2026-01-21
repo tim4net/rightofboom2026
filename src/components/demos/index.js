@@ -9,6 +9,7 @@ export { CACrateExampleSlide } from './CACrateExampleSlide';
 export { CACrateIntroSlide } from './CACrateIntroSlide';
 export { CASandwichMappingSlide } from './CASandwichMappingSlide';
 export { PatternApplicationsSlide } from './PatternApplicationsSlide';
+export { AlertTriagePatternSlide } from './AlertTriagePatternSlide';
 export { NetworkSegmentationDemo } from './NetworkSegmentationDemo';
 export { AlertTriageDemo } from './AlertTriageDemo';
 export { EndpointValidationDemo } from './EndpointValidationDemo';

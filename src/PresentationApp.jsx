@@ -54,7 +54,7 @@ import {
 } from './DemoComponents';
 
 // CA Policy Monitor crate slides
-import { M365ConfigDriftDemo, CACrateIntroSlide, CASandwichMappingSlide, PatternApplicationsSlide } from './components/demos';
+import { M365ConfigDriftDemo, CACrateIntroSlide, CASandwichMappingSlide, PatternApplicationsSlide, AlertTriagePatternSlide } from './components/demos';
 
 // Data
 import { slides, themes } from './data/slides';
@@ -289,7 +289,7 @@ const PresentationApp = () => {
       case 'alertTriage':
         return (
           <div className="animate-in fade-in duration-500">
-            <AlertTriageDemo theme={t} />
+            <AlertTriagePatternSlide theme={t} />
           </div>
         );
 

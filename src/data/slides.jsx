@@ -268,29 +268,26 @@ export const slides = [
 
 ⏱ ~55 seconds | 👁 Drives home the reusability of the architecture` },
 
-  { type: 'alertTriage', notes: `**The Pattern** (10 sec)
-"The CA Policy Monitor shows config drift. But what about security alerts that need judgment?"
-"Same sandwich pattern, different application."
+  { type: 'alertTriage', notes: `**The Pattern** (15 sec)
+"We've seen config drift detection. Now let's apply the same pattern to real-time security alerts."
+"Impossible travel. Suspicious inbox rules. Brute force attempts. These need judgment, not just detection."
 
-**Walk the Demo** (45 sec)
-→ Click on the "Suspicious Inbox Rule" alert
-"Inbox rule forwarding invoices to external Gmail. Classic BEC indicator."
-"Watch what the AI does — it's not just pattern matching."
-→ Let the analysis run
-"It checks: Was this created via Outlook or API? Is the user actually active? When was their last legit auth?"
-"This is the reasoning chain. Deterministic data gathering, AI synthesis."
+**Walk the Architecture** (40 sec)
+→ Point to each layer
+"INPUT: Alert arrives from your SIEM, EDR, identity provider. That's deterministic — something triggered."
+"GATHER: This is key — before AI touches anything, you collect facts. Check the calendar. Check recent auth. Check the device. All API calls, all deterministic."
+"AI: NOW the AI synthesizes. It has facts, not guesses. It outputs a recommendation AND a confidence score AND shows its reasoning chain."
+"OUTPUT: Human approval gate. The analyst sees the recommendation, the reasoning, and decides. Approve or override."
 
-**The Human Gate** (20 sec)
-→ Point to the approval buttons
-"98% confidence, recommendation BLOCK. But look — human decision required."
-"The AI doesn't act. It recommends. You approve or override."
-"That's the output layer of the sandwich."
+**Why This Works** (15 sec)
+"The AI isn't guessing from thin air — it's reasoning over facts you gathered."
+"And it doesn't act — it recommends. The human gate catches both AI mistakes AND legitimate edge cases."
 
 **The Takeaway** (10 sec)
-"You could build this. Alert comes in, AI gathers context and reasons, human approves action."
-"Same pattern as config drift — just applied to real-time alerts."
+"You could build this in Rewst. Alert trigger, context-gathering workflow, AI synthesis, approval form."
+"Same sandwich, different filling."
 
-⏱ ~85 seconds | 👁 The reasoning chain is the 'aha' — AI showing its work` },
+⏱ ~80 seconds | 👁 "Facts gathered, AI synthesizes, human decides" is the quotable line` },
 
   // ============================================
   // BREAK (15 min)
