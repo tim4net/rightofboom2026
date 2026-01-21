@@ -1,20 +1,15 @@
 // Barrel export for all demo components
+// NOTE: Slide components (CACrateIntroSlide, etc.) have been moved to /slides
+
 export { AIReconDemo } from './AIReconDemo';
 export { AttackDemo } from './AttackDemo';
 export { EvolutionRace } from './EvolutionRace';
 export { TokenHeistDemo } from './TokenHeistDemo';
 export { DeterminismDemo } from './DeterminismDemo';
-export { M365ConfigDriftDemo } from './M365ConfigDriftDemo';
 export { CACrateExampleSlide } from './CACrateExampleSlide';
-export { CACrateIntroSlide } from './CACrateIntroSlide';
-export { CASandwichMappingSlide } from './CASandwichMappingSlide';
-export { PatternApplicationsSlide } from './PatternApplicationsSlide';
-export { AlertTriagePatternSlide } from './AlertTriagePatternSlide';
-export { TieredResponseSlide } from './TieredResponseSlide';
 export { NetworkSegmentationDemo } from './NetworkSegmentationDemo';
 export { AlertTriageDemo } from './AlertTriageDemo';
 export { EndpointValidationDemo } from './EndpointValidationDemo';
-export { TakeawaysSlide } from './TakeawaysSlide';
 export { ClaudeCodeDemo } from './ClaudeCodeDemo';
 export { LiveAttackDemo } from './LiveAttackDemo';
 export { AttackPlannerDemo } from './AttackPlannerDemo';
@@ -22,6 +17,5 @@ export { HumanApprovalDemo } from './HumanApprovalDemo';
 export { FailureModeDemo } from './FailureModeDemo';
 export { AttackerTerminal } from './AttackerTerminal';
 export { SpiceViewer } from './SpiceViewer';
-export { AttackLabDemo } from './AttackLabDemo';
 export { SimulatedTerminal } from './SimulatedTerminal';
 export { ChatMessage } from './ChatMessage';

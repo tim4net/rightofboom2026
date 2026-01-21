@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Zap, Mail, Key, Clock, Shield, AlertTriangle, Search, Globe, User, Server, FileText, Target, Loader2, Brain } from 'lucide-react';
 
-// Re-export AttackLabDemo from its separate file
-export { AttackLabDemo } from './components/demos/AttackLabDemo';
+// NOTE: AttackLabDemo has been moved to slides as 004-AttackLabSlide.jsx
 
 // ============================================================================
 // AI RECON DEMO - Shows how attackers use AI for reconnaissance

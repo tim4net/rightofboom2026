@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { AttackerTerminal } from './AttackerTerminal';
-import { ChatMessage } from './ChatMessage';
+import { AttackerTerminal } from '../demos/AttackerTerminal';
+import { ChatMessage } from '../demos/ChatMessage';
 import { Play, Terminal, Zap, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 /**

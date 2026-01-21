@@ -4,7 +4,7 @@ import { Palette } from 'lucide-react';
 // Layout components
 import { Footer, PresenterNotes } from './components/layout';
 
-// Slide components
+// Slide components (all numbered slides now in /slides)
 import {
   TitleSlide,
   ContentSlide,
@@ -21,7 +21,6 @@ import {
   OperationalizationSlide,
   LiveDemoSlide,
   IntroSlide,
-  // New slides for 2026 content
   MultiTenantSlide,
   BudgetSlide,
   LearningPathSlide,
@@ -35,10 +34,19 @@ import {
   AIVocabSlide,
   AIVocabTermsSlide,
   ToolUseSlide,
-  SandwichExampleSlide
+  SandwichExampleSlide,
+  // Slides moved from /demos
+  AttackLabSlide,
+  CACrateIntroSlide,
+  M365DriftSlide,
+  CASandwichMappingSlide,
+  PatternApplicationsSlide,
+  AlertTriageSlide,
+  TieredResponseSlide,
+  TakeawaysSlide
 } from './components/slides';
 
-// Demo components (existing)
+// Demo components (interactive demos, not slides)
 import {
   AIReconDemo,
   AttackDemo,
@@ -48,13 +56,8 @@ import {
   NetworkSegmentationDemo,
   AlertTriageDemo,
   EndpointValidationDemo,
-  TakeawaysSlide,
-  ClaudeCodeDemo,
-  AttackLabDemo
+  ClaudeCodeDemo
 } from './DemoComponents';
-
-// CA Policy Monitor crate slides
-import { M365ConfigDriftDemo, CACrateIntroSlide, CASandwichMappingSlide, PatternApplicationsSlide, AlertTriagePatternSlide, TieredResponseSlide } from './components/demos';
 
 // Data
 import { slides, themes } from './data/slides';
@@ -214,7 +217,7 @@ const PresentationApp = () => {
       case 'attackLab':
         return (
           <div className="animate-in fade-in duration-500 w-full h-full">
-            <AttackLabDemo theme={t} />
+            <AttackLabSlide theme={t} />
           </div>
         );
 
@@ -261,7 +264,7 @@ const PresentationApp = () => {
       case 'm365Drift':
         return (
           <div className="animate-in fade-in duration-500">
-            <M365ConfigDriftDemo theme={t} />
+            <M365DriftSlide theme={t} />
           </div>
         );
 
@@ -289,7 +292,7 @@ const PresentationApp = () => {
       case 'alertTriage':
         return (
           <div className="animate-in fade-in duration-500">
-            <AlertTriagePatternSlide theme={t} />
+            <AlertTriageSlide theme={t} />
           </div>
         );
 
