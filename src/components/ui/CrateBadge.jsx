@@ -16,22 +16,26 @@ import { Package } from 'lucide-react';
 export function CrateBadge({ name, variant = 'default', className = '' }) {
   if (variant === 'hero') {
     return (
-      <div className={`flex flex-col items-center gap-6 ${className}`}>
-        {/* Rewst Logo + Label */}
-        <div className="flex items-center gap-8">
-          <img
-            src="/images/rewst-logo.png"
-            alt="Rewst"
-            className="h-48 w-auto"
-          />
-          <div className="flex flex-col gap-2">
-            <span className="text-3xl font-semibold text-slate-400 uppercase tracking-widest">Example Rewst Crate</span>
-            {/* Crate Name */}
-            <div className="text-6xl font-bold text-white">
-              {name}
-            </div>
-          </div>
+      <div className={`flex flex-col items-center ${className}`}>
+        {/* Logo as brand mark - prominent but not overwhelming */}
+        <img
+          src="/images/rewst-logo.png"
+          alt="Rewst"
+          className="h-20 w-auto mb-4"
+        />
+
+        {/* Crate label badge - subtle but credible */}
+        <div className="flex items-center gap-2 mb-3">
+          <Package className="w-5 h-5 text-amber-400" />
+          <span className="text-xl font-semibold text-amber-400 uppercase tracking-wider">
+            Rewst Crate
+          </span>
         </div>
+
+        {/* Crate name - the unmistakable hero */}
+        <h1 className="text-7xl font-black text-white tracking-tight text-center leading-none">
+          {name}
+        </h1>
       </div>
     );
   }
