@@ -52,17 +52,22 @@ export const CACrateIntroSlide = ({ theme: t }) => {
           CA Policy Monitor
         </h1>
 
-        {/* What it does - concrete */}
-        <div className="space-y-4 text-center max-w-5xl">
-          <p className="text-3xl text-slate-300">
-            Watches your <span className="text-amber-400 font-semibold">Conditional Access policies</span> across all M365 tenants
+        {/* The problem → the solution */}
+        <div className="space-y-8 text-center max-w-5xl">
+          <p className="text-3xl text-slate-300 leading-relaxed">
+            Someone changes a Conditional Access policy at 2am.
+            <br />
+            <span className="text-red-400 font-semibold">How long until you notice?</span>
           </p>
-          <p className="text-3xl text-slate-300">
-            Alerts when someone <span className="text-red-400 font-semibold">weakens a policy</span> or <span className="text-red-400 font-semibold">adds exclusions</span>
-          </p>
-          <p className="text-3xl text-slate-300">
-            Shows you <span className="text-emerald-400 font-semibold">who changed it</span> and <span className="text-emerald-400 font-semibold">whether there's a ticket</span>
-          </p>
+          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+            <p className="text-2xl text-slate-300 leading-relaxed">
+              This crate watches for CA policy changes across your M365 tenants,
+              creates a <span className="text-amber-400 font-semibold">PSA ticket</span> and
+              sends an <span className="text-amber-400 font-semibold">email alert</span> — with
+              <span className="text-purple-400 font-semibold"> AI-generated summaries</span> that
+              explain what changed in plain English.
+            </p>
+          </div>
         </div>
       </div>
     </div>
