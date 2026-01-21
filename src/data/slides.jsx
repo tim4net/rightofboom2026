@@ -202,6 +202,21 @@ export const slides = [
 - "What about APTs with dwell time?" → "You're right — that's why detection speed matters. The sandwich is most powerful when combined with continuous monitoring."
 - "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },                   // Slide 9
 
+  { type: 'caCrateIntro', notes: `**What is a Crate?** (15 sec)
+"Before I show you the demo, let me explain what you're looking at."
+"Rewst Crates are pre-built automations. You don't write code — you configure and deploy."
+"Think of them like apps in an app store. Someone else built it, you just install and configure."
+
+**This Specific Crate** (20 sec)
+"The CA Policy Monitor watches your Conditional Access policies across all your M365 tenants."
+"It alerts you when someone weakens a policy or adds exclusions."
+"And it tells you WHO made the change and whether there was a ticket."
+
+**Transition** (5 sec)
+"Let me show you what the alert actually looks like..."
+
+⏱ ~40 seconds | 👁 Quick context before the demo` },
+
   { type: 'caCrateExample', notes: `**Open with the Hook** (10 sec)
 "Someone changed your Block Legacy Authentication policy. Look at this."
 → Let them read the before/after
