@@ -17,21 +17,20 @@ export function CrateBadge({ name, variant = 'default', className = '' }) {
   if (variant === 'hero') {
     return (
       <div className={`flex flex-col items-center gap-6 ${className}`}>
-        {/* Rewst Logo + Crate Label */}
-        <div className="flex items-center gap-6">
+        {/* Rewst Logo + Label */}
+        <div className="flex items-center gap-8">
           <img
             src="/images/rewst-logo.png"
             alt="Rewst"
-            className="h-24 w-auto"
+            className="h-48 w-auto"
           />
-          <div className="flex items-center gap-3 px-5 py-3 bg-amber-500/20 border-2 border-amber-500/50 rounded-xl">
-            <Package className="w-8 h-8 text-amber-400" />
-            <span className="text-2xl font-bold text-amber-400 uppercase tracking-wide">Crate</span>
+          <div className="flex flex-col gap-2">
+            <span className="text-3xl font-semibold text-slate-400 uppercase tracking-widest">Example Rewst Crate</span>
+            {/* Crate Name */}
+            <div className="text-6xl font-bold text-white">
+              {name}
+            </div>
           </div>
-        </div>
-        {/* Crate Name */}
-        <div className="text-6xl font-bold text-white">
-          {name}
         </div>
       </div>
     );
