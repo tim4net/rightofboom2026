@@ -379,7 +379,7 @@ const PresentationApp = () => {
 
       {/* Sponsor logos header - shown on all slides except title */}
       {currentSlide > 0 && (
-        <div className="fixed top-4 left-0 right-0 flex justify-between items-center px-6 z-40 pointer-events-none">
+        <div className="fixed top-0 left-0 right-0 flex justify-between items-center px-6 z-40 pointer-events-none">
           <img
             src="/images/rewst-logo.png"
             alt="Rewst"
