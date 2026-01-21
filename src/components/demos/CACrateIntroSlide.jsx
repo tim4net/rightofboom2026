@@ -52,22 +52,21 @@ export const CACrateIntroSlide = ({ theme: t }) => {
           CA Policy Monitor
         </h1>
 
-        {/* The problem → the solution */}
-        <div className="space-y-8 text-center max-w-5xl">
+        {/* Official crate description */}
+        <div className="space-y-6 text-center max-w-5xl">
           <p className="text-3xl text-slate-300 leading-relaxed">
-            Someone changes a Conditional Access policy at 2am.
-            <br />
-            <span className="text-red-400 font-semibold">How long until you notice?</span>
+            Monitors Microsoft 365 Conditional Access Policy changes and generates
+            notifications via <span className="text-amber-400 font-semibold">ticket creation</span> and{' '}
+            <span className="text-amber-400 font-semibold">email alerts</span>.
           </p>
-          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-            <p className="text-2xl text-slate-300 leading-relaxed">
-              This crate watches for CA policy changes across your M365 tenants,
-              creates a <span className="text-amber-400 font-semibold">PSA ticket</span> and
-              sends an <span className="text-amber-400 font-semibold">email alert</span> — with
-              <span className="text-purple-400 font-semibold"> AI-generated summaries</span> that
-              explain what changed in plain English.
-            </p>
-          </div>
+          <p className="text-3xl text-slate-300 leading-relaxed">
+            Leverages <span className="text-purple-400 font-semibold">OpenAI</span> to provide
+            a clearer, human-readable summary of policy modifications.
+          </p>
+          <p className="text-2xl text-slate-400 leading-relaxed max-w-4xl">
+            Get notified about unauthorized changes, ensure policies are modified only by
+            authorized personnel, and streamline incident response with automatic notifications.
+          </p>
         </div>
       </div>
     </div>
