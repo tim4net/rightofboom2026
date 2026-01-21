@@ -202,65 +202,37 @@ export const slides = [
 - "What about APTs with dwell time?" → "You're right — that's why detection speed matters. The sandwich is most powerful when combined with continuous monitoring."
 - "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },                   // Slide 9
 
-  { type: 'caCrateIntro', notes: `**Transition** (5 sec)
-"First demo: Let me show you the guardrail sandwich applied to something you deal with every day."
+  { type: 'caCrateExample', notes: `**Open with the Hook** (10 sec)
+"Someone changed your Block Legacy Authentication policy. Look at this."
+→ Let them read the before/after
 
-**What is a Crate** (15 sec)
-"Rewst Crates are reusable automation packages. Deploy once, runs across all your tenants."
-"This one monitors Conditional Access policies — the gates that control who can access M365."
+**The Risk** (15 sec)
+"Report-Only means legacy auth is ALLOWED — it just gets logged. Attackers specifically look for this gap."
+"This exact drift has been involved in real M365 breaches."
 
-**The Sandwich Connection** (15 sec)
-→ Point to the bottom formula
-"Notice how this maps: Your baseline is the INPUT — deterministic, you stored it."
-"Math comparison is deterministic — set difference, no AI involved in detecting the change."
-"AI comes in ONLY to translate and explain — probabilistic, but constrained."
-"The alert fires based on the math, not the AI's opinion."
+**The Attribution** (10 sec)
+→ Point to "Changed by" and "No ticket"
+"We know WHO made the change. And there's no ticket. Was this authorized?"
 
-**Bridge** (5 sec)
-"Let me show you how this flow actually works..."
+**Transition** (5 sec)
+"How did we catch this? Let me show you..."
 
-⏱ ~40 seconds | 👁 Emphasize "your baseline" — that's the ground truth callback` },
+⏱ ~40 seconds | 👁 Let the example speak — this is the hook` },
 
-  { type: 'm365Drift', notes: `**Callback to Bridge** (5 sec)
-"Remember what you have that attackers don't? Ground truth. This is the first demo of that principle in action."
-
-**The Architecture** (25 sec)
-→ Walk through the 4-step flow left to right
-"Your baseline — stored configuration snapshot. This is YOUR truth, not Microsoft's defaults."
-"Compare — pure math. Set difference. What's in current that wasn't in baseline? What's missing? What changed?"
-"AI layer — translates GUIDs to human names. Makes the output readable. But notice: it never decides what changed."
+  { type: 'm365Drift', notes: `**The Architecture** (25 sec)
+→ Walk through the flow
+"Your baseline — you store what the config SHOULD be. Your ground truth."
+"Math — set difference. What changed? Deterministic, no guessing."
+"AI — translates GUIDs to names, explains the security impact. But it never decides what changed."
 "Alert — ticket in your PSA, email to your team."
 
 **The Key Line** (10 sec)
-→ Point to the green callout
-"AI summarizes. Math decides. This is the guardrail sandwich in action — deterministic detection, AI enhancement."
+"AI summarizes. Math decides. That's why there are no false positives from AI hallucination."
 
 **Dual Triggers** (10 sec)
-"Two triggers: scheduled check every 42 minutes, plus real-time webhook from Microsoft's audit log. Defense in depth."
+"Two triggers: scheduled checks plus real-time webhook from Microsoft's audit log."
 
-**Transition** (5 sec)
-"Let me show you what this actually catches..."
-
-⏱ ~55 seconds | 👁 "AI summarizes, math decides" is the quotable line` },
-
-  { type: 'caCrateExample', notes: `**The Scenario** (15 sec)
-"Block Legacy Authentication — one of the most critical CA policies. It stops password spray attacks that MFA can't help with."
-→ Point to the before/after
-"Someone set it to Report-Only. Probably 'just testing' or helping a vendor."
-
-**The Risk** (15 sec)
-"Report-Only means legacy auth is ALLOWED — it just gets logged. Attackers know this. They specifically look for this gap."
-"This exact drift has been involved in multiple real M365 breaches."
-
-**The Attribution** (10 sec)
-→ Point to "Changed by"
-"Notice: we know WHO made the change, WHEN, and from what. That's your ground truth at work."
-"No guessing. No 'the AI thinks someone changed something.' Math found the diff. AI just made it readable."
-
-**Landing** (5 sec)
-"This is what continuous validation looks like. Your baseline catches drift before attackers exploit it."
-
-⏱ ~45 seconds | 👁 The before/after visual should hit hard — legacy auth is a known attack vector` },
+⏱ ~45 seconds | 👁 "AI summarizes, math decides" is the quotable line` },
 
   { type: 'endpointValidation' },
   { type: 'networkSeg' },               // Slide 10
