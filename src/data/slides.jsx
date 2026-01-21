@@ -268,9 +268,29 @@ export const slides = [
 
 ⏱ ~55 seconds | 👁 Drives home the reusability of the architecture` },
 
-  { type: 'networkSeg' },               // Slide 10
-  { type: 'alertTriage' },              // Slide 11
-  { type: 'evolutionRace' },            // Slide 12
+  { type: 'alertTriage', notes: `**The Pattern** (10 sec)
+"The CA Policy Monitor shows config drift. But what about security alerts that need judgment?"
+"Same sandwich pattern, different application."
+
+**Walk the Demo** (45 sec)
+→ Click on the "Suspicious Inbox Rule" alert
+"Inbox rule forwarding invoices to external Gmail. Classic BEC indicator."
+"Watch what the AI does — it's not just pattern matching."
+→ Let the analysis run
+"It checks: Was this created via Outlook or API? Is the user actually active? When was their last legit auth?"
+"This is the reasoning chain. Deterministic data gathering, AI synthesis."
+
+**The Human Gate** (20 sec)
+→ Point to the approval buttons
+"98% confidence, recommendation BLOCK. But look — human decision required."
+"The AI doesn't act. It recommends. You approve or override."
+"That's the output layer of the sandwich."
+
+**The Takeaway** (10 sec)
+"You could build this. Alert comes in, AI gathers context and reasons, human approves action."
+"Same pattern as config drift — just applied to real-time alerts."
+
+⏱ ~85 seconds | 👁 The reasoning chain is the 'aha' — AI showing its work` },
 
   // ============================================
   // BREAK (15 min)
