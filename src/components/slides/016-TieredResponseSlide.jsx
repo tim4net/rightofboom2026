@@ -1,162 +1,137 @@
 import React from 'react';
-import { Zap, UserCheck, ShieldAlert, ArrowRight, CheckCircle } from 'lucide-react';
+import { Zap, UserCheck, Users, Clock } from 'lucide-react';
 
 /**
- * Tiered Response Slide
+ * Response Matrix Slide
  *
- * Shows WHEN AI can auto-execute vs when humans must approve.
- * The decision logic: confidence threshold + impact level = action tier.
+ * 2x2 matrix showing when AI can auto-execute vs when humans must approve.
+ * Axes: Confidence (X) vs Risk/Impact (Y)
  *
- * Three tiers:
- * 1. AUTO-EXECUTE: High confidence (>95%) + Low impact
- * 2. HUMAN APPROVAL: Medium confidence (80-95%) OR Medium impact
- * 3. ALWAYS HUMAN: Any confidence + High impact
- *
- * Photo test: Someone sees this and immediately understands
- * the tiered model - when AI acts alone vs. when humans gate.
+ * Quadrants:
+ * - High Risk + High Confidence → Human approves (stakes too high)
+ * - High Risk + Low Confidence → Escalate to senior
+ * - Low Risk + High Confidence → Auto-execute
+ * - Low Risk + Low Confidence → Queue for batch review
  */
 export const TieredResponseSlide = ({ theme: t }) => {
-  const tiers = [
-    {
-      name: 'AUTO-EXECUTE',
-      subtitle: 'High Confidence (>95%) + Low Impact',
-      icon: Zap,
-      color: 'emerald',
-      actions: [
-        'Block IP on threat intel blocklist',
-        'Quarantine phishing email',
-        'Send "was this you?" notification',
-        'Add to MFA challenge group',
-        'Revoke suspicious session',
-        'Create ticket for review'
-      ]
-    },
-    {
-      name: 'HUMAN APPROVAL',
-      subtitle: 'Medium Confidence (80-95%) OR Medium Impact',
-      icon: UserCheck,
-      color: 'amber',
-      actions: [
-        'Disable/lock user account',
-        'Force password reset',
-        'Isolate endpoint from network',
-        'Remove inbox forwarding rule'
-      ]
-    },
-    {
-      name: 'ALWAYS HUMAN',
-      subtitle: 'Any Confidence + High Impact',
-      icon: ShieldAlert,
-      color: 'red',
-      actions: [
-        'VIP/executive actions',
-        'Mass actions (multiple users)',
-        'Permanent deletions',
-        'Firewall rule changes',
-        'Production system isolation'
-      ]
-    }
-  ];
-
-  const colorClasses = {
-    emerald: {
-      bg: 'bg-emerald-500/15',
-      border: 'border-emerald-500/50',
-      text: 'text-emerald-400',
-      textLight: 'text-emerald-300',
-      badge: 'bg-emerald-500/20'
-    },
-    amber: {
-      bg: 'bg-amber-500/15',
-      border: 'border-amber-500/50',
-      text: 'text-amber-400',
-      textLight: 'text-amber-300',
-      badge: 'bg-amber-500/20'
-    },
-    red: {
-      bg: 'bg-red-500/15',
-      border: 'border-red-500/50',
-      text: 'text-red-400',
-      textLight: 'text-red-300',
-      badge: 'bg-red-500/20'
-    }
-  };
-
   return (
-    <div className="w-full h-full flex flex-col px-12 py-8">
+    <div className="w-full h-full flex flex-col px-16 py-8">
       {/* Header */}
       <div className="text-center mb-6">
-        <h2 className={`text-6xl font-bold ${t.textOnPage} mb-3`}>
-          Tiered Response Model
+        <h2 className={`text-5xl font-bold ${t.textOnPage} mb-2`}>
+          The Response Matrix
         </h2>
         <p className="text-2xl text-slate-400">
-          When AI acts alone vs. when humans gate
+          Confidence alone isn't enough — risk sets the bar
         </p>
       </div>
 
-      {/* Decision logic formula */}
-      <div className="flex justify-center mb-6">
-        <div className="flex items-center gap-4 bg-slate-800/60 border border-slate-700 rounded-xl px-8 py-3">
-          <span className="text-xl text-purple-400 font-semibold">Confidence %</span>
-          <span className="text-xl text-slate-500">+</span>
-          <span className="text-xl text-blue-400 font-semibold">Impact Level</span>
-          <ArrowRight className="w-6 h-6 text-slate-500" />
-          <span className="text-xl text-slate-200 font-semibold">Action Tier</span>
-        </div>
-      </div>
+      {/* Matrix with integrated axis labels */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex items-stretch gap-4">
+          {/* Y-axis label - vertical on left */}
+          <div className="flex flex-col items-center justify-center w-12">
+            <div className="text-xl text-slate-500 mb-2">High</div>
+            <div className="flex-1 flex items-center">
+              <span className="text-2xl font-bold text-red-400 tracking-wider uppercase -rotate-90 whitespace-nowrap">
+                RISK
+              </span>
+            </div>
+            <div className="text-xl text-slate-500 mt-2">Low</div>
+          </div>
 
-      {/* Three tier columns */}
-      <div className="flex-1 grid grid-cols-3 gap-6">
-        {tiers.map((tier, idx) => {
-          const Icon = tier.icon;
-          const colors = colorClasses[tier.color];
-          return (
-            <div
-              key={idx}
-              className={`${colors.bg} border-2 ${colors.border} rounded-2xl p-5 flex flex-col`}
-            >
-              {/* Tier header */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`p-2 ${colors.badge} rounded-lg`}>
-                  <Icon className={`w-7 h-7 ${colors.text}`} />
+          {/* Matrix and X-axis */}
+          <div className="flex flex-col">
+            {/* The 2x2 Grid */}
+            <div className="grid grid-cols-2 gap-2">
+              {/* Top-left: Low Confidence + High Risk = ESCALATE */}
+              <div className="w-[620px] h-[280px] bg-red-500/15 border-2 border-red-500/40 rounded-tl-3xl p-6 flex flex-col">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="p-3 bg-red-500/25 rounded-xl">
+                    <Users className="w-9 h-9 text-red-400" />
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-red-400">ESCALATE</div>
+                    <div className="text-xl text-red-300/70">Human + Senior Review</div>
+                  </div>
                 </div>
-                <div>
-                  <div className={`text-2xl font-bold ${colors.text}`}>
-                    {tier.name}
-                  </div>
-                  <div className="text-base text-slate-400">
-                    {tier.subtitle}
-                  </div>
+                <div className="flex-1 flex flex-col justify-center gap-1">
+                  <div className="text-xl text-slate-300">Production system isolation</div>
+                  <div className="text-xl text-slate-300">Uncertain threat on critical asset</div>
                 </div>
               </div>
 
-              {/* Actions list */}
-              <div className="flex-1 space-y-2">
-                {tier.actions.map((action, actionIdx) => (
-                  <div
-                    key={actionIdx}
-                    className="flex items-start gap-2 px-3 py-2 bg-slate-800/40 rounded-lg"
-                  >
-                    <CheckCircle className={`w-5 h-5 ${colors.text} flex-shrink-0 mt-0.5`} />
-                    <span className={`text-lg ${colors.textLight}`}>
-                      {action}
-                    </span>
+              {/* Top-right: High Confidence + High Risk = HUMAN APPROVES */}
+              <div className="w-[620px] h-[280px] bg-amber-500/15 border-2 border-amber-500/40 rounded-tr-3xl p-6 flex flex-col">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="p-3 bg-amber-500/25 rounded-xl">
+                    <UserCheck className="w-9 h-9 text-amber-400" />
                   </div>
-                ))}
+                  <div>
+                    <div className="text-3xl font-bold text-amber-400">HUMAN APPROVES</div>
+                    <div className="text-xl text-amber-300/70">Confident, but stakes are high</div>
+                  </div>
+                </div>
+                <div className="flex-1 flex flex-col justify-center gap-1">
+                  <div className="text-xl text-slate-300">Disable executive account</div>
+                  <div className="text-xl text-slate-300">Firewall rule changes</div>
+                </div>
+              </div>
+
+              {/* Bottom-left: Low Confidence + Low Risk = QUEUE */}
+              <div className="w-[620px] h-[280px] bg-slate-500/15 border-2 border-slate-500/40 rounded-bl-3xl p-6 flex flex-col">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="p-3 bg-slate-500/25 rounded-xl">
+                    <Clock className="w-9 h-9 text-slate-400" />
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-slate-400">QUEUE</div>
+                    <div className="text-xl text-slate-400/70">Batch review later</div>
+                  </div>
+                </div>
+                <div className="flex-1 flex flex-col justify-center gap-1">
+                  <div className="text-xl text-slate-400">Suspicious but low-priority alerts</div>
+                  <div className="text-xl text-slate-400">Anomalies needing context</div>
+                </div>
+              </div>
+
+              {/* Bottom-right: High Confidence + Low Risk = AUTO-EXECUTE */}
+              <div className="w-[620px] h-[280px] bg-emerald-500/15 border-2 border-emerald-500/40 rounded-br-3xl p-6 flex flex-col">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="p-3 bg-emerald-500/25 rounded-xl">
+                    <Zap className="w-9 h-9 text-emerald-400" />
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-emerald-400">AUTO-EXECUTE</div>
+                    <div className="text-xl text-emerald-300/70">No human needed</div>
+                  </div>
+                </div>
+                <div className="flex-1 flex flex-col justify-center gap-1">
+                  <div className="text-xl text-slate-300">Block known-bad IP</div>
+                  <div className="text-xl text-slate-300">Quarantine phishing email</div>
+                </div>
               </div>
             </div>
-          );
-        })}
+
+            {/* X-axis label - horizontal below */}
+            <div className="flex items-center justify-between mt-3 px-4">
+              <div className="text-xl text-slate-500">Low</div>
+              <span className="text-2xl font-bold text-purple-400 tracking-wider uppercase">
+                CONFIDENCE
+              </span>
+              <div className="text-xl text-slate-500">High</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Footer - Landing line */}
       <div className="mt-6 flex justify-center">
-        <div className="bg-slate-900/80 border border-slate-700 rounded-xl px-10 py-4">
+        <div className="bg-slate-900/80 border border-slate-700 rounded-xl px-12 py-4">
           <p className="text-3xl text-slate-300">
-            <span className="text-purple-400 font-semibold">Confidence</span>
-            {' '}sets the threshold.{' '}
-            <span className="text-blue-400 font-semibold">Impact</span>
-            {' '}sets the stakes.
+            <span className="text-purple-400 font-semibold">AI explains every action.</span>
+            {' '}The matrix determines{' '}
+            <span className="text-amber-400 font-semibold">who approves.</span>
           </p>
         </div>
       </div>

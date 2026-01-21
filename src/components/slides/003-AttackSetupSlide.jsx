@@ -31,10 +31,10 @@ const AttackSetupSlide = ({ theme: t }) => {
       <div className={`${t.cardBg} rounded-3xl border ${t.cardBorder} p-12 md:p-16 max-w-5xl w-full`}>
 
         {/* Two columns inside the card */}
-        <div className="grid grid-cols-2 gap-16">
+        <div className="flex items-stretch">
 
           {/* Before */}
-          <div className="text-center border-r border-slate-700 pr-12">
+          <div className="flex-1 text-center pr-12">
             <div className="text-slate-500 font-mono text-2xl uppercase tracking-widest mb-6">
               Before AI
             </div>
@@ -49,8 +49,11 @@ const AttackSetupSlide = ({ theme: t }) => {
             </div>
           </div>
 
+          {/* Center Divider */}
+          <div className="w-px bg-slate-700 mx-4"></div>
+
           {/* After */}
-          <div className="text-center pl-12">
+          <div className="flex-1 text-center pl-12">
             <div className={`${t.accentColorOnDark} font-mono text-2xl uppercase tracking-widest mb-6`}>
               After AI
             </div>
@@ -58,7 +61,6 @@ const AttackSetupSlide = ({ theme: t }) => {
               2026
             </div>
             <div className="space-y-4 text-left">
-              <div className="text-3xl text-slate-300">Basic English</div>
               <div className="text-3xl text-slate-300">Curiosity</div>
               <div className="text-3xl text-slate-300">A login to an LLM</div>
             </div>
@@ -68,13 +70,15 @@ const AttackSetupSlide = ({ theme: t }) => {
 
         {/* The Punchline - Time Collapse */}
         <div className="mt-16 pt-10 border-t border-slate-700 relative">
-          <div className="grid grid-cols-2 gap-16">
-            <div className="text-center border-r border-slate-700 pr-12">
-              <div className="text-slate-500 text-xl uppercase tracking-wider mb-2">Time to First Attack</div>
+          <div className="flex items-stretch">
+            <div className="flex-1 text-center pr-12">
+              <div className="text-slate-500 text-2xl uppercase tracking-wider mb-2">Time to First Attack</div>
               <div className="text-7xl font-black text-white">Years</div>
             </div>
-            <div className="text-center pl-12">
-              <div className={`${t.accentColorOnDark} text-xl uppercase tracking-wider mb-2`}>Time to First Attack</div>
+            {/* Center Divider */}
+            <div className="w-px bg-slate-700 mx-4"></div>
+            <div className="flex-1 text-center pl-12">
+              <div className={`${t.accentColorOnDark} text-2xl uppercase tracking-wider mb-2`}>Time to First Attack</div>
               <div className={`text-7xl font-black ${t.accentColorOnDark}`}>Minutes</div>
             </div>
           </div>

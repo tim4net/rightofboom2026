@@ -9,13 +9,13 @@ const AIVocabSlide = ({ theme: t }) => {
   return (
     <div className="w-full h-full flex flex-col px-20 py-12">
       {/* Header - more breathing room */}
-      <div className="mb-10">
+      <div className="mb-32">
         <h2 className={`text-7xl font-black ${t.textOnPage}`}>Two Types of Logic</h2>
-        <p className="text-3xl mt-4 text-slate-400">The foundation you need before we talk guardrails</p>
       </div>
 
+  
       {/* Two columns - increased gap, better proportions */}
-      <div className="flex-1 grid grid-cols-2 gap-20">
+      <div className="flex-1 grid grid-cols-2 gap-32">
 
         {/* Deterministic */}
         <div className="flex flex-col">
@@ -64,13 +64,13 @@ const AIVocabSlide = ({ theme: t }) => {
       </div>
 
       {/* Footer insight - split for better line rhythm */}
-      <div className="pt-8 mt-6 border-t-2 border-slate-700">
+      <div className={`pt-8 mt-6 border-t-2 ${t.cardBorder}`}>
         <div className="text-3xl">
           <span className="text-purple-400 font-bold">AI is probabilistic</span>
-          <span className="text-white"> — it predicts, sometimes brilliantly, sometimes confidently wrong.</span>
+          <span className={t.textOnPage}> — it predicts, sometimes brilliantly, sometimes confidently wrong.</span>
         </div>
         <div className="text-3xl mt-2">
-          <span className="text-slate-400">That's why we wrap it in</span>{' '}
+          <span className={t.textOnPageMuted}>That's why we wrap it in</span>{' '}
           <span className="text-amber-400 font-bold">deterministic guardrails.</span>
         </div>
       </div>

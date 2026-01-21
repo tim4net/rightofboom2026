@@ -25,7 +25,7 @@ const ToolUseSlide = ({ theme: t }) => {
   return (
     <div className="w-full h-full flex flex-col px-20 py-10">
       {/* Header */}
-      <div className="mb-12">
+      <div className="mb-20">
         <h2 className={`text-7xl font-black ${t.textOnPage}`}>What Agentic AI Does</h2>
         <p className="text-3xl mt-3 text-slate-400">
           Tools are the bridge from reasoning to reality
@@ -33,7 +33,7 @@ const ToolUseSlide = ({ theme: t }) => {
       </div>
 
       {/* Flow Diagram - Horizontal Pipeline */}
-      <div className="flex items-center justify-center gap-6 mb-20">
+      <div className="flex items-center justify-center gap-6 mb-32">
         {/* User */}
         <div className="flex flex-col items-center">
           <div className="bg-blue-500/20 rounded-2xl p-4 border-2 border-blue-500/40">
@@ -77,7 +77,7 @@ const ToolUseSlide = ({ theme: t }) => {
       <div className="grid grid-cols-2 gap-20">
         {/* Left: Tool Examples */}
         <div>
-          <div className="text-xl text-slate-500 uppercase tracking-widest mb-5 font-semibold">
+          <div className="text-2xl text-slate-500 uppercase tracking-widest mb-5 font-semibold">
             Common AI Tools in Your Stack
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -113,7 +113,7 @@ const ToolUseSlide = ({ theme: t }) => {
                 <div className="text-2xl text-white leading-relaxed">
                   Prompt injection + tools = <span className="text-red-400 font-semibold">execution</span>
                 </div>
-                <div className="text-xl text-slate-400 mt-2">
+                <div className="text-2xl text-slate-400 mt-2">
                   Malicious input can trigger real actions via your AI's tool access.
                 </div>
               </div>
@@ -122,7 +122,7 @@ const ToolUseSlide = ({ theme: t }) => {
 
           {/* Vendor Questions */}
           <div>
-            <div className="text-xl text-amber-400 uppercase tracking-widest mb-4 font-semibold">
+            <div className="text-2xl text-amber-400 uppercase tracking-widest mb-4 font-semibold">
               Ask Your Vendors
             </div>
             <ul className="space-y-4">

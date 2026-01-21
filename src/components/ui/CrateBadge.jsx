@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package } from 'lucide-react';
+import CrateIcon from './CrateIcon';
 
 /**
  * CrateBadge - Rewst Crate branding component
@@ -26,7 +26,7 @@ export function CrateBadge({ name, variant = 'default', className = '' }) {
 
         {/* Crate label badge - subtle but credible */}
         <div className="flex items-center gap-2 mb-3">
-          <Package className="w-5 h-5 text-amber-400" />
+          <CrateIcon className="w-5 h-5 text-amber-400" />
           <span className="text-xl font-semibold text-amber-400 uppercase tracking-wider">
             Rewst Crate
           </span>
@@ -49,7 +49,7 @@ export function CrateBadge({ name, variant = 'default', className = '' }) {
           className="h-14 w-auto"
         />
         <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/50 rounded-lg">
-          <Package className="w-6 h-6 text-amber-400" />
+          <CrateIcon className="w-6 h-6 text-amber-400" />
           <span className="text-xl font-bold text-amber-400">{name}</span>
         </div>
       </div>
@@ -66,7 +66,7 @@ export function CrateBadge({ name, variant = 'default', className = '' }) {
       />
       <div className="h-8 w-px bg-slate-600" />
       <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/50 rounded-lg">
-        <Package className="w-5 h-5 text-amber-400" />
+        <CrateIcon className="w-5 h-5 text-amber-400" />
         <span className="text-xl font-bold text-amber-400">{name}</span>
       </div>
     </div>

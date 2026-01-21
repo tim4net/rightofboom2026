@@ -30,7 +30,7 @@ const IntroSlide = ({ theme: t }) => {
   return (
     <div className="animate-in fade-in duration-500">
       {/* Header Section */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-14">
         <h2 className={`text-5xl md:text-7xl font-black mb-4 ${t.textOnPage}`}>
           {title}
         </h2>
@@ -43,29 +43,29 @@ const IntroSlide = ({ theme: t }) => {
       {/* Presenter Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[85vw] mx-auto">
         {presenters.map((p, i) => (
-          <div key={i} className={`${t.cardBg} p-8 rounded-2xl border ${t.cardBorder}`}>
+          <div key={i} className={`${t.cardBg} p-10 rounded-2xl border ${t.cardBorder}`}>
             {/* Presenter Header */}
-            <div className="flex items-center gap-6 mb-6">
+            <div className="flex items-center gap-8 mb-8">
               <img
                 src={p.headshot}
                 alt={p.name}
-                className={`w-24 h-24 rounded-full object-cover border-4 ${t.accentBorder}/50`}
+                className={`w-32 h-32 rounded-full object-cover border-4 ${t.accentBorder}/50`}
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}
               />
               <div>
-                <h3 className="text-3xl font-black text-white">{p.name}</h3>
+                <h3 className="text-5xl font-black text-white">{p.name}</h3>
                 {/* Role: Keep accent color, ensure minimum text-lg size */}
-                <p className={`text-xl ${t.accentColor} font-mono font-semibold`}>{p.role}</p>
+                <p className={`text-2xl ${t.accentColor} font-mono font-semibold`}>{p.role}</p>
               </div>
             </div>
             {/* Credentials: WHITE text, text-xl minimum for 30+ foot readability */}
-            <div className="space-y-4">
+            <div className="space-y-5">
               {p.credentials.map((cred, j) => (
-                <div key={j} className="flex items-center gap-3">
-                  <Zap className={`w-5 h-5 ${t.accentColor} flex-shrink-0`} />
-                  <span className="text-xl text-white">{cred}</span>
+                <div key={j} className="flex items-center gap-4">
+                  <Zap className={`w-7 h-7 ${t.accentColor} flex-shrink-0`} />
+                  <span className="text-3xl text-white">{cred}</span>
                 </div>
               ))}
             </div>

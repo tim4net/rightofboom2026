@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Flame, Smartphone, Database, Mail } from 'lucide-react';
+import { Flame, Smartphone, Database, Mail, UserPlus, Forward, KeyRound } from 'lucide-react';
 
 /**
  * Pattern Applications Slide
@@ -10,11 +10,11 @@ import { Shield, Flame, Smartphone, Database, Mail } from 'lucide-react';
 export const PatternApplicationsSlide = ({ theme: t }) => {
   const applications = [
     {
-      icon: Shield,
-      system: 'M365 CA Policies',
-      detects: 'Policy state changed',
-      explains: 'Security impact of the change',
-      color: 'amber'
+      icon: UserPlus,
+      system: 'Microsoft',
+      detects: 'User added to Privileged Group',
+      explains: 'Role scope and blast radius',
+      color: 'blue'
     },
     {
       icon: Flame,
@@ -43,6 +43,20 @@ export const PatternApplicationsSlide = ({ theme: t }) => {
       detects: 'DMARC/SPF changed',
       explains: 'Email auth weakened',
       color: 'purple'
+    },
+    {
+      icon: Forward,
+      system: 'Microsoft 365',
+      detects: 'Mail forwarding rule created',
+      explains: 'Exfil risk and destination',
+      color: 'amber'
+    },
+    {
+      icon: KeyRound,
+      system: 'SaaS Apps',
+      detects: 'OAuth app granted permissions',
+      explains: 'Data access scope',
+      color: 'red'
     }
   ];
 
@@ -55,28 +69,26 @@ export const PatternApplicationsSlide = ({ theme: t }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col px-12 py-8">
+    <div className="w-full h-full flex flex-col px-6 py-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className={`text-6xl font-bold ${t.textOnPage} mb-4`}>
-          One Pattern, Many Applications
+        <h2 className={`text-6xl font-bold ${t.textOnPage} mb-8`}>
+          What else can you build with the same pattern?
         </h2>
-        <p className="text-2xl text-slate-400">
-          The same architecture works everywhere
-        </p>
       </div>
 
       {/* Table */}
-      <div className="flex-1 flex flex-col justify-center">
-        {/* Header row */}
-        <div className="grid grid-cols-[200px_1fr_1fr] gap-4 mb-4 px-4">
-          <div className="text-xl font-bold text-slate-500 uppercase tracking-wider">
+      <div className="flex-1 flex flex-col justify-center items-center">
+        <div className="w-[1800px]">
+          {/* Header row */}
+          <div className="grid grid-cols-3 gap-4 mb-4 px-4">
+          <div className="text-3xl font-bold text-white-500 uppercase tracking-wider">
             System
           </div>
-          <div className="text-xl font-bold text-amber-400 uppercase tracking-wider">
-            What Math Detects
+          <div className="text-3xl font-bold text-amber-400 uppercase tracking-wider">
+            What Code Detects
           </div>
-          <div className="text-xl font-bold text-purple-400 uppercase tracking-wider">
+          <div className="text-3xl font-bold text-purple-400 uppercase tracking-wider">
             What AI Explains
           </div>
         </div>
@@ -89,7 +101,7 @@ export const PatternApplicationsSlide = ({ theme: t }) => {
             return (
               <div
                 key={idx}
-                className="grid grid-cols-[200px_1fr_1fr] gap-4 items-center bg-slate-800/40 border border-slate-700/50 rounded-xl px-4 py-4"
+                className="grid grid-cols-3 gap-4 items-center bg-slate-800/40 border border-slate-700/50 rounded-xl px-4 py-4"
               >
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-lg border ${colors}`}>
@@ -108,6 +120,7 @@ export const PatternApplicationsSlide = ({ theme: t }) => {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
 

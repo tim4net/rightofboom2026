@@ -9,7 +9,7 @@ const SandwichSlide = ({ theme: t }) => {
     <div className="w-full h-full flex flex-col px-16 py-12">
       {/* Title */}
       <div className="text-center mb-4">
-        <h2 className={`text-6xl font-bold ${t.textOnPage}`}>
+        <h2 className={`text-7xl font-black ${t.textOnPage}`}>
           The Guardrail Sandwich
         </h2>
       </div>

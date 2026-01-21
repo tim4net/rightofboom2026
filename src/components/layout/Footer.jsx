@@ -7,14 +7,14 @@ const Footer = ({ theme: t, currentSlide, totalSlides, prevSlide, nextSlide }) =
       <button
         onClick={prevSlide}
         disabled={currentSlide === 0}
-        className={`flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800/80 border border-slate-700 hover:bg-slate-700 disabled:opacity-20 transition-all font-bold`}
+        className={`flex items-center justify-center gap-2 w-36 py-3 rounded-xl bg-slate-800/80 border border-slate-700 hover:bg-slate-700 disabled:opacity-20 transition-all font-bold`}
       >
         <ChevronLeft className="w-5 h-5" /> BACK
       </button>
       <button
         onClick={nextSlide}
         disabled={currentSlide === totalSlides - 1}
-        className={`flex items-center gap-2 px-8 py-3 rounded-xl ${t.accentBg} border ${t.accentBorder} hover:brightness-110 disabled:opacity-20 ${t.accentGlow} transition-all font-bold`}
+        className={`flex items-center justify-center gap-2 w-36 py-3 rounded-xl ${t.accentBg} border ${t.accentBorder} hover:brightness-110 disabled:opacity-20 ${t.accentGlow} transition-all font-bold`}
       >
         NEXT <ChevronRight className="w-5 h-5" />
       </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowDown, Clock, Zap, Database, Calculator, Brain, Bell, RefreshCw } from 'lucide-react';
+import { ArrowDown, Clock, Database, Calculator, Brain, Bell, RefreshCw } from 'lucide-react';
 import { CrateBadge } from '../ui/CrateBadge';
 
 /**
@@ -48,13 +48,13 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg">
                   <Clock className="w-6 h-6 text-slate-400" />
-                  <span className="text-xl text-slate-300">Every 42 min</span>
+                  <span className="text-xl text-slate-300">Scheduled Poll</span>
                 </div>
                 <span className="text-2xl text-slate-500 font-bold">OR</span>
                 <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
-                  <Zap className="w-6 h-6 text-emerald-400" />
-                  <span className="text-xl text-emerald-300 font-semibold">MS Audit Webhook</span>
-                  <span className="text-lg text-emerald-400/60">(real-time)</span>
+                  <img src="/images/microsoft-logo.svg" alt="Microsoft" className="w-6 h-6" />
+                  <span className="text-xl text-emerald-300 font-semibold">MS Graph Webhook</span>
+                  <span className="text-xl text-emerald-400/60">(real-time)</span>
                 </div>
               </div>
             </div>
@@ -80,7 +80,7 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
                 <div>
                   <div className="text-2xl font-bold text-amber-400">FETCH + COMPARE</div>
                   <div className="text-xl text-slate-400">
-                    Get current from MS Graph, compare to stored baseline
+                    Review the changes, compare against stored baseline
                   </div>
                 </div>
               </div>
@@ -117,7 +117,7 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
               <div className="flex items-center gap-2 ml-auto">
                 <span className="font-mono text-xl text-slate-500">a1b2c3d4-...</span>
                 <span className="text-xl text-slate-500">→</span>
-                <span className="text-xl text-amber-400">it-manager@contoso.com</span>
+                <span className="text-xl text-amber-400">it-manager@clucktoso.com</span>
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
           </div>
         </div>
 
-        {/* Row 4: AI ANALYSIS (Optional) */}
+        {/* Row 4: AI ANALYSIS */}
         <div className="flex items-center gap-4">
           <div className="w-24 text-right">
             <span className="text-xl font-bold text-purple-400">5</span>
@@ -141,13 +141,12 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
               <div className="flex-1">
                 <div className="flex items-center gap-3">
                   <div className="text-2xl font-bold text-purple-400">AI ANALYSIS</div>
-                  <span className="text-lg text-purple-400/60 px-2 py-1 bg-purple-500/20 rounded">(optional)</span>
                 </div>
                 <div className="text-xl text-slate-400">
-                  GPT-4 explains security impact: positive or negative
+                  Explain security impact: positive or negative
                 </div>
               </div>
-              <div className="text-xl text-purple-300 italic max-w-md">
+              <div className="text-xl text-purple-300 max-w-md">
                 "This change allows legacy auth, which bypasses MFA..."
               </div>
             </div>

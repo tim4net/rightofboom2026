@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, Search, Brain, User, CheckCircle, ArrowDown } from 'lucide-react';
+import { AlertTriangle, Search, Brain, User, CheckCircle, ArrowDown, Wrench } from 'lucide-react';
 
 /**
  * Alert Triage Pattern Slide
@@ -74,20 +74,16 @@ export const AlertTriagePatternSlide = ({ theme: t }) => {
           </div>
           <div className="ml-36 mt-4 grid grid-cols-4 gap-3">
             <div className="px-3 py-2 bg-slate-800/60 rounded-lg text-center">
-              <div className="text-lg text-amber-400">Calendar</div>
-              <div className="text-sm text-slate-500">Travel events?</div>
+              <div className="text-xl text-amber-400">Calendar: Travel?</div>
             </div>
             <div className="px-3 py-2 bg-slate-800/60 rounded-lg text-center">
-              <div className="text-lg text-amber-400">Recent Auth</div>
-              <div className="text-sm text-slate-500">Last good login?</div>
+              <div className="text-xl text-amber-400">Recent Auth: When?</div>
             </div>
             <div className="px-3 py-2 bg-slate-800/60 rounded-lg text-center">
-              <div className="text-lg text-amber-400">Device</div>
-              <div className="text-sm text-slate-500">Registered?</div>
+              <div className="text-xl text-amber-400">Device: Registered?</div>
             </div>
             <div className="px-3 py-2 bg-slate-800/60 rounded-lg text-center">
-              <div className="text-lg text-amber-400">MFA Status</div>
-              <div className="text-sm text-slate-500">Verified?</div>
+              <div className="text-xl text-amber-400">MFA: Verified?</div>
             </div>
           </div>
         </div>
@@ -114,12 +110,10 @@ export const AlertTriagePatternSlide = ({ theme: t }) => {
             </div>
             <div className="flex items-center gap-4">
               <div className="px-4 py-2 bg-purple-500/20 rounded-lg text-center">
-                <div className="text-lg text-purple-400">Reasoning Chain</div>
-                <div className="text-sm text-slate-500">Shows its work</div>
+                <div className="text-xl text-purple-400">Reasoning: Shows its work</div>
               </div>
               <div className="px-4 py-2 bg-purple-500/20 rounded-lg text-center">
-                <div className="text-lg text-purple-400">Confidence %</div>
-                <div className="text-sm text-slate-500">How sure?</div>
+                <div className="text-xl text-purple-400">Confidence: How sure?</div>
               </div>
             </div>
           </div>
@@ -149,8 +143,13 @@ export const AlertTriagePatternSlide = ({ theme: t }) => {
               <div className="px-4 py-2 bg-emerald-500/30 border border-emerald-500/50 rounded-lg">
                 <span className="text-xl text-emerald-300 font-semibold">✓ Approve</span>
               </div>
-              <div className="px-4 py-2 bg-amber-500/30 border border-amber-500/50 rounded-lg">
-                <span className="text-xl text-amber-300 font-semibold">Override</span>
+              <div className="px-4 py-2 bg-amber-500/30 border border-amber-500/50 rounded-lg flex items-center gap-2">
+                <Search className="w-5 h-5 text-amber-300" />
+                <span className="text-xl text-amber-300 font-semibold">Research</span>
+              </div>
+              <div className="px-4 py-2 bg-red-500/30 border border-red-500/50 rounded-lg flex items-center gap-2">
+                <Wrench className="w-5 h-5 text-red-300" />
+                <span className="text-xl text-red-300 font-semibold">Remediate</span>
               </div>
             </div>
           </div>

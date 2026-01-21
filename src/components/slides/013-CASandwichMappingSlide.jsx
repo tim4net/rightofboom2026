@@ -1,70 +1,57 @@
 import React from 'react';
-import { Clock, Zap, Calculator, Brain, Bell, CheckCircle } from 'lucide-react';
+import { Clock, Calculator, Brain, Bell, Shield, Ticket } from 'lucide-react';
 import { CrateBadge } from '../ui/CrateBadge';
 
 /**
- * CA Sandwich Mapping Slide
+ * CA Sandwich Mapping Slide - Restructured
  *
- * Shows how the CA Policy Monitor maps to the guardrail sandwich architecture.
- * Reinforces the INPUT → AI → OUTPUT pattern taught earlier.
+ * Shows how the CA Policy Monitor implements the guardrail sandwich:
+ * - INPUT GUARDRAIL: Code determines what changed BEFORE AI sees it
+ * - AI: Only explains, cannot change what was detected
+ * - OUTPUT GUARDRAIL: Action happens regardless of AI opinion
  *
- * Photo test: Someone sees this and understands how the crate follows
- * the sandwich pattern - deterministic guards around probabilistic AI.
+ * The trigger (cron/webhook) is just context, not a guardrail.
  */
 export const CASandwichMappingSlide = ({ theme: t }) => {
   return (
     <div className="w-full h-full flex flex-col px-12 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <CrateBadge name="CA Policy Monitor" variant="compact" />
         <h2 className={`text-5xl font-bold ${t.textOnPage}`}>
           The Guardrail Sandwich
         </h2>
       </div>
 
-      {/* Main content - vertical sandwich stack */}
-      <div className="flex-1 flex flex-col justify-center gap-4">
-
-        {/* INPUT LAYER - Emerald (Deterministic) */}
-        <div className="bg-emerald-500/15 border-2 border-emerald-500/50 rounded-2xl p-6">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <div className="w-32 text-right">
-                <span className="text-2xl font-bold text-emerald-400">INPUT</span>
-              </div>
-              <div className="h-12 w-px bg-emerald-500/50" />
-            </div>
-            <div className="flex-1">
-              <div className="text-xl text-emerald-400/80 mb-2">Deterministic Triggers</div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/60 rounded-lg">
-                  <Clock className="w-6 h-6 text-slate-400" />
-                  <span className="text-xl text-slate-300">Every 42 minutes</span>
-                </div>
-                <span className="text-xl text-slate-500">or</span>
-                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 rounded-lg">
-                  <Zap className="w-6 h-6 text-emerald-400" />
-                  <span className="text-xl text-emerald-300">Microsoft webhook (instant)</span>
-                </div>
-              </div>
-            </div>
-            <div className="text-right">
-              <CheckCircle className="w-8 h-8 text-emerald-400" />
-            </div>
-          </div>
+      {/* Trigger - compact, just context */}
+      <div className="flex items-center justify-center gap-4 mb-4">
+        <span className="text-xl text-slate-500">Triggered by:</span>
+        <div className="flex items-center gap-2 px-3 py-1 bg-slate-800/60 rounded-lg">
+          <Clock className="w-5 h-5 text-slate-400" />
+          <span className="text-xl text-slate-400">Schedule</span>
         </div>
+        <span className="text-xl text-slate-600">or</span>
+        <div className="flex items-center gap-2 px-3 py-1 bg-slate-800/60 rounded-lg">
+          <img src="/images/microsoft-logo.svg" alt="Microsoft" className="w-5 h-5" />
+          <span className="text-xl text-slate-400">Webhook</span>
+        </div>
+      </div>
 
-        {/* Detection - Amber (Still Deterministic!) */}
-        <div className="bg-amber-500/15 border-2 border-amber-500/50 rounded-2xl p-6">
+      {/* Main content - the actual sandwich */}
+      <div className="flex-1 flex flex-col justify-center gap-3">
+
+        {/* INPUT GUARDRAIL - Amber (Deterministic) */}
+        <div className="bg-amber-500/15 border-2 border-amber-500/50 rounded-2xl p-5">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-32 text-right">
-                <span className="text-2xl font-bold text-amber-400">DETECT</span>
+              <Shield className="w-8 h-8 text-amber-400" />
+              <div className="w-44">
+                <span className="text-2xl font-bold text-amber-400">INPUT GUARDRAIL</span>
               </div>
               <div className="h-12 w-px bg-amber-500/50" />
             </div>
             <div className="flex-1">
-              <div className="text-xl text-amber-400/80 mb-2">Math Finds Changes (No AI)</div>
+              <div className="text-2xl text-amber-300 mb-2">Code determines what changed</div>
               <div className="flex items-center gap-4">
                 <Calculator className="w-7 h-7 text-amber-400" />
                 <div className="font-mono text-xl">
@@ -77,80 +64,76 @@ export const CASandwichMappingSlide = ({ theme: t }) => {
               </div>
             </div>
             <div className="text-right">
-              <CheckCircle className="w-8 h-8 text-amber-400" />
+              <span className="text-xl text-amber-400/80">deterministic</span>
             </div>
           </div>
         </div>
 
         {/* AI LAYER - Purple (Probabilistic) */}
-        <div className="bg-purple-500/15 border-2 border-purple-500/50 rounded-2xl p-6">
+        <div className="bg-purple-500/15 border-2 border-purple-500/50 rounded-2xl p-5">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-32 text-right">
+              <Brain className="w-8 h-8 text-purple-400" />
+              <div className="w-44">
                 <span className="text-2xl font-bold text-purple-400">AI</span>
               </div>
               <div className="h-12 w-px bg-purple-500/50" />
             </div>
             <div className="flex-1">
-              <div className="text-xl text-purple-400/80 mb-2">Explains Only (Optional)</div>
+              <div className="text-2xl text-purple-300 mb-2">Builds explanation from JSON</div>
               <div className="flex items-center gap-4">
-                <Brain className="w-7 h-7 text-purple-400" />
                 <div className="text-xl text-slate-300">
-                  Translates GUIDs → names, describes security impact
+                  Translates IDs → names, describes security impact
                 </div>
-                <div className="px-3 py-1 bg-purple-500/20 rounded text-lg text-purple-400/70">
-                  Cannot change what was detected
+                <div className="px-3 py-1 bg-purple-500/20 rounded text-xl text-purple-400/70">
+                  Builds summary and advice
                 </div>
               </div>
             </div>
             <div className="text-right">
-              <span className="text-lg text-purple-400/60">probabilistic</span>
+              <span className="text-xl text-purple-400/80">probabilistic</span>
             </div>
           </div>
         </div>
 
-        {/* OUTPUT LAYER - Emerald (Deterministic) */}
-        <div className="bg-emerald-500/15 border-2 border-emerald-500/50 rounded-2xl p-6">
+        {/* OUTPUT GUARDRAIL - Amber (Deterministic) */}
+        <div className="bg-amber-500/15 border-2 border-amber-500/50 rounded-2xl p-5">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-32 text-right">
-                <span className="text-2xl font-bold text-emerald-400">OUTPUT</span>
+              <Shield className="w-8 h-8 text-amber-400" />
+              <div className="w-44">
+                <span className="text-2xl font-bold text-amber-400">OUTPUT GUARDRAIL</span>
               </div>
-              <div className="h-12 w-px bg-emerald-500/50" />
+              <div className="h-12 w-px bg-amber-500/50" />
             </div>
             <div className="flex-1">
-              <div className="text-xl text-emerald-400/80 mb-2">Deterministic Actions</div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 rounded-lg">
-                  <Bell className="w-6 h-6 text-emerald-400" />
-                  <span className="text-xl text-emerald-300">PSA ticket created</span>
+              <div className="text-2xl text-amber-300 mb-2">Set up Human Response</div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 rounded-lg">
+                  <Ticket className="w-6 h-6 text-amber-400" />
+                  <span className="text-xl text-amber-300">PSA ticket with AI explanation</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 rounded-lg">
-                  <span className="text-xl text-emerald-300">Email sent</span>
+                <div className="px-3 py-1 bg-red-500/20 rounded text-xl text-red-400/80">
+                  Easy Approval or Remediation
                 </div>
-                <span className="text-xl text-slate-400">
-                  AI cannot skip the alert
-                </span>
               </div>
             </div>
             <div className="text-right">
-              <CheckCircle className="w-8 h-8 text-emerald-400" />
+              <span className="text-xl text-amber-400/80">deterministic</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Footer - The payoff */}
-      <div className="mt-6 flex justify-center">
+      <div className="mt-4 flex justify-center">
         <div className="bg-slate-900/80 border border-slate-700 rounded-xl px-10 py-4">
           <p className="text-3xl text-slate-300">
-            <span className="text-emerald-400 font-semibold">Math detects.</span>
+            <span className="text-amber-400 font-semibold">Code detects.</span>
             {' '}
             <span className="text-purple-400 font-semibold">AI explains.</span>
             {' '}
-            <span className="text-emerald-400 font-semibold">You get notified.</span>
-            {' '}
-            <span className="text-slate-500">Every time.</span>
+            <span className="text-amber-400 font-semibold">You get notified.</span>
           </p>
         </div>
       </div>

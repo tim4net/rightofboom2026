@@ -48,7 +48,7 @@ const BridgeSlide = ({ theme: t }) => {
                 className="bg-slate-800/50 border border-slate-600/50 rounded-xl p-5"
               >
                 <div className="text-2xl font-semibold text-slate-200">{item.text}</div>
-                <div className="text-xl text-slate-400 mt-1">{item.detail}</div>
+                <div className="text-2xl text-slate-400 mt-1">{item.detail}</div>
               </div>
             ))}
           </div>
@@ -93,7 +93,7 @@ const BridgeSlide = ({ theme: t }) => {
                 }`}>
                   {item.text}
                 </div>
-                <div className={`text-xl mt-1 ${
+                <div className={`text-2xl mt-1 ${
                   item.highlight ? 'text-emerald-400/80' : 'text-emerald-500/70'
                 }`}>
                   {item.detail}

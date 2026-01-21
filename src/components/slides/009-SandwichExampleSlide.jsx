@@ -11,7 +11,7 @@ const SandwichExampleSlide = ({ theme: t }) => {
     <div className="w-full h-full flex flex-col px-12 py-8">
       {/* Header */}
       <div className="text-center mb-6">
-        <h2 className={`text-5xl font-bold ${t.textOnPage} mb-2`}>
+        <h2 className={`text-7xl font-black ${t.textOnPage} mb-2`}>
           The Sandwich in Action
         </h2>
         <p className="text-2xl text-slate-400">
@@ -20,7 +20,7 @@ const SandwichExampleSlide = ({ theme: t }) => {
       </div>
 
       {/* Main content - side by side comparison */}
-      <div className="flex-1 flex gap-6 items-stretch justify-center max-w-6xl mx-auto w-full">
+      <div className="flex-1 flex gap-48 items-stretch justify-center max-w-[86rem] mx-auto w-full">
 
         {/* APPROVED Card */}
         <div className="flex-1">
@@ -42,9 +42,9 @@ const SandwichExampleSlide = ({ theme: t }) => {
               <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <CheckCircle className="w-5 h-5 text-amber-400" />
-                  <span className="text-xl font-bold text-amber-400">INPUT</span>
+                  <span className="text-2xl font-bold text-amber-400">INPUT</span>
                 </div>
-                <div className="text-lg text-slate-300 pl-7">
+                <div className="text-xl text-slate-300 pl-7">
                   Sentinel: "Cobalt Strike beacon on WKS-042"
                 </div>
               </div>
@@ -53,9 +53,9 @@ const SandwichExampleSlide = ({ theme: t }) => {
               <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <CheckCircle className="w-5 h-5 text-purple-400" />
-                  <span className="text-xl font-bold text-purple-400">AI</span>
+                  <span className="text-2xl font-bold text-purple-400">AI</span>
                 </div>
-                <div className="text-lg text-slate-300 pl-7">
+                <div className="text-xl text-slate-300 pl-7">
                   Decision: <span className="font-mono text-emerald-400">"isolate_endpoint"</span>
                   <span className="text-slate-400 ml-2">(92%)</span>
                 </div>
@@ -65,9 +65,9 @@ const SandwichExampleSlide = ({ theme: t }) => {
               <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <CheckCircle className="w-5 h-5 text-amber-400" />
-                  <span className="text-xl font-bold text-amber-400">OUTPUT</span>
+                  <span className="text-2xl font-bold text-amber-400">OUTPUT</span>
                 </div>
-                <div className="text-lg text-slate-300 pl-7">
+                <div className="text-xl text-slate-300 pl-7">
                   On allowlist, 92% ≥ 80% threshold
                 </div>
               </div>
@@ -79,7 +79,7 @@ const SandwichExampleSlide = ({ theme: t }) => {
                 <Zap className="w-9 h-9 text-emerald-400" />
                 <div>
                   <div className="text-2xl font-bold text-emerald-400">AUTO-EXECUTE</div>
-                  <div className="text-lg text-emerald-400/70">No human needed</div>
+                  <div className="text-xl text-emerald-400/70">No human needed</div>
                 </div>
               </div>
             </div>
@@ -106,9 +106,9 @@ const SandwichExampleSlide = ({ theme: t }) => {
               <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <CheckCircle className="w-5 h-5 text-amber-400" />
-                  <span className="text-xl font-bold text-amber-400">INPUT</span>
+                  <span className="text-2xl font-bold text-amber-400">INPUT</span>
                 </div>
-                <div className="text-lg text-slate-300 pl-7">
+                <div className="text-xl text-slate-300 pl-7">
                   EDR: "Ransomware indicators on FILESRV01"
                 </div>
               </div>
@@ -117,9 +117,9 @@ const SandwichExampleSlide = ({ theme: t }) => {
               <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <AlertTriangle className="w-5 h-5 text-yellow-400" />
-                  <span className="text-xl font-bold text-purple-400">AI</span>
+                  <span className="text-2xl font-bold text-purple-400">AI</span>
                 </div>
-                <div className="text-lg text-slate-300 pl-7">
+                <div className="text-xl text-slate-300 pl-7">
                   Decision: <span className="font-mono text-amber-400">"shutdown_server"</span>
                   <span className="text-slate-400 ml-2">(73%)</span>
                 </div>
@@ -129,9 +129,9 @@ const SandwichExampleSlide = ({ theme: t }) => {
               <div className="bg-red-500/20 border-2 border-red-500/50 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <XCircle className="w-5 h-5 text-red-400" />
-                  <span className="text-xl font-bold text-red-400">OUTPUT</span>
+                  <span className="text-2xl font-bold text-red-400">OUTPUT</span>
                 </div>
-                <div className="text-lg text-red-300 pl-7 font-medium">
+                <div className="text-xl text-red-300 pl-7 font-medium">
                   Critical asset requires ≥95%
                 </div>
               </div>
@@ -143,7 +143,7 @@ const SandwichExampleSlide = ({ theme: t }) => {
                 <User className="w-9 h-9 text-amber-400" />
                 <div>
                   <div className="text-2xl font-bold text-amber-400">HUMAN REVIEW</div>
-                  <div className="text-lg text-amber-400/70">Analyst approval required</div>
+                  <div className="text-xl text-amber-400/70">Analyst approval required</div>
                 </div>
               </div>
             </div>

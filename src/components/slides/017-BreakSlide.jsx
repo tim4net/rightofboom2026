@@ -16,18 +16,18 @@ const BreakSlide = ({ theme: t }) => {
       <p className={`text-2xl md:text-3xl ${t.accentColor} font-medium mb-12`}>{subtitle}</p>
 
       <div className={`max-w-xl mx-auto ${t.cardBg} p-8 rounded-2xl border ${t.cardBorder}`}>
-        <div className="text-slate-400 mb-4 text-lg">Returning with:</div>
+        <div className="text-slate-400 mb-4 text-2xl">Returning with:</div>
         <div className={`text-3xl font-bold ${t.accentColor}`}>{nextSection}</div>
       </div>
 
       <div className="mt-12 flex items-center justify-center gap-4">
         <Clock className={`w-6 h-6 ${t.accentColor}`} />
-        <span className="text-xl text-slate-400">
+        <span className="text-2xl text-slate-400">
           Back at <span className={`font-mono ${t.accentColor}`}>{new Date(Date.now() + duration * 60000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
         </span>
       </div>
 
-      <p className="mt-8 text-slate-600 font-mono text-sm">
+      <p className="mt-8 text-slate-600 font-mono text-xl">
         [CPE Reminder: Sign the attendance sheet]
       </p>
     </div>
