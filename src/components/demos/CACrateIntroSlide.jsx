@@ -22,7 +22,7 @@ export const CACrateIntroSlide = ({ theme: t }) => {
         <div className="h-32 w-px bg-slate-600" />
         <div className="flex items-center gap-4">
           <Package className="w-16 h-16 text-amber-400" />
-          <span className="text-6xl font-bold text-amber-400">Crates</span>
+          <span className="text-6xl font-bold text-amber-400">Crate</span>
         </div>
       </div>
 
