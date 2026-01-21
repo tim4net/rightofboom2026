@@ -275,35 +275,44 @@ Now you have full RDP access from your Linux box. Most IT teams never audit loca
   }
 ];
 
+// Static mockup for PDF generation - no hooks, no keyboard handlers
+function AttackLabMockup() {
+  return (
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'transparent'
+    }}>
+      <img
+        src="/images/attack-demo-mockup.png"
+        alt="Attack Lab Demo"
+        style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          objectFit: 'contain'
+        }}
+      />
+    </div>
+  );
+}
+
+// Check if we're in PDF mode (do this once at module level)
+const isPdfMode = typeof window !== 'undefined' &&
+  new URLSearchParams(window.location.search).get('pdf') === 'true';
+
+// Export wrapper that chooses between mockup and interactive demo
 export function AttackLabDemo() {
-  // Check for PDF mode (static mockup for PDF generation)
-  const isPdfMode = typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).get('pdf') === 'true';
-
-  // In PDF mode, show static mockup instead of interactive demo
   if (isPdfMode) {
-    return (
-      <div style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'transparent'
-      }}>
-        <img
-          src="/images/attack-demo-mockup.png"
-          alt="Attack Lab Demo"
-          style={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-            objectFit: 'contain'
-          }}
-        />
-      </div>
-    );
+    return <AttackLabMockup />;
   }
+  return <AttackLabInteractive />;
+}
 
+// Interactive demo component with all hooks
+function AttackLabInteractive() {
   // State
   const [phase, setPhase] = useState(0);
   const [messageIndex, setMessageIndex] = useState(0);
