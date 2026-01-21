@@ -54,7 +54,7 @@ import {
 } from './DemoComponents';
 
 // CA Policy Monitor crate slides
-import { M365ConfigDriftDemo, CACrateExampleSlide, CACrateIntroSlide } from './components/demos';
+import { M365ConfigDriftDemo, CACrateIntroSlide, CASandwichMappingSlide } from './components/demos';
 
 // Data
 import { slides, themes } from './data/slides';
@@ -265,10 +265,10 @@ const PresentationApp = () => {
           </div>
         );
 
-      case 'caCrateExample':
+      case 'caSandwichMapping':
         return (
           <div className="animate-in fade-in duration-500">
-            <CACrateExampleSlide theme={t} />
+            <CASandwichMappingSlide theme={t} />
           </div>
         );
 

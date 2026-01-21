@@ -7,6 +7,7 @@ export { DeterminismDemo } from './DeterminismDemo';
 export { M365ConfigDriftDemo } from './M365ConfigDriftDemo';
 export { CACrateExampleSlide } from './CACrateExampleSlide';
 export { CACrateIntroSlide } from './CACrateIntroSlide';
+export { CASandwichMappingSlide } from './CASandwichMappingSlide';
 export { NetworkSegmentationDemo } from './NetworkSegmentationDemo';
 export { AlertTriageDemo } from './AlertTriageDemo';
 export { EndpointValidationDemo } from './EndpointValidationDemo';

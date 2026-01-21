@@ -213,26 +213,9 @@ export const slides = [
 "And it tells you WHO made the change and whether there was a ticket."
 
 **Transition** (5 sec)
-"Let me show you what the alert actually looks like..."
+"Let me show you how it works..."
 
-⏱ ~40 seconds | 👁 Quick context before the demo` },
-
-  { type: 'caCrateExample', notes: `**Open with the Hook** (10 sec)
-"Someone changed your Block Legacy Authentication policy. Look at this."
-→ Let them read the before/after
-
-**The Risk** (15 sec)
-"Report-Only means legacy auth is ALLOWED — it just gets logged. Attackers specifically look for this gap."
-"This exact drift has been involved in real M365 breaches."
-
-**The Attribution** (10 sec)
-→ Point to "Changed by" and "No ticket"
-"We know WHO made the change. And there's no ticket. Was this authorized?"
-
-**Transition** (5 sec)
-"How did we catch this? Let me show you..."
-
-⏱ ~40 seconds | 👁 Let the example speak — this is the hook` },
+⏱ ~40 seconds | 👁 Quick context before the technical flow` },
 
   { type: 'm365Drift', notes: `**The Architecture** (25 sec)
 → Walk through the flow
@@ -248,6 +231,26 @@ export const slides = [
 "Two triggers: scheduled checks plus real-time webhook from Microsoft's audit log."
 
 ⏱ ~45 seconds | 👁 "AI summarizes, math decides" is the quotable line` },
+
+  { type: 'caSandwichMapping', notes: `**Connect to the Sandwich** (20 sec)
+"Remember the guardrail sandwich from earlier? Here's how the CA Policy Monitor maps to it."
+→ Walk through each layer
+
+**INPUT** (10 sec)
+"Deterministic triggers — scheduled check or Microsoft webhook. No AI deciding when to run."
+
+**AI LAYER** (15 sec)
+"The AI ONLY explains. It translates GUIDs to names. It describes the security impact."
+"But notice — AI doesn't decide what changed. Math already did that."
+
+**OUTPUT** (10 sec)
+"Deterministic actions — create a ticket, send an email. The AI can't decide to skip the alert."
+
+**The Payoff** (10 sec)
+"This is why you can trust it. If the math finds a change, you get notified. Every time."
+"AI makes it readable. It can't make it wrong."
+
+⏱ ~65 seconds | 👁 Reinforces the architecture they learned earlier` },
 
   { type: 'endpointValidation' },
   { type: 'networkSeg' },               // Slide 10
