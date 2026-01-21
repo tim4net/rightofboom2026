@@ -1,22 +1,25 @@
 import React from 'react';
-import { ArrowDown, ArrowRight, Clock, Zap, Database, Calculator, Brain, Bell, FileText, Mail } from 'lucide-react';
+import { ArrowDown, Clock, Zap, Database, Calculator, Brain, Bell, RefreshCw } from 'lucide-react';
 import { CrateBadge } from '../ui/CrateBadge';
 
 /**
- * CA Policy Monitor - How It Works (Flowchart)
+ * CA Policy Monitor - How It Works (Accurate Technical Flow)
  *
- * This is the SECOND SLIDE in the CA Crate demo sequence.
- * Shows the complete detection flow as a vertical flowchart
- * with clear mapping to the guardrail sandwich layers.
+ * This shows the REAL architecture:
  *
- * Flow:
- * 1. YOUR BASELINE (ground truth)
- * 2. DUAL TRIGGERS (scheduled + webhook)
- * 3. MATH DIFF (deterministic comparison)
- * 4. AI LAYER (translation + explanation)
- * 5. ALERT (ticket + email with attribution)
+ * 1. TRIGGERS: Cron (42 min) OR Microsoft Audit Log webhook
+ * 2. FETCH: Get current CA policies from MS Graph API
+ * 3. COMPARE: Set difference against stored baseline (MATH)
+ *    - added = in current, not in baseline
+ *    - removed = in baseline, not in current
+ *    - changed = modifiedDateTime newer than last check
+ * 4. TRANSLATE: GUIDs to human-readable names (lookup)
+ * 5. AI (optional): GPT-4 explains security impact
+ * 6. NOTIFY: PSA ticket + email
+ * 7. UPDATE: Save new baseline to Rewst template
  *
- * Teaching point: "AI summarizes. Math decides."
+ * Key insight: Detection is MATH. AI only EXPLAINS.
+ * "Who changed it" comes from Microsoft's audit log, not the crate.
  */
 export const M365ConfigDriftDemo = ({ theme: t }) => {
   return (
@@ -29,191 +32,176 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
         </h2>
       </div>
 
-      {/* Main Content - Flowchart */}
-      <div className="flex-1 flex gap-6">
-        {/* Left Side: The Flow (70%) */}
-        <div className="flex-[7] flex flex-col justify-center gap-2">
+      {/* Main Flow - Horizontal with clear steps */}
+      <div className="flex-1 flex flex-col justify-center gap-3">
 
-          {/* STEP 1: YOUR BASELINE */}
-          <div className="flex items-center gap-4">
-            {/* Sandwich Label */}
-            <div className="w-32 text-right">
-              <span className="text-xl font-bold text-emerald-400">INPUT</span>
-              <div className="text-lg text-emerald-400/60">deterministic</div>
-            </div>
-
-            {/* Flow Box */}
-            <div className="flex-1 bg-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-4">
+        {/* Row 1: TRIGGERS */}
+        <div className="flex items-center gap-4">
+          <div className="w-24 text-right">
+            <span className="text-xl font-bold text-emerald-400">1</span>
+          </div>
+          <div className="flex-1 bg-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-4">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Database className="w-8 h-8 text-emerald-400 flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="text-2xl font-bold text-emerald-400">YOUR BASELINE</div>
-                  <div className="text-xl text-slate-400">
-                    Stored config snapshot — <span className="text-emerald-400">your ground truth</span>
-                  </div>
-                </div>
+                <div className="text-2xl font-bold text-emerald-400">TRIGGER</div>
               </div>
-            </div>
-          </div>
-
-          {/* Arrow + Triggers */}
-          <div className="flex items-center gap-4">
-            <div className="w-32" />
-            <div className="flex-1 flex items-center justify-center gap-4 py-1">
-              <ArrowDown className="w-6 h-6 text-slate-600" />
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-1 bg-slate-800/60 border border-slate-600/50 rounded-lg">
-                  <Clock className="w-5 h-5 text-slate-400" />
-                  <span className="text-lg text-slate-300">Scheduled</span>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg">
+                  <Clock className="w-6 h-6 text-slate-400" />
+                  <span className="text-xl text-slate-300">Every 42 min</span>
                 </div>
-                <span className="text-xl text-slate-500">+</span>
-                <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
-                  <Zap className="w-5 h-5 text-emerald-400" />
-                  <span className="text-lg text-emerald-300 font-semibold">MS Audit Webhook</span>
-                </div>
-              </div>
-              <ArrowDown className="w-6 h-6 text-slate-600" />
-            </div>
-          </div>
-
-          {/* STEP 2: MATH DIFF */}
-          <div className="flex items-center gap-4">
-            {/* Sandwich Label */}
-            <div className="w-32 text-right">
-              <span className="text-xl font-bold text-amber-400">MATH</span>
-              <div className="text-lg text-amber-400/60">deterministic</div>
-            </div>
-
-            {/* Flow Box */}
-            <div className="flex-1 bg-amber-500/10 border-2 border-amber-500/40 rounded-xl p-4">
-              <div className="flex items-center gap-4">
-                <Calculator className="w-8 h-8 text-amber-400 flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="text-2xl font-bold text-amber-400">SET DIFFERENCE</div>
-                  <div className="text-xl text-slate-400">
-                    Compare baseline to current — <span className="text-amber-400">no guessing</span>
-                  </div>
-                </div>
-                <div className="flex gap-4 font-mono text-xl">
-                  <span className="text-emerald-400">+ added</span>
-                  <span className="text-red-400">- removed</span>
-                  <span className="text-amber-400">~ changed</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="w-32" />
-            <div className="flex-1 flex justify-center">
-              <ArrowDown className="w-6 h-6 text-slate-600" />
-            </div>
-          </div>
-
-          {/* STEP 3: AI LAYER */}
-          <div className="flex items-center gap-4">
-            {/* Sandwich Label */}
-            <div className="w-32 text-right">
-              <span className="text-xl font-bold text-purple-400">AI</span>
-              <div className="text-lg text-purple-400/60">probabilistic</div>
-            </div>
-
-            {/* Flow Box */}
-            <div className="flex-1 bg-purple-500/10 border-2 border-purple-500/40 rounded-xl p-4">
-              <div className="flex items-center gap-4">
-                <Brain className="w-8 h-8 text-purple-400 flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="text-2xl font-bold text-purple-400">AI TRANSLATION</div>
-                  <div className="text-xl text-slate-400">
-                    GUIDs to names • Security impact • Recommendations
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-1 text-lg">
-                  <span className="text-emerald-400">POSITIVE change</span>
-                  <span className="text-red-400">NEGATIVE change</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="w-32" />
-            <div className="flex-1 flex justify-center">
-              <ArrowDown className="w-6 h-6 text-slate-600" />
-            </div>
-          </div>
-
-          {/* STEP 4: ALERT */}
-          <div className="flex items-center gap-4">
-            {/* Sandwich Label */}
-            <div className="w-32 text-right">
-              <span className="text-xl font-bold text-red-400">OUTPUT</span>
-              <div className="text-lg text-red-400/60">deterministic</div>
-            </div>
-
-            {/* Flow Box */}
-            <div className="flex-1 bg-red-500/10 border-2 border-red-500/40 rounded-xl p-4">
-              <div className="flex items-center gap-4">
-                <Bell className="w-8 h-8 text-red-400 flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="text-2xl font-bold text-red-400">ALERT</div>
-                  <div className="text-xl text-slate-400">
-                    Based on <span className="text-amber-400">real diff</span>, not AI opinion
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-slate-800/60 border border-slate-600/50 rounded-lg">
-                    <FileText className="w-5 h-5 text-slate-400" />
-                    <span className="text-lg text-slate-300">PSA Ticket</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-1 bg-slate-800/60 border border-slate-600/50 rounded-lg">
-                    <Mail className="w-5 h-5 text-slate-400" />
-                    <span className="text-lg text-slate-300">Email</span>
-                  </div>
+                <span className="text-2xl text-slate-500 font-bold">OR</span>
+                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
+                  <Zap className="w-6 h-6 text-emerald-400" />
+                  <span className="text-xl text-emerald-300 font-semibold">MS Audit Webhook</span>
+                  <span className="text-lg text-emerald-400/60">(real-time)</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Alert Contents (30%) */}
-        <div className="flex-[3] flex flex-col justify-center">
-          <div className="bg-slate-900/70 border-2 border-slate-600/50 rounded-2xl p-5">
-            <div className="text-xl font-bold text-slate-400 mb-4 uppercase tracking-wide">
-              Alert Contains
+        <div className="flex items-center gap-4">
+          <div className="w-24" />
+          <div className="flex-1 flex justify-center">
+            <ArrowDown className="w-6 h-6 text-slate-600" />
+          </div>
+        </div>
+
+        {/* Row 2: FETCH + COMPARE */}
+        <div className="flex items-center gap-4">
+          <div className="w-24 text-right">
+            <span className="text-xl font-bold text-amber-400">2-3</span>
+          </div>
+          <div className="flex-1 bg-amber-500/10 border-2 border-amber-500/40 rounded-xl p-4">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4 flex-1">
+                <Database className="w-8 h-8 text-amber-400 flex-shrink-0" />
+                <div>
+                  <div className="text-2xl font-bold text-amber-400">FETCH + COMPARE</div>
+                  <div className="text-xl text-slate-400">
+                    Get current from MS Graph, compare to stored baseline
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Calculator className="w-7 h-7 text-amber-400" />
+                <div className="flex flex-col gap-1 font-mono text-xl">
+                  <span className="text-emerald-400">added = current - baseline</span>
+                  <span className="text-red-400">removed = baseline - current</span>
+                  <span className="text-amber-400">changed = newer modifiedDateTime</span>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <div className="space-y-4">
-              <div className="bg-slate-800/50 rounded-lg p-3">
-                <div className="text-lg text-slate-500 mb-1">WHO</div>
-                <div className="text-xl text-amber-400 font-mono">it-manager@contoso.com</div>
+        <div className="flex items-center gap-4">
+          <div className="w-24" />
+          <div className="flex-1 flex justify-center">
+            <ArrowDown className="w-6 h-6 text-slate-600" />
+          </div>
+        </div>
+
+        {/* Row 3: TRANSLATE */}
+        <div className="flex items-center gap-4">
+          <div className="w-24 text-right">
+            <span className="text-xl font-bold text-slate-400">4</span>
+          </div>
+          <div className="flex-1 bg-slate-700/30 border-2 border-slate-600/40 rounded-xl p-4">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl font-bold text-slate-300">TRANSLATE</div>
+              <div className="text-xl text-slate-400">
+                GUIDs → human names
               </div>
-
-              <div className="bg-slate-800/50 rounded-lg p-3">
-                <div className="text-lg text-slate-500 mb-1">WHAT CHANGED</div>
-                <div className="text-xl text-white">State: Enabled → Report-Only</div>
+              <div className="flex items-center gap-2 ml-auto">
+                <span className="font-mono text-xl text-slate-500">a1b2c3d4-...</span>
+                <span className="text-xl text-slate-500">→</span>
+                <span className="text-xl text-amber-400">it-manager@contoso.com</span>
               </div>
+            </div>
+          </div>
+        </div>
 
-              <div className="bg-slate-800/50 rounded-lg p-3">
-                <div className="text-lg text-slate-500 mb-1">WHY IT MATTERS</div>
-                <div className="text-xl text-purple-300 italic">"Allows legacy auth attacks..."</div>
+        <div className="flex items-center gap-4">
+          <div className="w-24" />
+          <div className="flex-1 flex justify-center">
+            <ArrowDown className="w-6 h-6 text-slate-600" />
+          </div>
+        </div>
+
+        {/* Row 4: AI ANALYSIS (Optional) */}
+        <div className="flex items-center gap-4">
+          <div className="w-24 text-right">
+            <span className="text-xl font-bold text-purple-400">5</span>
+          </div>
+          <div className="flex-1 bg-purple-500/10 border-2 border-purple-500/40 rounded-xl p-4">
+            <div className="flex items-center gap-4">
+              <Brain className="w-8 h-8 text-purple-400 flex-shrink-0" />
+              <div className="flex-1">
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl font-bold text-purple-400">AI ANALYSIS</div>
+                  <span className="text-lg text-purple-400/60 px-2 py-1 bg-purple-500/20 rounded">(optional)</span>
+                </div>
+                <div className="text-xl text-slate-400">
+                  GPT-4 explains security impact: positive or negative
+                </div>
               </div>
+              <div className="text-xl text-purple-300 italic max-w-md">
+                "This change allows legacy auth, which bypasses MFA..."
+              </div>
+            </div>
+          </div>
+        </div>
 
-              <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3">
-                <div className="text-lg text-red-400/80 mb-1">TICKET CHECK</div>
-                <div className="text-xl text-red-400 font-bold">No matching ticket found</div>
+        <div className="flex items-center gap-4">
+          <div className="w-24" />
+          <div className="flex-1 flex justify-center">
+            <ArrowDown className="w-6 h-6 text-slate-600" />
+          </div>
+        </div>
+
+        {/* Row 5: NOTIFY + UPDATE */}
+        <div className="flex items-center gap-4">
+          <div className="w-24 text-right">
+            <span className="text-xl font-bold text-red-400">6-7</span>
+          </div>
+          <div className="flex-1 flex gap-4">
+            {/* Notify */}
+            <div className="flex-1 bg-red-500/10 border-2 border-red-500/40 rounded-xl p-4">
+              <div className="flex items-center gap-4">
+                <Bell className="w-8 h-8 text-red-400 flex-shrink-0" />
+                <div>
+                  <div className="text-2xl font-bold text-red-400">NOTIFY</div>
+                  <div className="text-xl text-slate-400">
+                    PSA ticket + email with full details
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Update baseline */}
+            <div className="flex-1 bg-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-4">
+              <div className="flex items-center gap-4">
+                <RefreshCw className="w-8 h-8 text-emerald-400 flex-shrink-0" />
+                <div>
+                  <div className="text-2xl font-bold text-emerald-400">UPDATE BASELINE</div>
+                  <div className="text-xl text-slate-400">
+                    Save current state for next comparison
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Footer: Landing Line */}
+      {/* Footer: The Landing Line */}
       <div className="mt-4 flex justify-center">
-        <div className="bg-slate-900/80 border border-slate-700 rounded-xl px-8 py-3">
+        <div className="bg-slate-900/80 border border-slate-700 rounded-xl px-10 py-4">
           <p className="text-3xl text-slate-300">
-            "<span className="text-purple-400 font-semibold">AI summarizes.</span>{' '}
-            <span className="text-amber-400 font-semibold">Math decides.</span>"
+            <span className="text-amber-400 font-semibold">Math detects.</span>
+            {' '}
+            <span className="text-purple-400 font-semibold">AI explains.</span>
           </p>
         </div>
       </div>
