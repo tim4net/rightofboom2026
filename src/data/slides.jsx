@@ -289,11 +289,53 @@ export const slides = [
 
 ⏱ ~80 seconds | 👁 "Facts gathered, AI synthesizes, human decides" is the quotable line` },
 
+  { type: 'tieredResponse', notes: `**Transition from Alert Triage** (10 sec)
+"So we have alerts coming in, context gathered, AI synthesizing. But here's the question everyone asks: When does the AI just ACT versus when do I need to approve?"
+"The answer isn't yes or no — it's a tiered model."
+
+**Walk the Decision Formula** (15 sec)
+→ Point to the formula bar
+"Two variables: confidence percentage and impact level. Combine them, you get your tier."
+"High confidence plus low impact? Auto-execute. Uncertain or high stakes? Human in the loop."
+
+**AUTO-EXECUTE Column** (25 sec)
+→ Point to the green column
+"Green means go. These are low-risk, high-confidence actions."
+"Block an IP that's on your threat intel blocklist — 100% confidence, zero business impact. Why wait for approval?"
+"Quarantine a phishing email. Send a 'was this you?' notification. Add someone to an MFA challenge group."
+"These happen in seconds. If you're wrong, the blast radius is tiny."
+
+**HUMAN APPROVAL Column** (25 sec)
+→ Point to the amber column
+"Amber means pause. Either we're not sure enough, or the action matters enough to verify."
+"Disabling an account — that's business impact. What if it's the CEO traveling?"
+"Isolating an endpoint — that's someone's workday stopped. Worth a 30-second check."
+"These aren't 'AI can't handle it.' These are 'a human adds context faster than we can automate it.'"
+
+**ALWAYS HUMAN Column** (25 sec)
+→ Point to the red column
+"Red means stop. No matter how confident the AI is, some actions require human judgment."
+"VIP actions — executives, board members. The reputational risk alone requires a human."
+"Mass actions — disabling 50 accounts? That's not alert response, that's incident response."
+"Permanent deletions. Firewall changes. Production isolation. These are irreversible or high-blast-radius."
+→ Land it: "The AI can recommend. But a human pulls the trigger."
+
+**The Landing** (10 sec)
+"Confidence sets the threshold — how sure are we? Impact sets the stakes — what happens if we're wrong?"
+"Design your automation with both in mind."
+
+⏱ ~110 seconds | 👁 "A human pulls the trigger" is the memorable phrase for high-impact actions
+
+**Q&A Prep:**
+- "Who decides the thresholds?" → "You do. Start conservative — 95% for auto-execute. Lower it as you build trust in specific detections."
+- "What about after-hours?" → "Great question. Some orgs auto-execute more aggressively off-hours when human response is slow. Others get more conservative. Depends on your risk tolerance."
+- "Doesn't this slow things down?" → "Auto-execute tier handles volume. Human tiers handle judgment. You're not slowing down the 90% — you're adding quality to the 10%."` },
+
   // ============================================
   // BREAK (15 min)
   // ============================================
 
-  { type: 'break' },                    // Slide 13
+  { type: 'break' },                    // Slide 14
 
   // ============================================
   // PART 3: GOVERNANCE & TRUST (35 min)
