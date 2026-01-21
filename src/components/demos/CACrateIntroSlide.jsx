@@ -3,28 +3,35 @@ import React from 'react';
 /**
  * CA Crate Intro Slide
  *
- * Simple, clean introduction. One focal point.
- * The next slides will explain HOW it works.
+ * Photo test: Can someone understand this slide from a photo taken at the conference?
  */
 export const CACrateIntroSlide = ({ theme: t }) => {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-16">
-      {/* Rewst Logo - large and prominent */}
+    <div className="w-full h-full flex flex-col items-center justify-center px-20">
+      {/* Rewst Logo */}
       <img
         src="/images/rewst-logo.png"
         alt="Rewst"
-        className="h-32 w-auto mb-8"
+        className="h-24 w-auto mb-10"
       />
 
-      {/* The title */}
-      <h1 className={`text-7xl font-black ${t.textOnPage} mb-6`}>
+      {/* Title */}
+      <h1 className={`text-6xl font-bold ${t.textOnPage} mb-12`}>
         CA Policy Monitor
       </h1>
 
-      {/* One line - what it does */}
-      <p className="text-3xl text-slate-400 text-center max-w-4xl">
-        Detects config drift in your Conditional Access policies
-      </p>
+      {/* The three steps - clear, scannable */}
+      <div className="space-y-6 text-center">
+        <p className="text-4xl text-slate-200">
+          <span className="text-emerald-400 font-semibold">You store the baseline.</span>
+        </p>
+        <p className="text-4xl text-slate-200">
+          <span className="text-amber-400 font-semibold">Math finds what changed.</span>
+        </p>
+        <p className="text-4xl text-slate-200">
+          <span className="text-purple-400 font-semibold">AI explains why it matters.</span>
+        </p>
+      </div>
     </div>
   );
 };
