@@ -17,12 +17,12 @@ export const CACrateIntroSlide = ({ theme: t }) => {
         <img
           src="/images/rewst-logo.png"
           alt="Rewst"
-          className="h-16 w-auto"
+          className="h-48 w-auto"
         />
-        <div className="h-12 w-px bg-slate-600" />
-        <div className="flex items-center gap-3">
-          <Package className="w-10 h-10 text-amber-400" />
-          <span className="text-4xl font-bold text-amber-400">Crates</span>
+        <div className="h-32 w-px bg-slate-600" />
+        <div className="flex items-center gap-4">
+          <Package className="w-16 h-16 text-amber-400" />
+          <span className="text-6xl font-bold text-amber-400">Crates</span>
         </div>
       </div>
 
