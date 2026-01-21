@@ -6,7 +6,7 @@ import { CHAT_CONFIG } from '../../config/typography';
  * Chat message component for attacker/AI conversation display
  * Supports typing animation, code block rendering with copy button, and bold text
  */
-export function ChatMessage({ role, content, animate = false, onComplete }) {
+export function ChatMessage({ role, content, animate = false, onComplete, onTypingProgress }) {
   const [displayedContent, setDisplayedContent] = useState(animate ? '' : content);
   const [isComplete, setIsComplete] = useState(!animate);
   const [copiedIndex, setCopiedIndex] = useState(null);
@@ -30,15 +30,21 @@ export function ChatMessage({ role, content, animate = false, onComplete }) {
       if (index >= content.length) {
         setDisplayedContent(content);
         setIsComplete(true);
-        onComplete?.();
+        // Defer scroll until after React commits the DOM update
+        requestAnimationFrame(() => {
+          onTypingProgress?.();
+          onComplete?.();
+        });
         clearInterval(timer);
       } else {
         setDisplayedContent(content.slice(0, index));
+        // Defer scroll until after React commits the DOM update
+        requestAnimationFrame(() => onTypingProgress?.());
       }
     }, 15);
 
     return () => clearInterval(timer);
-  }, [content, animate, onComplete]);
+  }, [content, animate, onComplete, onTypingProgress]);
 
   // Copy code to clipboard
   const copyCode = async (code, index) => {

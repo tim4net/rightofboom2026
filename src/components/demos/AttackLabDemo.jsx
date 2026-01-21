@@ -305,10 +305,10 @@ export function AttackLabDemo() {
     });
   });
 
-  // Auto-scroll to bottom when messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [allVisibleMessages.length]);
+  // Scroll to bottom - called directly by ChatMessage during typing
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+  }, []);
 
   // Reset phase state
   const resetPhaseState = useCallback(() => {
@@ -325,9 +325,10 @@ export function AttackLabDemo() {
     // Step 1: Show next message
     if (messageIndex < currentPhase.messages.length) {
       setIsAnimating(true);
+      scrollToBottom(); // Initial scroll
       setMessageIndex(i => i + 1);
-      // Allow time for animation
-      setTimeout(() => setIsAnimating(false), 500);
+      // ChatMessage will call scrollToBottom via onTypingProgress
+      // isAnimating will be set to false via onComplete
       return;
     }
 
@@ -355,7 +356,7 @@ export function AttackLabDemo() {
       setPhase(p => p + 1);
       resetPhaseState();
     }
-  }, [phase, messageIndex, showExecuteButton, commandExecuted, isAnimating, currentPhase, resetPhaseState]);
+  }, [phase, messageIndex, showExecuteButton, commandExecuted, isAnimating, currentPhase, resetPhaseState, scrollToBottom]);
 
   // Go to previous step
   const goBack = useCallback(() => {
@@ -579,6 +580,8 @@ export function AttackLabDemo() {
                 role={msg.role}
                 content={msg.content}
                 animate={msg.isNew}
+                onTypingProgress={msg.isNew ? scrollToBottom : undefined}
+                onComplete={msg.isNew ? () => setIsAnimating(false) : undefined}
               />
             ))}
 
