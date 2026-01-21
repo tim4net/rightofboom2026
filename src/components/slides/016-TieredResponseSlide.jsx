@@ -2,10 +2,10 @@ import React from 'react';
 import { Zap, UserCheck, Users, Clock } from 'lucide-react';
 
 /**
- * Response Matrix Slide
+ * Approval Matrix Slide
  *
- * 2x2 matrix showing when AI can auto-execute vs when humans must approve.
- * Axes: Confidence (X) vs Risk/Impact (Y)
+ * 2x2 matrix showing when automation can act vs when humans must approve.
+ * Axes: Detection Confidence (X) vs Risk/Impact (Y)
  *
  * Quadrants:
  * - High Risk + High Confidence → Human approves (stakes too high)
@@ -19,10 +19,10 @@ export const TieredResponseSlide = ({ theme: t }) => {
       {/* Header */}
       <div className="text-center mb-6">
         <h2 className={`text-5xl font-bold ${t.textOnPage} mb-2`}>
-          The Response Matrix
+          The Approval Matrix
         </h2>
         <p className="text-2xl text-slate-400">
-          Confidence alone isn't enough — risk sets the bar
+          Automate or Escalate?
         </p>
       </div>
 
@@ -58,6 +58,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
                 <div className="flex-1 flex flex-col justify-center gap-1">
                   <div className="text-xl text-slate-300">Production system isolation</div>
                   <div className="text-xl text-slate-300">Uncertain threat on critical asset</div>
+                  <div className="text-xl text-slate-300">Provide information, not action</div>
                 </div>
               </div>
 
@@ -75,6 +76,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
                 <div className="flex-1 flex flex-col justify-center gap-1">
                   <div className="text-xl text-slate-300">Disable executive account</div>
                   <div className="text-xl text-slate-300">Firewall rule changes</div>
+                  <div className="text-xl text-slate-300">Easy approval / denial</div>
                 </div>
               </div>
 
@@ -92,6 +94,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
                 <div className="flex-1 flex flex-col justify-center gap-1">
                   <div className="text-xl text-slate-400">Suspicious but low-priority alerts</div>
                   <div className="text-xl text-slate-400">Anomalies needing context</div>
+                  <div className="text-xl text-slate-400">Likely noise or candidates for refinement</div>
                 </div>
               </div>
 
@@ -109,6 +112,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
                 <div className="flex-1 flex flex-col justify-center gap-1">
                   <div className="text-xl text-slate-300">Block known-bad IP</div>
                   <div className="text-xl text-slate-300">Quarantine phishing email</div>
+                  <div className="text-xl text-slate-300">Automated remediation with ticket logging</div>
                 </div>
               </div>
             </div>

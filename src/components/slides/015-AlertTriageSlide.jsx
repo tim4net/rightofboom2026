@@ -165,6 +165,8 @@ export const AlertTriagePatternSlide = ({ theme: t }) => {
             <span className="text-purple-400 font-semibold">AI synthesizes.</span>
             {' '}
             <span className="text-emerald-400 font-semibold">Human decides.</span>
+            {' '}
+            <span className="text-slate-500">— But when can we automate that decision?</span>
           </p>
         </div>
       </div>
