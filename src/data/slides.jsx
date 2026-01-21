@@ -252,6 +252,22 @@ export const slides = [
 
 ⏱ ~65 seconds | 👁 Reinforces the architecture they learned earlier` },
 
+  { type: 'patternApplications', notes: `**The Template** (15 sec)
+"This isn't just for Conditional Access. The same pattern works everywhere."
+→ Walk through the table
+
+**Examples** (30 sec)
+"Firewall rules — math detects a new 'allow any', AI explains what you just exposed."
+"Duo bypass — math detects someone's MFA is disabled, AI explains the risk window."
+"Backup retention — math detects someone shortened your retention, AI explains the RPO impact."
+"DNS records — math detects your DMARC changed, AI explains how email auth was weakened."
+
+**The Landing** (10 sec)
+"Same four steps every time: Baseline, Compare, Explain, Alert."
+"You're not learning one tool. You're learning a pattern you can apply to anything."
+
+⏱ ~55 seconds | 👁 Drives home the reusability of the architecture` },
+
   { type: 'endpointValidation' },
   { type: 'networkSeg' },               // Slide 10
   { type: 'alertTriage' },              // Slide 11
