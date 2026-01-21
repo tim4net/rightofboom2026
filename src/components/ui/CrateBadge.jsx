@@ -16,21 +16,21 @@ import { Package } from 'lucide-react';
 export function CrateBadge({ name, variant = 'default', className = '' }) {
   if (variant === 'hero') {
     return (
-      <div className={`flex flex-col items-center gap-4 ${className}`}>
+      <div className={`flex flex-col items-center gap-6 ${className}`}>
         {/* Rewst Logo + Crate Label */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <img
             src="/images/rewst-logo.png"
             alt="Rewst"
-            className="h-16 w-auto"
+            className="h-24 w-auto"
           />
-          <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/50 rounded-lg">
-            <Package className="w-6 h-6 text-amber-400" />
-            <span className="text-xl font-bold text-amber-400 uppercase tracking-wide">Crate</span>
+          <div className="flex items-center gap-3 px-5 py-3 bg-amber-500/20 border-2 border-amber-500/50 rounded-xl">
+            <Package className="w-8 h-8 text-amber-400" />
+            <span className="text-2xl font-bold text-amber-400 uppercase tracking-wide">Crate</span>
           </div>
         </div>
         {/* Crate Name */}
-        <div className="text-4xl font-bold text-white">
+        <div className="text-6xl font-bold text-white">
           {name}
         </div>
       </div>
@@ -39,15 +39,15 @@ export function CrateBadge({ name, variant = 'default', className = '' }) {
 
   if (variant === 'compact') {
     return (
-      <div className={`flex items-center gap-3 ${className}`}>
+      <div className={`flex items-center gap-4 ${className}`}>
         <img
           src="/images/rewst-logo.png"
           alt="Rewst"
-          className="h-12 w-auto"
+          className="h-14 w-auto"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/20 border border-amber-500/50 rounded-lg">
-          <Package className="w-5 h-5 text-amber-400" />
-          <span className="text-lg font-bold text-amber-400">{name}</span>
+        <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/50 rounded-lg">
+          <Package className="w-6 h-6 text-amber-400" />
+          <span className="text-xl font-bold text-amber-400">{name}</span>
         </div>
       </div>
     );
