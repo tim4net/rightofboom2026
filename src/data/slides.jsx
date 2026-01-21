@@ -268,7 +268,6 @@ export const slides = [
 
 ⏱ ~55 seconds | 👁 Drives home the reusability of the architecture` },
 
-  { type: 'endpointValidation' },
   { type: 'networkSeg' },               // Slide 10
   { type: 'alertTriage' },              // Slide 11
   { type: 'evolutionRace' },            // Slide 12
