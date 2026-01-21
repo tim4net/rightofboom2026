@@ -285,7 +285,7 @@ export function AttackLabDemo() {
 
   // Refs
   const terminalRef = useRef(null);
-  const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   const currentPhase = PHASES[phase];
 
@@ -307,7 +307,9 @@ export function AttackLabDemo() {
 
   // Scroll to bottom - called directly by ChatMessage during typing
   const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, []);
 
   // Reset phase state
@@ -566,7 +568,9 @@ export function AttackLabDemo() {
           </div>
 
           {/* Messages */}
-          <div style={{
+          <div
+            ref={chatContainerRef}
+            style={{
             flex: 1,
             padding: '16px',
             overflowY: 'auto',
@@ -598,9 +602,6 @@ export function AttackLabDemo() {
                 Press SPACE to begin...
               </div>
             )}
-
-            {/* Scroll anchor */}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Execute button */}

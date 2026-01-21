@@ -24,6 +24,7 @@ export function ChatMessage({ role, content, animate = false, onComplete, onTypi
     // Fast typing animation - reveal in chunks for speed
     const chunkSize = 3;
     let index = 0;
+    let lastScrollTime = 0;
 
     const timer = setInterval(() => {
       index += chunkSize;
@@ -38,8 +39,12 @@ export function ChatMessage({ role, content, animate = false, onComplete, onTypi
         clearInterval(timer);
       } else {
         setDisplayedContent(content.slice(0, index));
-        // Defer scroll until after React commits the DOM update
-        requestAnimationFrame(() => onTypingProgress?.());
+        // Throttle scroll updates to prevent bouncing
+        const now = Date.now();
+        if (now - lastScrollTime >= 100) {
+          lastScrollTime = now;
+          requestAnimationFrame(() => onTypingProgress?.());
+        }
       }
     }, 15);
 
