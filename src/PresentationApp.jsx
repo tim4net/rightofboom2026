@@ -377,6 +377,22 @@ const PresentationApp = () => {
       <div className={`fixed top-0 right-0 w-[600px] h-[600px] ${t.accentBg}/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none`} />
       <div className={`fixed bottom-0 left-0 w-[600px] h-[600px] ${t.accentBg}/5 blur-[150px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none`} />
 
+      {/* Sponsor logos header - shown on all slides except title */}
+      {currentSlide > 0 && (
+        <div className="fixed top-4 left-0 right-0 flex justify-between items-center px-6 z-40 pointer-events-none">
+          <img
+            src="/images/rewst-logo.png"
+            alt="Rewst"
+            className="h-20 w-auto object-contain"
+          />
+          <img
+            src="/images/sherweb-logo-white.svg"
+            alt="Sherweb"
+            className="h-6 w-auto object-contain"
+          />
+        </div>
+      )}
+
       {/* Logo - bottom right corner with white pill behind */}
       <div className="fixed bottom-3 right-3 bg-white/90 rounded-xl px-4 py-2 z-40">
         <img

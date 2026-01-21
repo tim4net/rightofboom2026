@@ -5,10 +5,11 @@ import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
 
 const SLIDE_COUNT = 26; // Total slides (0-25)
-const SKIP_SLIDES = [3]; // Slide indices to skip (attackLab demo)
-const SELF_NAVIGATING_SLIDES = [3]; // Slides that capture ArrowRight (use Escape to exit)
+const SKIP_SLIDES = []; // No slides skipped - mockups shown for demos
+const SELF_NAVIGATING_SLIDES = []; // PDF mode disables self-navigation
 const OUTPUT_FILE = 'presentation.pdf';
-const URL = process.env.URL || 'http://localhost:2026';
+const BASE_URL = process.env.URL || 'http://localhost:2026';
+const URL = `${BASE_URL}?pdf=true`; // PDF mode shows static mockups for demos
 
 async function generatePDF() {
   console.log('Launching browser...');

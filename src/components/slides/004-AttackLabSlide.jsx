@@ -276,6 +276,34 @@ Now you have full RDP access from your Linux box. Most IT teams never audit loca
 ];
 
 export function AttackLabDemo() {
+  // Check for PDF mode (static mockup for PDF generation)
+  const isPdfMode = typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('pdf') === 'true';
+
+  // In PDF mode, show static mockup instead of interactive demo
+  if (isPdfMode) {
+    return (
+      <div style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'transparent'
+      }}>
+        <img
+          src="/images/attack-demo-mockup.png"
+          alt="Attack Lab Demo"
+          style={{
+            maxWidth: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain'
+          }}
+        />
+      </div>
+    );
+  }
+
   // State
   const [phase, setPhase] = useState(0);
   const [messageIndex, setMessageIndex] = useState(0);
