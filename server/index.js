@@ -429,6 +429,139 @@ Response must be valid JSON only, no markdown or explanation.`;
   }
 });
 
+// ============================================================================
+// Endpoint Attack Path Generator - For Attack Path Validator Demo
+// ============================================================================
+app.post('/api/endpoint-attack-path', async (req, res) => {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!apiKey) {
+    return res.status(400).json({ error: 'ANTHROPIC_API_KEY not configured' });
+  }
+
+  const { endpointConfig } = req.body;
+
+  if (!endpointConfig) {
+    return res.status(400).json({ error: 'Missing endpoint configuration' });
+  }
+
+  try {
+    const client = new Anthropic({ apiKey });
+
+    const prompt = `You are a red team operator analyzing endpoint security configuration.
+Given this endpoint config JSON, generate an attack path exploiting the security gaps found.
+
+ENDPOINT CONFIGURATION:
+${typeof endpointConfig === 'string' ? endpointConfig : JSON.stringify(endpointConfig, null, 2)}
+
+Generate an attack path in this exact JSON format:
+{
+  "attacks": [
+    {
+      "step": 1,
+      "technique": "MITRE ATT&CK ID (e.g., T1003.001)",
+      "name": "Attack name",
+      "description": "What this attack does",
+      "exploits": "Which specific gap this exploits",
+      "atomicTest": "Invoke-AtomicTest command to validate",
+      "severity": "critical|high|medium",
+      "expectedOutcome": "What happens if successful"
+    }
+  ],
+  "summary": "One sentence describing the attack chain"
+}
+
+Focus on gaps like:
+- Disabled ASR rules (especially LSASS protection)
+- Defender exclusions
+- Shared local admin accounts
+- Disabled PowerShell logging
+
+Response must be valid JSON only, no markdown.`;
+
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2048,
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const responseText = message.content[0].text;
+
+    let attackPath;
+    try {
+      attackPath = JSON.parse(responseText);
+    } catch {
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        attackPath = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error('Failed to parse AI response as JSON');
+      }
+    }
+
+    res.json({ attackPath });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Streaming endpoint attack path with visible AI response
+app.post('/api/endpoint-attack-path/stream', async (req, res) => {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const { endpointConfig } = req.body;
+
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  const send = (data) => {
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  };
+
+  if (!apiKey) {
+    send({ type: 'error', message: 'ANTHROPIC_API_KEY not configured' });
+    res.end();
+    return;
+  }
+
+  try {
+    const client = new Anthropic({ apiKey });
+
+    const prompt = `You are a red team operator. Given this endpoint security configuration, explain step-by-step how you would exploit the gaps found.
+
+ENDPOINT CONFIGURATION:
+${typeof endpointConfig === 'string' ? endpointConfig : JSON.stringify(endpointConfig, null, 2)}
+
+For each exploitable gap, explain:
+1. What the gap is
+2. The MITRE ATT&CK technique you'd use
+3. The specific Atomic Red Team test command
+4. What the successful attack enables
+
+Be concise but specific. Reference the actual values from the config.`;
+
+    send({ type: 'start' });
+
+    const stream = await client.messages.stream({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2048,
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    for await (const chunk of stream) {
+      if (chunk.type === 'content_block_delta' && chunk.delta?.text) {
+        send({ type: 'chunk', text: chunk.delta.text });
+      }
+    }
+
+    send({ type: 'done' });
+    res.end();
+  } catch (error) {
+    send({ type: 'error', message: error.message });
+    res.end();
+  }
+});
+
 // Streaming attack plan generation with visible AI thinking
 app.post('/api/attack-plan/stream', async (req, res) => {
   const apiKey = process.env.ANTHROPIC_API_KEY;
