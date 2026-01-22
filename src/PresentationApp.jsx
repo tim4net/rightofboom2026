@@ -31,6 +31,7 @@ import {
   SourcesSlide,
   GovernanceSlide,
   AttackSetupSlide,
+  AIRiskTensionSlide,
   AIVocabSlide,
   AIVocabTermsSlide,
   ToolUseSlide,
@@ -157,6 +158,9 @@ const PresentationApp = () => {
 
       case 'intro':
         return <IntroSlide theme={t} />;
+
+      case 'aiRiskTension':
+        return <AIRiskTensionSlide theme={t} />;
 
       case 'content':
         return <ContentSlide slide={slide} theme={t} />;

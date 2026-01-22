@@ -29,8 +29,32 @@ export const slides = [
 
   { type: 'title' },                    // Slide 0
   { type: 'intro' },                    // Slide 1
-  { type: 'attackSetup' },              // Slide 2
-  { type: 'attackLab' },                // Slide 3
+  { type: 'aiRiskTension', notes: `**Set up the tension** (5 sec)
+"Before we dive in, let's name the elephant in the room."
+
+**Left column - Adoption risks** (25 sec)
+→ Gesture to left card
+"If you let AI loose in your stack without guardrails..."
+"Hallucinated fix pushed to production — AI tells your L1 to change a firewall rule. They trust it. It's wrong. Now you're explaining to a client why their VoIP died."
+"One bad automation touches 50 tenants before your NOC notices."
+"And your techs? They're already pasting client credentials into ChatGPT to debug scripts. That data is gone."
+
+**Right column - Avoidance risks** (25 sec)
+→ Gesture to right card
+"But refusing to adopt while attackers don't? That's also losing."
+"AI-generated phishing is already landing in your clients' inboxes. No grammar mistakes. Personalized from LinkedIn scrapes."
+"Your L1 takes 4 hours to triage an alert. The attacker's tooling iterates in 4 seconds."
+"Alert volume across your client base doubles every year. You're not doubling headcount."
+
+**The landing** (10 sec)
+→ Pause, let them feel squeezed
+"Both paths lead somewhere bad."
+"The answer isn't ban AI. It's not trust AI blindly either."
+"It's harness it — with guardrails. That's what we're building today."
+
+⏱ ~65 seconds | 👁 MSPs feel this tension daily — let the pause land before offering the resolution.` },            // Slide 2: The AI Dilemma
+  { type: 'attackSetup' },              // Slide 3
+  { type: 'attackLab' },                // Slide 4
   { type: 'aiVocab', notes: `**Open with the "why"** (5 sec)
 "Before I show you how to secure AI, you need to understand one fundamental split."
 

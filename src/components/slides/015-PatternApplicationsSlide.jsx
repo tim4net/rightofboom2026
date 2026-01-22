@@ -18,9 +18,9 @@ export const PatternApplicationsSlide = ({ theme: t }) => {
     },
     {
       icon: Flame,
-      system: 'Firewall Rules',
-      detects: 'New "allow any" rule added',
-      explains: 'What exposure was created',
+      system: 'Network Segmentation',
+      detects: 'RDP/SMB opened across zones',
+      explains: 'Lateral movement now possible',
       color: 'red'
     },
     {
