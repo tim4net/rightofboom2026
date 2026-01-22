@@ -105,8 +105,14 @@ try {
         Write-Host "[+] Atomic Red Team module installed" -ForegroundColor Green
     }
 
+    # Add Defender exclusion for AtomicRedTeam BEFORE downloading (prevents quarantine)
+    $artPath = "$env:USERPROFILE\AtomicRedTeam"
+    Write-Host "[*] Adding Defender exclusion for AtomicRedTeam folder..." -ForegroundColor Cyan
+    Add-MpPreference -ExclusionPath $artPath -ErrorAction SilentlyContinue
+    Write-Host "[+] Defender exclusion added: $artPath" -ForegroundColor Green
+
     # Install atomics if not present
-    $atomicsPath = "$env:USERPROFILE\AtomicRedTeam\atomics"
+    $atomicsPath = "$artPath\atomics"
     if (-not (Test-Path $atomicsPath)) {
         Write-Host "[*] Downloading atomic test definitions..." -ForegroundColor Cyan
         # Download and run the installer script first

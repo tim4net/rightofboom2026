@@ -149,6 +149,11 @@ try {
     } else {
         Write-Host "[+] Atomic Red Team not installed (nothing to clean)" -ForegroundColor Green
     }
+
+    # Remove AtomicRedTeam Defender exclusion
+    $artPath = "$env:USERPROFILE\AtomicRedTeam"
+    Remove-MpPreference -ExclusionPath $artPath -ErrorAction SilentlyContinue
+    Write-Host "[+] Removed Defender exclusion for AtomicRedTeam" -ForegroundColor Green
 } catch {
     Write-Host "[!] Could not clean Atomic artifacts: $_" -ForegroundColor Yellow
 }
