@@ -146,6 +146,11 @@ Install-Module -Name invoke-atomicredteam -Scope CurrentUser -Force
 # Install the atomics (attack definitions)
 Install-AtomicRedTeam -getAtomics -Force
 
+# Download prerequisites (ProcDump, etc.) for the tests we'll use
+Invoke-AtomicTest T1003.001 -GetPrereqs
+Invoke-AtomicTest T1059.001 -GetPrereqs
+Invoke-AtomicTest T1027 -GetPrereqs
+
 # Verify installation
 Invoke-AtomicTest T1003.001 -ShowDetailsBrief
 ```
