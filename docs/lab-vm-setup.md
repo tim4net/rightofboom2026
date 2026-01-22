@@ -10,7 +10,7 @@ The demo requires:
 3. Atomic Red Team for safe attack simulation
 4. The endpoint collector script
 
-> ⚠️ **Avoid Windows Server 2022** — It has LSASS Protected Process Light (PPL) and Credential Guard enabled by default, which blocks credential dumping tests even with ASR rules disabled. Windows 10/11 Pro is recommended as it better represents typical MSP client endpoints.
+> ⚠️ **Use Windows 10 Pro** — Windows 11 22H2+ and Server 2022 have LSASS Protected Process Light (PPL) enabled by default, blocking credential dump tests (T1003.001). Windows 10 Pro does NOT have PPL enabled by default, making it ideal for demonstrating exploitable gaps.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -63,12 +63,16 @@ If you prefer to set things up manually, follow the sections below.
 
 | Component | Minimum | Recommended |
 |-----------|---------|-------------|
-| OS | Windows 10 Pro 21H2+ | Windows 11 Pro 23H2 |
+| OS | Windows 10 Pro 21H2+ | Windows 10 Pro 22H2 |
 | RAM | 4 GB | 8 GB |
 | Disk | 40 GB | 60 GB |
 | Network | NAT or Bridged | Isolated/NAT |
 
-> **Why Pro?** Windows Home editions don't support some security features (ASR rules, Group Policy) that the demo relies on. Windows Server editions have hardened defaults (PPL, Credential Guard) that block the tests.
+> **Why Windows 10 Pro?**
+> - Windows Home editions don't support ASR rules or Group Policy
+> - Windows 11 22H2+ has LSASS PPL enabled by default (blocks T1003.001)
+> - Windows Server editions have hardened defaults (PPL, Credential Guard)
+> - **Windows 10 Pro** has ASR/GPO support but PPL is OFF by default = exploitable
 
 ### Recommended VM Platforms
 - **Hyper-V** (Windows Pro/Enterprise)
