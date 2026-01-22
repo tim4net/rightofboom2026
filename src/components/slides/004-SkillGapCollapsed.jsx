@@ -88,13 +88,12 @@ const AttackSetupSlide = ({ theme: t }) => {
       </div>
 
       {/* Bottom Context - Optional Stat */}
-      {/* <div className="mt-12 text-center">
+      <div className="mt-12 text-center">
         <p className="text-slate-500 text-2xl">
-          Attacker pool: <span className="text-slate-400 font-semibold">Trained specialists</span>
-          {" "}&rarr;{" "}
-          <span className={`${t.accentColor} font-semibold`}>5+ billion people with internet access</span>
+          <span className="text-slate-400 font-semibold italic">But chat models have controls to stop people from using them for evil... Right?</span>
+          <span className={`${t.accentColor} font-semibold`}></span>
         </p>
-      </div> */}
+      </div>
 
     </div>
   );

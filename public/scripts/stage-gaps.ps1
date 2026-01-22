@@ -20,6 +20,42 @@
 
 $ErrorActionPreference = "Stop"
 
+function Set-AsrRuleAction {
+    param(
+        [string]$RuleId,
+        [int]$Action
+    )
+
+    # Idempotent ASR update: preserve existing rules, modify or append only the target rule.
+    if (-not (Get-Command Get-MpPreference -ErrorAction SilentlyContinue)) {
+        throw "Defender cmdlets not available (Get-MpPreference)"
+    }
+    $prefs = Get-MpPreference
+    $ids = @($prefs.AttackSurfaceReductionRules_Ids)
+    $actions = @($prefs.AttackSurfaceReductionRules_Actions)
+    $idx = [array]::IndexOf($ids, $RuleId)
+
+    if ($idx -ge 0) {
+        $actions[$idx] = $Action
+    } else {
+        $ids += $RuleId
+        $actions += $Action
+    }
+
+    Set-MpPreference -AttackSurfaceReductionRules_Ids $ids -AttackSurfaceReductionRules_Actions $actions
+}
+
+function Ensure-DefenderExclusion {
+    param([string]$Path)
+    if (-not (Get-Command Add-MpPreference -ErrorAction SilentlyContinue)) {
+        throw "Defender cmdlets not available (Add-MpPreference)"
+    }
+    $prefs = Get-MpPreference -ErrorAction SilentlyContinue
+    if (-not $prefs -or $prefs.ExclusionPath -notcontains $Path) {
+        Add-MpPreference -ExclusionPath $Path -ErrorAction SilentlyContinue
+    }
+}
+
 Write-Host @"
 
 +===================================================================+
@@ -50,17 +86,8 @@ Write-Host "[*] GAP 1: Disabling ASR rule for LSASS protection..." -ForegroundCo
 try {
     $lsassRuleId = "9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2"
 
-    # Get current ASR rules
-    $currentRules = (Get-MpPreference).AttackSurfaceReductionRules_Ids
-    $currentActions = (Get-MpPreference).AttackSurfaceReductionRules_Actions
-
-    if ($currentRules -contains $lsassRuleId) {
-        # Rule exists, set to Disabled (0)
-        Add-MpPreference -AttackSurfaceReductionRules_Ids $lsassRuleId -AttackSurfaceReductionRules_Actions 0
-    } else {
-        # Rule doesn't exist, add as disabled
-        Set-MpPreference -AttackSurfaceReductionRules_Ids $lsassRuleId -AttackSurfaceReductionRules_Actions 0
-    }
+    # Disable the rule (0 = Disabled)
+    Set-AsrRuleAction -RuleId $lsassRuleId -Action 0
 
     Write-Host "[+] LSASS credential theft protection DISABLED" -ForegroundColor Green
     Write-Host "    Attackers can now dump credentials from memory" -ForegroundColor DarkGray
@@ -79,7 +106,7 @@ try {
     $obfuscatedRuleId = "5beb7efe-fd9a-4556-801d-275e5ffc04cc"
 
     # Set to Audit (2) instead of Block (1)
-    Add-MpPreference -AttackSurfaceReductionRules_Ids $obfuscatedRuleId -AttackSurfaceReductionRules_Actions 2
+    Set-AsrRuleAction -RuleId $obfuscatedRuleId -Action 2
 
     Write-Host "[+] Obfuscated scripts protection set to AUDIT only" -ForegroundColor Green
     Write-Host "    Obfuscated PowerShell will log but NOT be blocked" -ForegroundColor DarkGray
@@ -100,7 +127,7 @@ try {
         New-Item -ItemType Directory -Path "C:\Temp" -Force | Out-Null
     }
 
-    Add-MpPreference -ExclusionPath "C:\Temp"
+    Ensure-DefenderExclusion -Path "C:\Temp"
 
     Write-Host "[+] C:\Temp excluded from Defender scanning" -ForegroundColor Green
     Write-Host "    Malware dropped here will NOT be detected" -ForegroundColor DarkGray
@@ -117,7 +144,7 @@ Write-Host ""
 Write-Host "[*] GAP 4: Adding Defender exclusion for *.ps1 in Downloads..." -ForegroundColor Cyan
 try {
     $downloadsPath = [Environment]::GetFolderPath("UserProfile") + "\Downloads\*.ps1"
-    Add-MpPreference -ExclusionPath $downloadsPath
+    Ensure-DefenderExclusion -Path $downloadsPath
 
     Write-Host "[+] PowerShell scripts in Downloads excluded from scanning" -ForegroundColor Green
     Write-Host "    Downloaded scripts can execute without AV inspection" -ForegroundColor DarkGray

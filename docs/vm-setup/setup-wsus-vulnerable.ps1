@@ -8,8 +8,9 @@
     Fully automated - no prompts. Run with:
     powershell -ExecutionPolicy Bypass -File setup-wsus-vulnerable.ps1
 
-.PARAMETER Confirm
-    Skip safety confirmation (default: auto-confirmed for automation)
+# Parameters:
+# -TargetIP: Optional static IP for lab network
+# -SkipReboot: Prevent automatic reboot at the end
 #>
 
 param(
@@ -17,10 +18,45 @@ param(
     [switch]$SkipReboot = $false
 )
 
-$ErrorActionPreference = "SilentlyContinue"
+# Stop on errors inside each step so we can catch them explicitly.
+$ErrorActionPreference = "Stop"
 
 function Write-Step($num, $total, $msg) {
     Write-Host "[$num/$total] $msg" -ForegroundColor Cyan
+}
+
+$script:stepErrors = @()
+
+function Invoke-Step {
+    param(
+        [int]$Num,
+        [int]$Total,
+        [string]$Message,
+        [scriptblock]$Action
+    )
+
+    Write-Step $Num $Total $Message
+    try {
+        & $Action
+    } catch {
+        $script:stepErrors += "[${Num}/${Total}] $Message -> $($_.Exception.Message)"
+        Write-Warning "Step failed (continuing): $($_.Exception.Message)"
+    }
+}
+
+function Ensure-FirewallRule {
+    param(
+        [string]$Name,
+        [int]$Port
+    )
+
+    # Idempotent: only create if missing; otherwise ensure it's enabled/Allow.
+    $existing = Get-NetFirewallRule -DisplayName $Name -ErrorAction SilentlyContinue
+    if (-not $existing) {
+        New-NetFirewallRule -DisplayName $Name -Direction Inbound -Protocol TCP -LocalPort $Port -Action Allow | Out-Null
+    } else {
+        Set-NetFirewallRule -DisplayName $Name -Enabled True -Action Allow | Out-Null
+    }
 }
 
 $totalSteps = 8
@@ -32,11 +68,18 @@ Write-Host ""
 
 # 1. Set static IP if provided
 if ($TargetIP) {
-    Write-Step 1 $totalSteps "Setting static IP to $TargetIP..."
-    $adapter = Get-NetAdapter | Where-Object { $_.Status -eq "Up" } | Select-Object -First 1
-    if ($adapter) {
-        Remove-NetIPAddress -InterfaceIndex $adapter.ifIndex -Confirm:$false 2>$null
-        Remove-NetRoute -InterfaceIndex $adapter.ifIndex -Confirm:$false 2>$null
+    Invoke-Step 1 $totalSteps "Setting static IP to $TargetIP..." {
+        $adapter = Get-NetAdapter | Where-Object { $_.Status -eq "Up" } | Select-Object -First 1
+        if (-not $adapter) {
+            throw "No active network adapter found"
+        }
+
+        # Idempotent: remove existing IPv4 addresses/routes on this adapter, then apply desired config.
+        Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue |
+            Remove-NetIPAddress -Confirm:$false -ErrorAction SilentlyContinue
+        Get-NetRoute -InterfaceIndex $adapter.ifIndex -ErrorAction SilentlyContinue |
+            Remove-NetRoute -Confirm:$false -ErrorAction SilentlyContinue
+
         New-NetIPAddress -InterfaceIndex $adapter.ifIndex -IPAddress $TargetIP -PrefixLength 24 -DefaultGateway "192.168.100.1" | Out-Null
         Set-DnsClientServerAddress -InterfaceIndex $adapter.ifIndex -ServerAddresses "8.8.8.8","8.8.4.4"
     }
@@ -45,47 +88,57 @@ if ($TargetIP) {
 }
 
 # 2. Install WSUS
-Write-Step 2 $totalSteps "Installing WSUS role (this takes a few minutes)..."
-Install-WindowsFeature -Name UpdateServices -IncludeManagementTools | Out-Null
+Invoke-Step 2 $totalSteps "Installing WSUS role (this takes a few minutes)..." {
+    Install-WindowsFeature -Name UpdateServices -IncludeManagementTools | Out-Null
+}
 
 # 3. Create content directory
-Write-Step 3 $totalSteps "Creating WSUS content directory..."
 $wsusPath = "C:\WSUS"
-New-Item -Path $wsusPath -ItemType Directory -Force | Out-Null
+Invoke-Step 3 $totalSteps "Creating WSUS content directory..." {
+    New-Item -Path $wsusPath -ItemType Directory -Force | Out-Null
+}
 
 # 4. Run WSUS post-install
-Write-Step 4 $totalSteps "Running WSUS post-install configuration..."
-$wsusutil = "C:\Program Files\Update Services\Tools\wsusutil.exe"
-if (Test-Path $wsusutil) {
-    & $wsusutil postinstall CONTENT_DIR=$wsusPath 2>&1 | Out-Null
+Invoke-Step 4 $totalSteps "Running WSUS post-install configuration..." {
+    $wsusutil = "C:\Program Files\Update Services\Tools\wsusutil.exe"
+    if (Test-Path $wsusutil) {
+        & $wsusutil postinstall CONTENT_DIR=$wsusPath 2>&1 | Out-Null
+    } else {
+        throw "wsusutil.exe not found at expected path"
+    }
 }
 
 # 5. Open firewall ports
-Write-Step 5 $totalSteps "Opening firewall ports 8530, 8531, 80, 443..."
-@(
-    @{Name="WSUS HTTP"; Port=8530},
-    @{Name="WSUS HTTPS"; Port=8531},
-    @{Name="HTTP"; Port=80},
-    @{Name="HTTPS"; Port=443},
-    @{Name="RDP"; Port=3389}
-) | ForEach-Object {
-    New-NetFirewallRule -DisplayName $_.Name -Direction Inbound -Protocol TCP -LocalPort $_.Port -Action Allow 2>$null | Out-Null
+Invoke-Step 5 $totalSteps "Opening firewall ports 8530, 8531, 80, 443..." {
+    @(
+        @{Name="WSUS HTTP"; Port=8530},
+        @{Name="WSUS HTTPS"; Port=8531},
+        @{Name="HTTP"; Port=80},
+        @{Name="HTTPS"; Port=443},
+        @{Name="RDP"; Port=3389}
+    ) | ForEach-Object {
+        Ensure-FirewallRule -Name $_.Name -Port $_.Port
+    }
 }
 
 # 6. Disable Windows Update
-Write-Step 6 $totalSteps "Disabling Windows Update auto-patching..."
-Stop-Service wuauserv -Force 2>$null
-Set-Service wuauserv -StartupType Disabled 2>$null
+Invoke-Step 6 $totalSteps "Disabling Windows Update auto-patching..." {
+    if (Get-Service wuauserv -ErrorAction SilentlyContinue) {
+        Stop-Service wuauserv -Force -ErrorAction SilentlyContinue
+        Set-Service wuauserv -StartupType Disabled -ErrorAction SilentlyContinue
+    }
 
-$auPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
-New-Item -Path $auPath -Force 2>$null | Out-Null
-Set-ItemProperty -Path $auPath -Name "NoAutoUpdate" -Value 1 -Type DWord
-Set-ItemProperty -Path $auPath -Name "AUOptions" -Value 1 -Type DWord
+    $auPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+    New-Item -Path $auPath -Force | Out-Null
+    Set-ItemProperty -Path $auPath -Name "NoAutoUpdate" -Value 1 -Type DWord
+    Set-ItemProperty -Path $auPath -Name "AUOptions" -Value 1 -Type DWord
+}
 
 # 7. Create demo sensitive data
-Write-Step 7 $totalSteps "Creating demo sensitive files..."
 $demoPath = "C:\SensitiveData"
-New-Item -Path $demoPath -ItemType Directory -Force | Out-Null
+Invoke-Step 7 $totalSteps "Creating demo sensitive files..." {
+    New-Item -Path $demoPath -ItemType Directory -Force | Out-Null
+}
 
 @"
 CONFIDENTIAL - MSP Client Database
@@ -119,12 +172,13 @@ Ransomware Response Playbook
 Backup status: Last successful backup was 47 days ago
 "@ | Set-Content "$demoPath\incident_response.txt"
 
-icacls $demoPath /grant "Everyone:(OI)(CI)R" | Out-Null
+icacls $demoPath /grant:r "Everyone:(OI)(CI)R" | Out-Null
 
 # 8. Enable RDP
-Write-Step 8 $totalSteps "Enabling RDP..."
-Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
-Enable-NetFirewallRule -DisplayGroup "Remote Desktop" 2>$null
+Invoke-Step 8 $totalSteps "Enabling RDP..." {
+    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+    Enable-NetFirewallRule -DisplayGroup "Remote Desktop" -ErrorAction SilentlyContinue
+}
 
 # Done
 Write-Host ""
@@ -148,4 +202,11 @@ if (-not $SkipReboot) {
     Restart-Computer -Force
 } else {
     Write-Host "Skipping reboot. You may need to reboot for WSUS to fully initialize." -ForegroundColor Yellow
+}
+
+if ($script:stepErrors.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Completed with warnings:" -ForegroundColor Yellow
+    $script:stepErrors | ForEach-Object { Write-Host "  - $_" -ForegroundColor Yellow }
+    Write-Host ""
 }

@@ -57,14 +57,14 @@ const TAILSlide = ({ theme: t }) => {
 
   return (
     <div className="animate-in fade-in duration-500">
-      <div className="text-center mb-6">
+      <div className="text-center mb-16">
         <h2 className={`text-5xl md:text-7xl font-black mb-4 ${t.textOnPage}`}>
           {title}
         </h2>
         <p className={`text-xl md:text-2xl ${t.accentColor} font-medium`}>
           {subtitle}
         </p>
-        <p className="text-xl text-slate-500 mt-2">Original framework by Tim Fournet & Roddy Bergeron</p>
+        <p className="text-xl text-slate-500 mt-2"></p>
       </div>
 
       <div className="max-w-6xl mx-auto">
@@ -84,8 +84,8 @@ const TAILSlide = ({ theme: t }) => {
         {/* Client Questions */}
         <div className={`${t.cardBg} p-6 rounded-xl border ${t.cardBorder} mb-6`}>
           <div className="flex items-center gap-2 mb-4">
-            <HelpCircle className={`w-6 h-6 ${t.accentColor}`} />
-            <div className="text-2xl font-bold text-slate-200">The Three Questions Every Client Asks</div>
+            <HelpCircle className={`w-6 h-6 ${t.accentColor}`}/>
+            <div className="text-2xl font-bold text-slate-200">Questions Clients Ask</div>
           </div>
           <div className="grid grid-cols-3 gap-4">
             {clientQuestions.map((q, i) => (

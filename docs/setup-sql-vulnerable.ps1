@@ -3,8 +3,48 @@
 #
 # Downloads and installs SQL Server Express with weak SA password
 # for penetration testing demonstrations.
+#
+# Teaching notes:
+# - This script is intentionally insecure (weak SA password).
+# - It is written to be idempotent and safe to re-run in a lab.
+# - It never attempts a production-hardened configuration.
 
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+
+$InstanceName = "YOURCOMPANYDB"
 $SA_PASSWORD = "Password1"
+
+function Write-Step {
+    param([int]$Num, [int]$Total, [string]$Message)
+    Write-Host "[$Num/$Total] $Message" -ForegroundColor Cyan
+}
+
+function Test-InstanceInstalled {
+    # Named instance services use MSSQL$<InstanceName>
+    return $null -ne (Get-Service -Name "MSSQL`$$InstanceName" -ErrorAction SilentlyContinue)
+}
+
+function Get-InstanceId {
+    # Map instance name -> instance ID for registry lookups (more reliable than hardcoding MSSQL15.*)
+    $instanceKey = "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL"
+    try {
+        $mapping = Get-ItemProperty -Path $instanceKey -ErrorAction Stop
+        return $mapping.$InstanceName
+    } catch {
+        return $null
+    }
+}
+
+function Ensure-FirewallRule {
+    param([string]$Name, [string]$Protocol, [int]$Port)
+    $existing = Get-NetFirewallRule -DisplayName $Name -ErrorAction SilentlyContinue
+    if (-not $existing) {
+        New-NetFirewallRule -DisplayName $Name -Direction Inbound -Action Allow -Protocol $Protocol -LocalPort $Port | Out-Null
+    } else {
+        Set-NetFirewallRule -DisplayName $Name -Enabled True -Action Allow | Out-Null
+    }
+}
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Red
@@ -14,39 +54,39 @@ Write-Host ""
 Write-Host "SA Password: $SA_PASSWORD" -ForegroundColor Yellow
 Write-Host ""
 
-# Step 1: Download
+# Step 1: Download media (only if not installed)
 $installer = "$env:TEMP\SQLEXPR_x64_ENU.exe"
-if (!(Test-Path $installer)) {
-    Write-Host "[1/4] Downloading SQL Server 2019 Express..."
+if (-not (Test-InstanceInstalled)) {
+    Write-Step 1 4 "Downloading SQL Server 2019 Express media..."
     # Direct link to SQL Server 2019 Express (standalone installer)
     $url = "https://download.microsoft.com/download/7/f/8/7f8a9c43-8c8a-4f7c-9f92-83c18d96b681/SQL2019-SSEI-Expr.exe"
     Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\sqlsetup.exe"
 
     # Extract the actual installer
-    Write-Host "[1/4] Extracting installer..."
+    Write-Step 1 4 "Extracting installer..."
     Start-Process -FilePath "$env:TEMP\sqlsetup.exe" -ArgumentList "/ACTION=Download","/MEDIAPATH=$env:TEMP\sqlmedia","/MEDIATYPE=Core","/QUIET" -Wait
 
     # Find extracted setup
     $installer = (Get-ChildItem "$env:TEMP\sqlmedia" -Filter "setup.exe" -Recurse | Select-Object -First 1).FullName
 }
 
-if (!(Test-Path $installer)) {
-    # Fallback: use the web installer directly
-    $installer = "$env:TEMP\sqlsetup.exe"
+if (-not (Test-InstanceInstalled) -and -not (Test-Path $installer)) {
+    throw "SQL Server installer not found. Verify download/extraction succeeded."
 }
 
 # Step 2: Install SQL Server
-Write-Host "[2/4] Installing SQL Server Express (this takes 5-10 minutes)..."
+if (-not (Test-InstanceInstalled)) {
+    Write-Step 2 4 "Installing SQL Server Express (this takes 5-10 minutes)..."
 
-$configFile = "$env:TEMP\sql_config.ini"
-@"
+    $configFile = "$env:TEMP\sql_config.ini"
+    @"
 [OPTIONS]
 ACTION="Install"
 QUIET="True"
 QUIETSIMPLE="False"
 IACCEPTSQLSERVERLICENSETERMS="True"
 FEATURES=SQLENGINE
-INSTANCENAME="YOURCOMPANYDB"
+INSTANCENAME="$InstanceName"
 SQLSVCACCOUNT="NT AUTHORITY\SYSTEM"
 SQLSYSADMINACCOUNTS="BUILTIN\Administrators"
 SECURITYMODE="SQL"
@@ -55,29 +95,37 @@ TCPENABLED="1"
 NPENABLED="1"
 "@ | Out-File -FilePath $configFile -Encoding ASCII
 
-Start-Process -FilePath $installer -ArgumentList "/ConfigurationFile=$configFile" -Wait -NoNewWindow
+    Start-Process -FilePath $installer -ArgumentList "/ConfigurationFile=$configFile" -Wait -NoNewWindow
+} else {
+    Write-Step 2 4 "SQL Server Express already installed - skipping install"
+}
 
 # Step 3: Configure network access
-Write-Host "[3/4] Configuring network access..."
+Write-Step 3 4 "Configuring network access..."
 
 # Open firewall
-netsh advfirewall firewall add rule name="SQL Server 1433" dir=in action=allow protocol=tcp localport=1433 | Out-Null
-netsh advfirewall firewall add rule name="SQL Browser UDP" dir=in action=allow protocol=udp localport=1434 | Out-Null
+Ensure-FirewallRule -Name "SQL Server 1433" -Protocol TCP -Port 1433
+Ensure-FirewallRule -Name "SQL Browser UDP" -Protocol UDP -Port 1434
 
 # Start SQL Browser for named instance discovery
 Set-Service "SQLBrowser" -StartupType Automatic -ErrorAction SilentlyContinue
 Start-Service "SQLBrowser" -ErrorAction SilentlyContinue
 
 # Force TCP on port 1433 via registry
-$tcpPath = "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL15.YOURCOMPANYDB\MSSQLServer\SuperSocketNetLib\Tcp\IPAll"
-if (Test-Path $tcpPath) {
-    Set-ItemProperty -Path $tcpPath -Name "TcpPort" -Value "1433" -ErrorAction SilentlyContinue
-    Set-ItemProperty -Path $tcpPath -Name "TcpDynamicPorts" -Value "" -ErrorAction SilentlyContinue
+$instanceId = Get-InstanceId
+if ($instanceId) {
+    $tcpPath = "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\$instanceId\MSSQLServer\SuperSocketNetLib\Tcp\IPAll"
+    if (Test-Path $tcpPath) {
+        Set-ItemProperty -Path $tcpPath -Name "TcpPort" -Value "1433" -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $tcpPath -Name "TcpDynamicPorts" -Value "" -ErrorAction SilentlyContinue
+    }
+} else {
+    Write-Host "[!] Could not resolve SQL instance ID in registry - TCP port may need manual verification" -ForegroundColor Yellow
 }
 
 # Restart SQL to apply
-Write-Host "[4/4] Restarting SQL Server..."
-Get-Service | Where-Object {$_.Name -like "MSSQL*YOURCOMPANYDB*"} | Restart-Service -Force -ErrorAction SilentlyContinue
+Write-Step 4 4 "Restarting SQL Server..."
+Get-Service -Name "MSSQL`$$InstanceName" -ErrorAction SilentlyContinue | Restart-Service -Force -ErrorAction SilentlyContinue
 
 Start-Sleep -Seconds 3
 
@@ -88,13 +136,13 @@ Write-Host "  SETUP COMPLETE" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
 Write-Host "Connection Details:" -ForegroundColor Cyan
-Write-Host "  Server: $env:COMPUTERNAME\YOURCOMPANYDB"
+Write-Host "  Server: $env:COMPUTERNAME\$InstanceName"
 Write-Host "  Port: 1433"
 Write-Host "  User: sa"
 Write-Host "  Password: $SA_PASSWORD" -ForegroundColor Red
 Write-Host ""
 Write-Host "Verify locally:" -ForegroundColor Yellow
-Write-Host '  sqlcmd -S .\YOURCOMPANYDB -U sa -P Password1 -Q "SELECT @@VERSION"'
+Write-Host "  sqlcmd -S .\$InstanceName -U sa -P $SA_PASSWORD -Q \"SELECT @@VERSION\""
 Write-Host ""
 
 # Get IP for remote testing

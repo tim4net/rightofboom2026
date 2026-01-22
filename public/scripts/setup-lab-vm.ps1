@@ -21,6 +21,16 @@ $ProgressPreference = "SilentlyContinue"
 $RepoOwner = "tim4net"
 $RepoName = "rightofboom2026"
 $ScriptsDir = "C:\LabScripts"
+$artPath = Join-Path $env:USERPROFILE "AtomicRedTeam"
+
+function Ensure-DefenderExclusion {
+    param([string]$Path)
+    if (-not (Get-Command Add-MpPreference -ErrorAction SilentlyContinue)) { return }
+    $prefs = Get-MpPreference -ErrorAction SilentlyContinue
+    if (-not $prefs -or $prefs.ExclusionPath -notcontains $Path) {
+        Add-MpPreference -ExclusionPath $Path -ErrorAction SilentlyContinue
+    }
+}
 
 Write-Host @"
 
@@ -57,7 +67,11 @@ Write-Host "[*] Creating $ScriptsDir..." -ForegroundColor Cyan
 New-Item -ItemType Directory -Force -Path $ScriptsDir | Out-Null
 
 # Define files to download
-$baseUrl = "https://github.com/$RepoOwner/$RepoName/releases/latest/download"
+$baseUrl = if ($version -and $version -ne "latest") {
+    "https://github.com/$RepoOwner/$RepoName/releases/download/$version"
+} else {
+    "https://github.com/$RepoOwner/$RepoName/releases/latest/download"
+}
 $files = @(
     @{ Name = "stage-gaps.ps1"; Description = "Gap staging script" },
     @{ Name = "teardown-lab-vm.ps1"; Description = "Cleanup script" },
@@ -70,8 +84,12 @@ foreach ($file in $files) {
     try {
         $url = "$baseUrl/$($file.Name)"
         $dest = Join-Path $ScriptsDir $file.Name
-        Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
-        Write-Host "[+] $($file.Description) saved to $dest" -ForegroundColor Green
+        if (-not (Test-Path $dest)) {
+            Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+            Write-Host "[+] $($file.Description) saved to $dest" -ForegroundColor Green
+        } else {
+            Write-Host "[+] $($file.Description) already present - skipping download" -ForegroundColor Green
+        }
     } catch {
         Write-Host "[!] Failed to download $($file.Name): $_" -ForegroundColor Red
         Write-Host "    You may need to download manually from:" -ForegroundColor Yellow
@@ -106,9 +124,8 @@ try {
     }
 
     # Add Defender exclusion for AtomicRedTeam BEFORE downloading (prevents quarantine)
-    $artPath = "$env:USERPROFILE\AtomicRedTeam"
     Write-Host "[*] Adding Defender exclusion for AtomicRedTeam folder..." -ForegroundColor Cyan
-    Add-MpPreference -ExclusionPath $artPath -ErrorAction SilentlyContinue
+    Ensure-DefenderExclusion -Path $artPath
     Write-Host "[+] Defender exclusion added: $artPath" -ForegroundColor Green
 
     # Install atomics if not present
@@ -134,6 +151,40 @@ try {
     Write-Host "[!] Failed to install Atomic Red Team: $_" -ForegroundColor Red
     Write-Host "    You can install manually with:" -ForegroundColor Yellow
     Write-Host "    Install-Module -Name invoke-atomicredteam -Scope CurrentUser -Force" -ForegroundColor Yellow
+}
+
+# Install Mimikatz for credential extraction demo
+Write-Host ""
+Write-Host "[*] Installing Mimikatz for credential extraction demo..." -ForegroundColor Cyan
+try {
+    $mimikatzDir = "$ScriptsDir\mimikatz"
+
+    # Add Defender exclusions BEFORE downloading
+    $atomicPayloads = Join-Path $artPath "ExternalPayloads"
+    Ensure-DefenderExclusion -Path $mimikatzDir
+    Ensure-DefenderExclusion -Path $atomicPayloads
+    Write-Host "[+] Defender exclusions added for Mimikatz paths" -ForegroundColor Green
+
+    # Download and extract
+    $mimikatzZip = "$ScriptsDir\mimikatz.zip"
+    $mimikatzExe = Join-Path $mimikatzDir "x64\mimikatz.exe"
+    if (-not (Test-Path $mimikatzExe)) {
+        Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/latest/download/mimikatz_trunk.zip" -OutFile $mimikatzZip -UseBasicParsing
+        Expand-Archive -Path $mimikatzZip -DestinationPath $mimikatzDir -Force
+        Remove-Item $mimikatzZip -Force
+        Write-Host "[+] Mimikatz downloaded to $mimikatzDir" -ForegroundColor Green
+    } else {
+        Write-Host "[+] Mimikatz already present at $mimikatzExe" -ForegroundColor Green
+    }
+
+    # Copy to Atomic Red Team ExternalPayloads (where Atomic tests expect it)
+    New-Item -ItemType Directory -Force -Path "$atomicPayloads\x64" | Out-Null
+    Copy-Item "$mimikatzDir\x64\*" "$atomicPayloads\x64\" -Recurse -Force
+    Write-Host "[+] Mimikatz copied to $atomicPayloads\x64\ for Atomic tests" -ForegroundColor Green
+} catch {
+    Write-Host "[!] Failed to install Mimikatz: $_" -ForegroundColor Red
+    Write-Host "    You can install manually from:" -ForegroundColor Yellow
+    Write-Host "    https://github.com/gentilkiwi/mimikatz/releases/latest" -ForegroundColor Yellow
 }
 
 # Create desktop shortcut

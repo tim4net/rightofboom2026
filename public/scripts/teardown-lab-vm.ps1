@@ -21,6 +21,31 @@
 
 $ErrorActionPreference = "Stop"
 
+function Set-AsrRuleAction {
+    param(
+        [string]$RuleId,
+        [int]$Action
+    )
+
+    # Idempotent ASR update: preserve existing rules, modify or append only the target rule.
+    if (-not (Get-Command Get-MpPreference -ErrorAction SilentlyContinue)) {
+        throw "Defender cmdlets not available (Get-MpPreference)"
+    }
+    $prefs = Get-MpPreference
+    $ids = @($prefs.AttackSurfaceReductionRules_Ids)
+    $actions = @($prefs.AttackSurfaceReductionRules_Actions)
+    $idx = [array]::IndexOf($ids, $RuleId)
+
+    if ($idx -ge 0) {
+        $actions[$idx] = $Action
+    } else {
+        $ids += $RuleId
+        $actions += $Action
+    }
+
+    Set-MpPreference -AttackSurfaceReductionRules_Ids $ids -AttackSurfaceReductionRules_Actions $actions
+}
+
 Write-Host @"
 
 +===================================================================+
@@ -38,7 +63,7 @@ $gapsRemoved = 0
 Write-Host "[*] RESTORE 1: Re-enabling LSASS protection..." -ForegroundColor Cyan
 try {
     $lsassRuleId = "9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2"
-    Add-MpPreference -AttackSurfaceReductionRules_Ids $lsassRuleId -AttackSurfaceReductionRules_Actions 1
+    Set-AsrRuleAction -RuleId $lsassRuleId -Action 1
     Write-Host "[+] LSASS credential theft protection ENABLED (Block mode)" -ForegroundColor Green
     $gapsRemoved++
 } catch {
@@ -52,7 +77,7 @@ Write-Host ""
 Write-Host "[*] RESTORE 2: Setting obfuscated scripts ASR to Block..." -ForegroundColor Cyan
 try {
     $obfuscatedRuleId = "5beb7efe-fd9a-4556-801d-275e5ffc04cc"
-    Add-MpPreference -AttackSurfaceReductionRules_Ids $obfuscatedRuleId -AttackSurfaceReductionRules_Actions 1
+    Set-AsrRuleAction -RuleId $obfuscatedRuleId -Action 1
     Write-Host "[+] Obfuscated scripts protection ENABLED (Block mode)" -ForegroundColor Green
     $gapsRemoved++
 } catch {

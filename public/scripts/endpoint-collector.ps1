@@ -12,6 +12,11 @@
 
 $ErrorActionPreference = "SilentlyContinue"
 
+function Test-CommandExists {
+    param([string]$Command)
+    return $null -ne (Get-Command $Command -ErrorAction SilentlyContinue)
+}
+
 function Get-EndpointSecurityConfig {
     $config = @{
         Hostname = $env:COMPUTERNAME
@@ -48,7 +53,11 @@ function Get-EndpointSecurityConfig {
     }
 
     # Get ASR rule states: 0=Disabled, 1=Block, 2=Audit, 6=Warn
-    $asrPrefs = Get-MpPreference
+    $asrPrefs = if (Test-CommandExists "Get-MpPreference") {
+        Get-MpPreference
+    } else {
+        $null
+    }
     if ($asrPrefs.AttackSurfaceReductionRules_Ids) {
         for ($i = 0; $i -lt $asrPrefs.AttackSurfaceReductionRules_Ids.Count; $i++) {
             $id = $asrPrefs.AttackSurfaceReductionRules_Ids[$i]
@@ -144,7 +153,11 @@ function Get-EndpointSecurityConfig {
     # DEFENDER STATUS
     # Overall protection state
     # =========================================================================
-    $defenderStatus = Get-MpComputerStatus -ErrorAction SilentlyContinue
+    $defenderStatus = if (Test-CommandExists "Get-MpComputerStatus") {
+        Get-MpComputerStatus -ErrorAction SilentlyContinue
+    } else {
+        $null
+    }
     if ($defenderStatus) {
         $config.DefenderStatus = @{
             RealTimeProtection = $defenderStatus.RealTimeProtectionEnabled
