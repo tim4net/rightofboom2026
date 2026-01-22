@@ -122,6 +122,14 @@ try {
     } else {
         Write-Host "[+] Atomic test definitions already present" -ForegroundColor Green
     }
+
+    # Download prerequisites (ProcDump, etc.) for the tests we'll use
+    Write-Host "[*] Downloading test prerequisites (ProcDump, etc.)..." -ForegroundColor Cyan
+    Import-Module invoke-atomicredteam -Force
+    Invoke-AtomicTest T1003.001 -GetPrereqs -ErrorAction SilentlyContinue
+    Invoke-AtomicTest T1059.001 -GetPrereqs -ErrorAction SilentlyContinue
+    Invoke-AtomicTest T1027 -GetPrereqs -ErrorAction SilentlyContinue
+    Write-Host "[+] Test prerequisites downloaded" -ForegroundColor Green
 } catch {
     Write-Host "[!] Failed to install Atomic Red Team: $_" -ForegroundColor Red
     Write-Host "    You can install manually with:" -ForegroundColor Yellow
