@@ -109,7 +109,8 @@ try {
     $atomicsPath = "$env:USERPROFILE\AtomicRedTeam\atomics"
     if (-not (Test-Path $atomicsPath)) {
         Write-Host "[*] Downloading atomic test definitions..." -ForegroundColor Cyan
-        Import-Module invoke-atomicredteam -Force
+        # Download and run the installer script first
+        IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing)
         Install-AtomicRedTeam -getAtomics -Force
         Write-Host "[+] Atomic test definitions installed" -ForegroundColor Green
     } else {
