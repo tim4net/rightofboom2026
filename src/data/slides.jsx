@@ -458,6 +458,57 @@ export const slides = [
 
 ⏱ ~75 seconds | 👁 "AI is not the sensor" is the quotable line — reinforce it` },           // Slide 21
 
+  { type: 'attackPathValidator', notes: `**THIS IS THE MAIN DEMO** (15-20 min interactive)
+
+**Setup** (before presentation)
+- Have a Windows VM ready with intentional gaps:
+  - ASR rule for LSASS disabled
+  - C:\\Temp excluded from Defender
+  - Shared local admin account "helpdesk"
+  - PowerShell script block logging disabled
+- Atomic Red Team installed: Install-Module -Name invoke-atomicredteam
+- Claude/ChatGPT tab open
+
+**Phase 1: Collect** (2 min)
+→ Run endpoint-collector.ps1 on the VM
+"This script reads your endpoint config — ASR rules, exclusions, local admins, logging."
+"No changes, just collection. Let's see what we find."
+→ Show the output, highlight the gaps
+
+**Phase 2: Analyze** (3 min)
+→ Copy the JSON output, paste into Claude/GPT with the prompt
+"This is exactly what an attacker does with recon data. Let's see what AI recommends."
+→ Wait for the attack path to generate
+"Notice — it mapped each gap to a specific exploit technique."
+
+**Phase 3: Attack Path** (3 min)
+→ Walk through the generated attack path
+"Step 1: Drop payload to excluded path. Step 2: Dump LSASS. Step 3: Move laterally with shared creds."
+"These aren't hypothetical — these are the exact techniques that work against THIS config."
+
+**Phase 4: Validate** (5-8 min)
+→ Actually run Atomic Red Team tests on the VM
+"Let's prove these gaps are exploitable."
+→ Run T1003.001 (LSASS dump)
+"If the attack succeeds, the gap is real. If it's blocked, our defenses caught it."
+→ Mark each test result in the UI
+
+**Phase 5: Results** (2 min)
+→ Show the summary
+"We just used AI the way attackers do — to find and validate exploitable gaps."
+"The difference? We found them first."
+
+**The Landing**
+"This is a repeatable process. Run it after every config change. Run it quarterly at minimum."
+"Your endpoint config changes. Your attack surface changes with it. Know before attackers do."
+
+⏱ ~15-20 minutes | 👁 This is the "Think Like an Attacker" payoff — make it count
+
+**Q&A Prep:**
+- "Isn't this dangerous?" → "Atomic Red Team tests are safe simulations — they log what WOULD happen without actually extracting creds or dropping malware."
+- "Can I run this on production?" → "Start in a lab. Once you trust it, run collection-only on production, testing in lab that mirrors production config."
+- "What if AI gives bad advice?" → "You validate with real tests. The AI suggests, Atomic proves, you decide."` },             // Slide 22 - MAIN DEMO
+
   // ============================================
   // PART 3: GOVERNANCE & TRUST (35 min)
   // "How to do this without getting fired"

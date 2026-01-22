@@ -11,6 +11,7 @@ export { NetworkSegmentationDemo } from './NetworkSegmentationDemo';
 export { AlertTriageDemo } from './AlertTriageDemo';
 export { EndpointValidationDemo } from './EndpointValidationDemo';
 export { ClaudeCodeDemo } from './ClaudeCodeDemo';
+export { AttackPathValidatorDemo } from './AttackPathValidatorDemo';
 export { LiveAttackDemo } from './LiveAttackDemo';
 export { AttackPlannerDemo } from './AttackPlannerDemo';
 export { HumanApprovalDemo } from './HumanApprovalDemo';

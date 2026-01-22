@@ -4864,4 +4864,7 @@ Pattern: Every 5 seconds, 500KB to DNS providers`
   );
 };
 
+// Re-export from demos folder
+export { AttackPathValidatorDemo } from './components/demos/AttackPathValidatorDemo';
+
 export default { AIReconDemo, AttackDemo, EvolutionRace, TokenHeistDemo, DeterminismDemo, M365ConfigDriftDemo, NetworkSegmentationDemo, AlertTriageDemo, EndpointValidationDemo, TakeawaysSlide, ClaudeCodeDemo, LiveAttackDemo, AttackPlannerDemo, HumanApprovalDemo, FailureModeDemo };

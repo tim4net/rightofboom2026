@@ -14,27 +14,17 @@ winget install OpenJS.NodeJS.LTS
 
 # Then run
 npm install
-npm run dev
+npm run dev:full
 ```
 
 ### macOS / Linux
 
 ```bash
 npm install
-npm run dev
+npm run dev:full
 ```
 
 Open http://localhost:2026
-
-## Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Vite dev server (frontend only) |
-| `npm run dev:full` | Start both frontend and backend server |
-| `npm run server` | Start backend server only (port 3001) |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
 
 ## Keyboard Shortcuts
 
@@ -49,57 +39,23 @@ Open http://localhost:2026
 | `R` | Reset current demo |
 | `Esc` | Close overlays |
 
-## Project Structure
 
-```
-src/
-├── components/
-│   ├── slides/          # Individual slide components
-│   ├── layout/          # Header, Footer, PresenterNotes
-│   ├── ui/              # Reusable UI components (Card, StatusBadge, etc.)
-│   └── ClaudeTerminal.jsx
-├── config/
-│   ├── tokens.js        # Design tokens (colors, spacing, components)
-│   ├── typography.js    # Font configuration
-│   ├── themes.js        # Theme definitions
-│   └── presentation.js  # Timing, shortcuts, terminal settings
-├── data/
-│   └── slides.jsx       # Slide content and ordering
-├── DemoComponents.jsx   # Interactive demo components
-└── PresentationApp.jsx  # Main app orchestrator
+## Lab VM Setup (for Attack Path Validator Demo)
 
-server/
-├── index.js             # Express + WebSocket server
-├── defender-ai.js       # AI triage module
-└── demo-data.js         # Cached demo data for fallbacks
+The presentation includes an **AI Attack Path Validator** demo (slide 22) that requires a Windows VM with intentional security gaps.
+
+**Quick setup** (run in elevated PowerShell on your VM):
+
+```powershell
+iex (irm https://github.com/tim4net/rightofboom2026/releases/latest/download/setup-lab-vm.ps1)
 ```
 
-## Configuration
+This installs:
+- Intentional security gaps (disabled ASR, exclusions, shared admin)
+- Atomic Red Team for safe attack simulation
+- Endpoint collector script for the demo
 
-### Adding/Editing Slides
-
-Edit `src/data/slides.jsx`:
-
-```jsx
-{
-  type: 'content',        // Slide type
-  title: 'Your Title',
-  bullets: ['Point 1', 'Point 2'],
-  notes: 'Presenter notes here'
-}
-```
-
-### Customizing Themes
-
-Edit `src/config/themes.js` to modify the 4 built-in themes or add new ones.
-
-### Adjusting Timing
-
-Edit `src/config/presentation.js` to change:
-- Animation durations
-- Demo step delays
-- Terminal settings
-- Fallback timeouts
+**[Full setup documentation →](docs/lab-vm-setup.md)**
 
 ## Features
 

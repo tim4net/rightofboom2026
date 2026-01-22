@@ -63,7 +63,8 @@ import {
   NetworkSegmentationDemo,
   AlertTriageDemo,
   EndpointValidationDemo,
-  ClaudeCodeDemo
+  ClaudeCodeDemo,
+  AttackPathValidatorDemo
 } from './DemoComponents';
 
 // Data
@@ -323,6 +324,13 @@ const PresentationApp = () => {
         return (
           <div className="animate-in fade-in duration-500">
             <EndpointValidationDemo theme={t} />
+          </div>
+        );
+
+      case 'attackPathValidator':
+        return (
+          <div className="animate-in fade-in duration-500 w-full h-full">
+            <AttackPathValidatorDemo theme={t} />
           </div>
         );
 
