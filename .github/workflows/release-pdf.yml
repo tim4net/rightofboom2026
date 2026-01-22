@@ -3,6 +3,12 @@ name: Build PDF on Release
 on:
   release:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to attach PDF to'
+        required: true
+        default: 'v0.2.0'
 
 permissions:
   contents: write
@@ -37,5 +43,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: presentation.pdf
+          tag_name: ${{ github.event.inputs.tag || github.event.release.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
