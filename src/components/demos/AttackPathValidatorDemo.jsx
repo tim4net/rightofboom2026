@@ -131,7 +131,7 @@ export const AttackPathValidatorDemo = ({ theme: t }) => {
   };
 
   return (
-    <div className="w-full h-full max-w-7xl mx-auto flex flex-col overflow-hidden">
+    <div className={`w-full h-full mx-auto flex flex-col overflow-hidden px-4 ${phase === 1 ? 'max-w-[95vw]' : 'max-w-7xl'}`}>
       {/* Header - compact */}
       <div className="text-center mb-4 flex-shrink-0">
         <h2 className="text-4xl md:text-5xl font-black text-white mb-2">
