@@ -83,15 +83,6 @@ const SafeEndpointTestingSlide = ({ theme: t }) => {
         ))}
       </div>
 
-      {/* Bottom Message */}
-      <div className="text-center">
-        <div className={`inline-block ${t.cardBg} px-8 py-4 rounded-xl border ${t.cardBorder}`}>
-          <p className="text-2xl text-slate-300">
-            <span className="text-amber-400 font-semibold">Vendor-neutral:</span>{' '}
-            PowerShell checks work on any Windows endpoint — no Intune required
-          </p>
-        </div>
-      </div>
     </div>
   );
 };

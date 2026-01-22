@@ -54,7 +54,7 @@ const AITabletopSlide = ({ theme: t }) => {
   return (
     <div className="animate-in fade-in duration-500">
       {/* Header */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-32">
         <h2 className={`text-5xl md:text-6xl font-black mb-3 ${t.textOnPage}`}>
           {title}
         </h2>
@@ -113,7 +113,7 @@ const AITabletopSlide = ({ theme: t }) => {
       </div>
 
       {/* Bottom callout */}
-      <div className="mt-6 text-center">
+      {/* <div className="mt-6 text-center">
         <div className={`inline-block ${t.cardBg} px-8 py-4 rounded-xl border border-purple-500/40`}>
           <div className="flex items-center gap-3 justify-center">
             <Zap className="w-6 h-6 text-purple-400" />
@@ -123,7 +123,7 @@ const AITabletopSlide = ({ theme: t }) => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

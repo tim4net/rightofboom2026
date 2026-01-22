@@ -1,51 +1,51 @@
 // ==============================================
 // SLIDE EXPORTS - Numbered slides in presentation order
-// Use sort order of 0xx prefixes to determine sequence
+// Filenames now match slide titles for easier navigation
 // ==============================================
 
-// Numbered slides (in presentation order)
+// Part 1: The Landscape
 export { default as TitleSlide } from './001-TitleSlide';
-export { default as IntroSlide } from './002-IntroSlide';
-export { default as AIRiskTensionSlide } from './003-AIRiskTensionSlide';
-export { default as AttackSetupSlide } from './004-AttackSetupSlide';
-export { default as AttackLabSlide, AttackLabDemo } from './005-AttackLabSlide';
-export { default as AIVocabSlide } from './006-AIVocabSlide';
-export { default as AIVocabTermsSlide } from './007-AIVocabTermsSlide';
-export { default as ToolUseSlide } from './008-ToolUseSlide';
-export { default as SandwichSlide } from './009-SandwichSlide';
-export { default as SandwichExampleSlide } from './010-SandwichExampleSlide';
-export { default as BridgeSlide } from './011-BridgeSlide';
-export { default as CACrateIntroSlide } from './012-CACrateIntroSlide';
-export { default as M365DriftSlide, M365ConfigDriftDemo } from './013-M365DriftSlide';
-export { default as CASandwichMappingSlide } from './014-CASandwichMappingSlide';
-export { default as PatternApplicationsSlide } from './015-PatternApplicationsSlide';
-export { default as AlertTriageSlide } from './016-AlertTriageSlide';
-export { default as TieredResponseSlide } from './017-TieredResponseSlide';
+export { default as IntroSlide } from './002-YourGuidesToday';
+export { default as AIRiskTensionSlide } from './003-AIRiskDilemma';
+export { default as AttackSetupSlide } from './004-SkillGapCollapsed';
+export { default as AttackLabSlide, AttackLabDemo } from './005-AttackLab';
+export { default as AIVocabSlide } from './006-TwoTypesOfLogic';
+export { default as AIVocabTermsSlide } from './007-ThreeWordsYoullHear';
+export { default as ToolUseSlide } from './008-WhatAgenticAIDoes';
+export { default as SandwichSlide } from './009-GuardrailSandwich';
+export { default as SandwichExampleSlide } from './010-GuardrailSandwichInAction';
+
+// Part 2: Defensive Automation
+export { default as BridgeSlide } from './011-WhySandwichWorks';
+export { default as CACrateIntroSlide } from './012-CAPolicyMonitor';
+export { default as M365DriftSlide, M365ConfigDriftDemo } from './013-HowItWorks';
+export { default as CASandwichMappingSlide } from './014-MapsToSandwich';
+export { default as PatternApplicationsSlide } from './015-SamePatternEverywhere';
+export { default as AlertTriageSlide } from './016-AlertTriagePattern';
+export { default as TieredResponseSlide } from './017-TieredResponse';
 export { default as BreakSlide } from './018-BreakSlide';
 
-// Endpoint Protection Testing Section (after Break)
+// Endpoint Protection Testing Section
 export { default as SafeEndpointTestingSlide } from './019-SafeEndpointTestingSlide';
-export { default as AttackerChecklistSlide } from './020-AttackerChecklistSlide';
-export { default as EndpointSandwichSlide } from './021-EndpointSandwichSlide';
+export { default as AttackerChecklistSlide } from './020-WhatAttackersCheckFirst';
+export { default as EndpointSandwichSlide } from './021-EndpointValidationSandwich';
 
-// Governance & Trust
-export { default as GovernanceSlide } from './022-GovernanceSlide';
-export { default as ShadowAISlide } from './023-ShadowAISlide';
-export { default as FailureModesSlide } from './024-FailureModesSlide';
+// Part 3: Governance & Trust
+export { default as GovernanceSlide } from './022-AIGovernanceQuestion';
+export { default as ShadowAISlide } from './023-ShadowAIGovernance';
+export { default as FailureModesSlide } from './024-WhenAutomationGoesWrong';
+export { default as AITabletopSlide } from './025-TabletopReadyForAI';
 
-// AI Tabletop Exercises (NEW)
-export { default as AITabletopSlide } from './025-AITabletopSlide';
-
-// Monday Morning (renumbered from 025-033 to 026-034)
-export { default as OperationalizationSlide } from './026-OperationalizationSlide';
-export { default as BudgetSlide } from './027-BudgetSlide';
-export { default as LearningPathSlide } from './028-LearningPathSlide';
-export { default as MultiTenantSlide } from './029-MultiTenantSlide';
-export { default as TAILSlide } from './030-TAILSlide';
-export { default as InsuranceSlide } from './031-InsuranceSlide';
-export { TakeawaysSlide } from './032-TakeawaysSlide';
-export { default as SourcesSlide } from './033-SourcesSlide';
-export { default as ClosingSlide } from './034-ClosingSlide';
+// Part 4: Monday Morning
+export { default as OperationalizationSlide } from './026-NinetyDayRoadmap';
+export { default as BudgetSlide } from './027-MoneyConversation';
+export { default as LearningPathSlide } from './028-AILearningPath';
+export { default as MultiTenantSlide } from './029-MultiTenantArchitecture';
+export { default as TAILSlide } from './030-TAILMethod';
+export { default as InsuranceSlide } from './031-WhatInsurerWants';
+export { TakeawaysSlide } from './032-AttendeeTakeaways';
+export { default as SourcesSlide } from './033-SourcesReferences';
+export { default as ClosingSlide } from './034-QuestionsDiscussion';
 
 // Utility slides (reusable templates, no fixed position)
 export { default as ContentSlide } from './ContentSlide';
