@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Play,
   ChevronRight,
@@ -12,10 +12,9 @@ import {
   Copy,
   RotateCcw,
   Crosshair,
-  Zap,
-  Send,
-  Loader2
+  Zap
 } from 'lucide-react';
+import { ClaudeTerminal } from '../ClaudeTerminal';
 
 /**
  * AttackPathValidatorDemo - Real AI-powered attack path validation
@@ -32,13 +31,6 @@ export const AttackPathValidatorDemo = ({ theme: t }) => {
   const [phase, setPhase] = useState(0); // 0-4
   const [selectedAttack, setSelectedAttack] = useState(0);
   const [testResults, setTestResults] = useState({});
-
-  // AI Chat state
-  const [endpointConfig, setEndpointConfig] = useState('');
-  const [aiResponse, setAiResponse] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [aiError, setAiError] = useState(null);
-  const responseRef = useRef(null);
 
   // Sample endpoint config (what the PowerShell script would return)
   // In live demo, presenter would show real output
@@ -127,63 +119,6 @@ export const AttackPathValidatorDemo = ({ theme: t }) => {
     setPhase(0);
     setSelectedAttack(0);
     setTestResults({});
-    setEndpointConfig('');
-    setAiResponse('');
-    setAiError(null);
-  };
-
-  // Auto-scroll AI response
-  useEffect(() => {
-    if (responseRef.current) {
-      responseRef.current.scrollTop = responseRef.current.scrollHeight;
-    }
-  }, [aiResponse]);
-
-  // Stream AI response
-  const analyzeWithAI = async () => {
-    if (!endpointConfig.trim()) return;
-
-    setIsStreaming(true);
-    setAiResponse('');
-    setAiError(null);
-
-    try {
-      const response = await fetch('/api/endpoint-attack-path/stream', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ endpointConfig })
-      });
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              if (data.type === 'chunk') {
-                setAiResponse(prev => prev + data.text);
-              } else if (data.type === 'error') {
-                setAiError(data.message);
-              }
-            } catch (e) {
-              // Ignore parse errors
-            }
-          }
-        }
-      }
-    } catch (error) {
-      setAiError(error.message);
-    } finally {
-      setIsStreaming(false);
-    }
   };
 
   const getSeverityColor = (severity) => {
@@ -242,8 +177,8 @@ export const AttackPathValidatorDemo = ({ theme: t }) => {
       {phase === 0 && (
         <div className="flex-1 flex gap-4 overflow-hidden">
           {/* Left: Instructions */}
-          <div className="w-1/3 flex flex-col">
-            <div className="bg-slate-900/70 rounded-xl p-4 border border-slate-700 flex-1">
+          <div className="w-80 flex flex-col gap-3">
+            <div className="bg-slate-900/70 rounded-xl p-4 border border-slate-700">
               <h3 className="text-lg font-bold text-blue-400 mb-2 flex items-center gap-2">
                 <Terminal className="w-5 h-5" />
                 Step 1: Collect Config
@@ -267,151 +202,93 @@ export const AttackPathValidatorDemo = ({ theme: t }) => {
                 </div>
               </div>
 
-              <div className="text-slate-400 text-xs mb-3">
-                Copy the JSON output and paste it in the box →
+              <div className="text-slate-400 text-xs">
+                Copy the JSON output for the next step.
               </div>
-
-              <button
-                onClick={() => endpointConfig.trim() && setPhase(1)}
-                disabled={!endpointConfig.trim()}
-                className={`w-full px-4 py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2 ${
-                  endpointConfig.trim()
-                    ? 'bg-blue-600 hover:bg-blue-500'
-                    : 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                }`}
-              >
-                Analyze with AI
-                <ChevronRight className="w-4 h-4" />
-              </button>
             </div>
+
+            <button
+              onClick={() => setPhase(1)}
+              className="px-4 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold flex items-center justify-center gap-2"
+            >
+              I've collected the data
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Right: JSON Input */}
-          <div className="flex-1 flex flex-col">
-            <div className="bg-slate-900/70 rounded-xl p-4 border border-slate-700 flex-1 flex flex-col">
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="text-sm font-bold text-slate-400">Paste Endpoint Config JSON:</h4>
-                {endpointConfig && (
-                  <button
-                    onClick={() => setEndpointConfig('')}
-                    className="text-xs text-slate-500 hover:text-slate-300"
-                  >
-                    Clear
-                  </button>
-                )}
+          {/* Right: Sample output preview */}
+          <div className="flex-1 bg-slate-900/50 rounded-xl p-4 border border-slate-700">
+            <h4 className="text-sm font-bold text-slate-400 mb-3">Sample Output Preview:</h4>
+            <div className="grid grid-cols-3 gap-3 font-mono text-sm">
+              <div className="bg-black rounded-lg p-3">
+                <div className="text-red-400 font-bold mb-2">[!] ASR GAPS</div>
+                <div className="text-yellow-400">LSASS: Disabled</div>
+                <div className="text-yellow-400">Obfuscated: Audit</div>
+                <div className="text-yellow-400">Office exec: Not Set</div>
               </div>
-              <textarea
-                value={endpointConfig}
-                onChange={(e) => setEndpointConfig(e.target.value)}
-                placeholder='Paste the JSON output from endpoint-collector.ps1 here...'
-                className="flex-1 bg-black rounded-lg p-3 font-mono text-xs text-green-400 placeholder-slate-600 resize-none border border-slate-700 focus:border-blue-500 focus:outline-none"
-              />
+              <div className="bg-black rounded-lg p-3">
+                <div className="text-yellow-400 font-bold mb-2">[!] EXCLUSIONS</div>
+                <div className="text-yellow-400">C:\Temp</div>
+                <div className="text-yellow-400">Downloads\*.ps1</div>
+                <div className="text-yellow-400">python.exe</div>
+              </div>
+              <div className="bg-black rounded-lg p-3">
+                <div className="text-cyan-400 font-bold mb-2">[i] ADMINS</div>
+                <div className="text-cyan-400">Administrator</div>
+                <div className="text-cyan-400">helpdesk</div>
+                <div className="text-red-400 mt-2">PS Logging: OFF</div>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Phase 1: Analyze with AI */}
+      {/* Phase 1: Analyze with Claude */}
       {phase === 1 && (
         <div className="flex-1 flex gap-4 overflow-hidden">
-          {/* Left: Config preview + controls */}
-          <div className="w-1/3 flex flex-col gap-3">
-            {/* Config preview */}
-            <div className="bg-slate-900/70 rounded-xl p-3 border border-slate-700 flex-shrink-0">
-              <h4 className="text-xs font-bold text-slate-400 mb-1">Your Config:</h4>
-              <pre className="bg-black rounded p-2 font-mono text-xs text-green-400 max-h-24 overflow-auto">
-                {endpointConfig.slice(0, 500)}{endpointConfig.length > 500 ? '...' : ''}
-              </pre>
-            </div>
-
-            {/* AI Controls */}
-            <div className="bg-purple-950/30 rounded-xl p-3 border border-purple-500/30 flex-1 flex flex-col">
-              <div className="flex items-center gap-2 mb-2">
-                <Brain className="w-5 h-5 text-purple-400" />
-                <span className="font-bold text-purple-300">AI Red Team Analysis</span>
-              </div>
-
-              <p className="text-slate-300 text-xs mb-3">
-                AI will analyze your config and generate an attack path with MITRE techniques and Atomic commands.
+          {/* Left: Instructions */}
+          <div className="w-72 flex flex-col gap-3">
+            <div className="bg-purple-950/30 rounded-xl p-4 border border-purple-500/30">
+              <h3 className="text-lg font-bold text-purple-400 mb-2 flex items-center gap-2">
+                <Brain className="w-5 h-5" />
+                Step 2: AI Analysis
+              </h3>
+              <p className="text-slate-300 text-sm mb-3">
+                Launch Claude and paste your config with a red team prompt.
               </p>
+              <div className="text-slate-400 text-xs space-y-1">
+                <div>1. Type: <code className="text-purple-300">claude</code></div>
+                <div>2. Paste your JSON</div>
+                <div>3. Ask for attack path</div>
+              </div>
+            </div>
 
+            <div className="bg-slate-900/50 rounded-xl p-3 border border-slate-700">
+              <div className="text-xs text-slate-500 mb-2">Sample prompt:</div>
+              <div className="text-xs text-purple-300 font-mono">
+                "You are a red team operator. Given this config, generate an attack path with MITRE IDs and Atomic tests."
+              </div>
               <button
-                onClick={analyzeWithAI}
-                disabled={isStreaming}
-                className={`w-full px-4 py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2 mb-3 ${
-                  isStreaming
-                    ? 'bg-purple-700 cursor-wait'
-                    : 'bg-purple-600 hover:bg-purple-500'
-                }`}
+                onClick={() => copyToClipboard('You are a red team operator. Given this endpoint config, generate an attack path with: 1) MITRE technique IDs 2) Atomic Red Team test commands 3) What each gap enables')}
+                className="mt-2 px-2 py-1 bg-purple-600/50 hover:bg-purple-600 rounded text-xs flex items-center gap-1"
               >
-                {isStreaming ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    {aiResponse ? 'Re-analyze' : 'Analyze with AI'}
-                  </>
-                )}
-              </button>
-
-              <div className="flex-1" />
-
-              <button
-                onClick={() => setPhase(2)}
-                disabled={!aiResponse && !isStreaming}
-                className={`w-full px-4 py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2 ${
-                  aiResponse
-                    ? 'bg-green-600 hover:bg-green-500'
-                    : 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                }`}
-              >
-                Continue to Attack Path
-                <ChevronRight className="w-4 h-4" />
+                <Copy className="w-3 h-3" />
+                Copy prompt
               </button>
             </div>
+
+            <button
+              onClick={() => setPhase(2)}
+              className="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-xl font-bold flex items-center justify-center gap-2"
+            >
+              Continue to Attack Path
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Right: AI Response */}
-          <div className="flex-1 flex flex-col">
-            <div className="bg-slate-900/70 rounded-xl p-4 border border-purple-500/30 flex-1 flex flex-col">
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="text-sm font-bold text-purple-400 flex items-center gap-2">
-                  <Brain className="w-4 h-4" />
-                  AI Response
-                  {isStreaming && <span className="text-xs text-purple-300 animate-pulse">streaming...</span>}
-                </h4>
-                {aiResponse && (
-                  <button
-                    onClick={() => copyToClipboard(aiResponse)}
-                    className="text-xs text-slate-400 hover:text-white flex items-center gap-1"
-                  >
-                    <Copy className="w-3 h-3" />
-                    Copy
-                  </button>
-                )}
-              </div>
-
-              {aiError && (
-                <div className="bg-red-950/50 border border-red-500/50 rounded-lg p-3 mb-2 text-red-400 text-sm">
-                  Error: {aiError}
-                </div>
-              )}
-
-              <div
-                ref={responseRef}
-                className="flex-1 bg-black rounded-lg p-3 font-mono text-sm text-slate-200 overflow-auto whitespace-pre-wrap"
-              >
-                {aiResponse || (
-                  <span className="text-slate-600">
-                    Click "Analyze with AI" to generate an attack path based on your endpoint configuration...
-                  </span>
-                )}
-                {isStreaming && <span className="animate-pulse">▊</span>}
-              </div>
-            </div>
+          {/* Right: Claude Terminal */}
+          <div className="flex-1 rounded-xl overflow-hidden border border-purple-500/30">
+            <ClaudeTerminal className="h-full" />
           </div>
         </div>
       )}
