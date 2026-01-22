@@ -23,10 +23,10 @@ $ErrorActionPreference = "Stop"
 
 Write-Host @"
 
-╔═══════════════════════════════════════════════════════════════════╗
-║         TEARDOWN - REMOVING SECURITY GAPS                         ║
-║         Restoring system to secure state                          ║
-╚═══════════════════════════════════════════════════════════════════╝
++===================================================================+
+|         TEARDOWN - REMOVING SECURITY GAPS                         |
+|         Restoring system to secure state                          |
++===================================================================+
 
 "@ -ForegroundColor Cyan
 
@@ -174,9 +174,9 @@ if ($removeScripts -eq "y" -or $removeScripts -eq "Y") {
 # ============================================================================
 Write-Host ""
 Write-Host @"
-╔═══════════════════════════════════════════════════════════════════╗
-║                     TEARDOWN COMPLETE                             ║
-╚═══════════════════════════════════════════════════════════════════╝
++===================================================================+
+|                     TEARDOWN COMPLETE                             |
++===================================================================+
 "@ -ForegroundColor Green
 
 Write-Host "Gaps removed: $gapsRemoved / 6" -ForegroundColor Cyan

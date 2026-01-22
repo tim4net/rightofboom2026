@@ -22,13 +22,13 @@ $ErrorActionPreference = "Stop"
 
 Write-Host @"
 
-╔═══════════════════════════════════════════════════════════════════╗
-║         STAGING INTENTIONAL SECURITY GAPS                         ║
-║         For Attack Path Validator Demo                            ║
-╠═══════════════════════════════════════════════════════════════════╣
-║  WARNING: This weakens system security intentionally!             ║
-║  Only run on isolated lab VMs - NEVER on production!              ║
-╚═══════════════════════════════════════════════════════════════════╝
++===================================================================+
+|         STAGING INTENTIONAL SECURITY GAPS                         |
+|         For Attack Path Validator Demo                            |
++===================================================================+
+|  WARNING: This weakens system security intentionally!             |
+|  Only run on isolated lab VMs - NEVER on production!              |
++===================================================================+
 
 "@ -ForegroundColor Yellow
 
@@ -142,7 +142,7 @@ try {
     if ($existingUser) {
         Write-Host "[+] User 'helpdesk' already exists" -ForegroundColor Green
     } else {
-        New-LocalUser -Name $username -Password $password -FullName "Help Desk Support" -Description "Shared support account (DEMO - DO NOT USE IN PRODUCTION)" -PasswordNeverExpires
+        New-LocalUser -Name $username -Password $password -FullName "Help Desk Support" -Description "Shared support account (DEMO ONLY)" -PasswordNeverExpires
         Write-Host "[+] Created local user 'helpdesk'" -ForegroundColor Green
     }
 
@@ -185,9 +185,9 @@ try {
 # ============================================================================
 Write-Host ""
 Write-Host @"
-╔═══════════════════════════════════════════════════════════════════╗
-║                     GAP STAGING COMPLETE                          ║
-╚═══════════════════════════════════════════════════════════════════╝
++===================================================================+
+|                     GAP STAGING COMPLETE                          |
++===================================================================+
 "@ -ForegroundColor $(if ($gapsCreated -ge 5) { "Green" } else { "Yellow" })
 
 Write-Host "Gaps created: $gapsCreated / 6" -ForegroundColor Cyan

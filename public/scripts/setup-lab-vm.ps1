@@ -24,10 +24,10 @@ $ScriptsDir = "C:\LabScripts"
 
 Write-Host @"
 
-╔═══════════════════════════════════════════════════════════════════╗
-║         RIGHT OF BOOM 2026 - LAB VM SETUP                        ║
-║         Attack Path Validator Demo Environment                    ║
-╚═══════════════════════════════════════════════════════════════════╝
++===================================================================+
+|         RIGHT OF BOOM 2026 - LAB VM SETUP                        |
+|         Attack Path Validator Demo Environment                    |
++===================================================================+
 
 "@ -ForegroundColor Cyan
 
@@ -141,9 +141,9 @@ try {
 # Summary
 Write-Host ""
 Write-Host @"
-╔═══════════════════════════════════════════════════════════════════╗
-║                        SETUP COMPLETE                             ║
-╚═══════════════════════════════════════════════════════════════════╝
++===================================================================+
+|                        SETUP COMPLETE                             |
++===================================================================+
 "@ -ForegroundColor Green
 
 Write-Host "Scripts installed to: $ScriptsDir" -ForegroundColor Cyan
