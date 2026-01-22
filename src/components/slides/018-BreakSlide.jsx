@@ -5,7 +5,7 @@ const BreakSlide = ({ theme: t }) => {
   const title = "15 Minute Break";
   const subtitle = "Process, caffeinate, prepare to operationalize";
   const duration = 15;
-  const nextSection = "Part III: Governance & Trust";
+  const nextSection = "Endpoint Protection Testing";
 
   return (
     <div className="animate-in fade-in duration-500 text-center">

@@ -44,7 +44,13 @@ import {
   PatternApplicationsSlide,
   AlertTriageSlide,
   TieredResponseSlide,
-  TakeawaysSlide
+  TakeawaysSlide,
+  // NEW: Endpoint Protection Testing Section
+  SafeEndpointTestingSlide,
+  AttackerChecklistSlide,
+  EndpointSandwichSlide,
+  // NEW: AI Tabletop Exercises
+  AITabletopSlide
 } from './components/slides';
 
 // Demo components (interactive demos, not slides)
@@ -368,6 +374,19 @@ const PresentationApp = () => {
 
       case 'attackSetup':
         return <AttackSetupSlide theme={t} />;
+
+      // Endpoint Protection Testing Section (after Break)
+      case 'safeEndpointTesting':
+        return <SafeEndpointTestingSlide theme={t} />;
+
+      case 'attackerChecklist':
+        return <AttackerChecklistSlide theme={t} />;
+
+      case 'endpointSandwich':
+        return <EndpointSandwichSlide theme={t} />;
+
+      case 'aiTabletop':
+        return <AITabletopSlide theme={t} />;
 
       default:
         return (

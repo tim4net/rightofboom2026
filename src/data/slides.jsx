@@ -226,20 +226,26 @@ export const slides = [
 - "What about APTs with dwell time?" → "You're right — that's why detection speed matters. The sandwich is most powerful when combined with continuous monitoring."
 - "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },                   // Slide 9
 
-  { type: 'caCrateIntro', notes: `**What is a Crate?** (15 sec)
-"Before I show you the demo, let me explain what you're looking at."
+  { type: 'caCrateIntro', notes: `**What is a Crate?** (10 sec)
 "Rewst Crates are pre-built automations. You don't write code — you configure and deploy."
 "Think of them like apps in an app store. Someone else built it, you just install and configure."
 
-**This Specific Crate** (20 sec)
+**This Specific Crate** (15 sec)
 "The CA Policy Monitor watches your Conditional Access policies across all your M365 tenants."
 "It alerts you when someone weakens a policy or adds exclusions."
-"And it tells you WHO made the change and whether there was a ticket."
 
-**Transition** (5 sec)
-"Let me show you how it works..."
+**Why MFA Exclusions Matter** (30 sec)
+→ Tap the red callout box
+"Here's why this matters: MFA exclusions are a skeleton key to your tenant."
+"Emergency exclusion — attacker adds a backdoor user to an MFA bypass group. Now they can log in without MFA."
+"Legacy auth backdoor — enable protocols like IMAP or SMTP that don't support MFA. Instant bypass."
+"Trusted location — add the attacker's IP to your trusted locations. Now their logins look legitimate."
+→ Land it: "These are the exact changes you want to catch within minutes, not weeks."
 
-⏱ ~40 seconds | 👁 Quick context before the technical flow` },
+**Detection Triggers** (5 sec)
+"The crate catches all of these: user added to exclusion, legacy auth enabled, named location modified."
+
+⏱ ~60 seconds | 👁 "Skeleton key to your tenant" is the memorable phrase` },
 
   { type: 'm365Drift', notes: `**The Architecture** (25 sec)
 → Walk through the flow
@@ -359,27 +365,108 @@ export const slides = [
   // BREAK (15 min)
   // ============================================
 
-  { type: 'break' },                    // Slide 14
+  { type: 'break' },                    // Slide 18
+
+  // ============================================
+  // PART 2.5: ENDPOINT PROTECTION TESTING (new)
+  // "Safely test endpoint detection"
+  // ============================================
+
+  { type: 'safeEndpointTesting', notes: `**Transition from Break** (10 sec)
+"Welcome back. Before we get into governance, I want to show you something practical."
+"We've talked about config drift detection in the cloud. Now let's bring it to the endpoint."
+
+**The Four Principles** (40 sec)
+→ Walk through each card
+"Scoped targets — you don't run this on production first. Test ring, lab VMs, or a single workstation you control."
+"Two-tier testing — built-in Windows checks for production safety, Atomic Red Team for lab fidelity."
+"Expected alerts — know what SHOULD fire. If your EDR doesn't alert on LSASS access, you have a gap."
+"Rollback ready — every test cleans up after itself. No lingering artifacts."
+
+**Vendor-neutral** (10 sec)
+"Notice: no Intune required. PowerShell works on any Windows endpoint — Datto, NinjaRMM, whatever you use."
+
+⏱ ~60 seconds | 👁 "Test ring, not production" is the key takeaway` },              // Slide 19
+
+  { type: 'attackerChecklist', notes: `**The Attacker's First 5 Minutes** (10 sec)
+"When an attacker lands on an endpoint, what do they check first?"
+"These are the exact things you should be validating proactively."
+
+**Walk the List** (50 sec)
+→ Point to each row
+"ASR rules — if these are disabled or audit-only, they can dump LSASS credentials trivially."
+"AV exclusions — if C:\\Temp or user profiles are excluded, that's where they drop malware."
+"Local admin sprawl — shared local admin across your fleet means one cred = everywhere."
+"PowerShell logging — if this is off, you have no forensic trail of what they ran."
+"Credential caching — cached domain creds on workstations enable offline attacks."
+
+**The Commands** (10 sec)
+"Every check has a PowerShell one-liner. These work on any Windows machine."
+"You could run these manually, or push them via your RMM to every endpoint."
+
+⏱ ~70 seconds | 👁 The commands on the right are copy-pasteable — screenshot-friendly` },             // Slide 20
+
+  { type: 'endpointSandwich', notes: `**Connect to the Architecture** (10 sec)
+"Remember the guardrail sandwich? Same pattern, different filling."
+"This is how you validate endpoint configuration at scale."
+
+**Walk the Layers** (40 sec)
+→ Point to each layer
+"DETERMINISTIC CHECKS — PowerShell queries, registry reads. Facts, not opinions. Same output every time."
+"AI ANALYSIS — correlate findings, explain the security impact, prioritize what to fix first."
+"HUMAN APPROVES — review recommendations, approve changes, track exceptions with justification."
+
+**The Key Insight** (15 sec)
+→ Tap the bottom message
+"This is critical: AI is not the sensor. Your EDR, your config baselines — those are the sensors."
+"AI explains what they find. It doesn't replace them."
+
+**MSP Application** (10 sec)
+"You could build this as a Rewst workflow. Run checks across all endpoints, AI synthesizes, human reviews."
+"Same pattern as CA drift detection, just different data sources."
+
+⏱ ~75 seconds | 👁 "AI is not the sensor" is the quotable line — reinforce it` },           // Slide 21
 
   // ============================================
   // PART 3: GOVERNANCE & TRUST (35 min)
   // "How to do this without getting fired"
   // ============================================
 
-  { type: 'governance' },               // Slide 14
+  { type: 'governance' },               // Slide 22
   { type: 'shadowAI' },                 // Slide 15
-  { type: 'failureModes' },             // Slide 16
+  { type: 'failureModes' },             // Slide 24
 
-  // Slide 17 & 18: Governance content slides (using generic ContentSlide)
-  // NOTE: These are now hardcoded in separate slide components if needed
-  // For now, temporarily commented as they used generic content structure
+  { type: 'aiTabletop', notes: `**Transition from Failure Modes** (10 sec)
+"We've talked about how AI can fail. Now let's talk about preparing your team for it."
+"How many of you run tabletop exercises? How many include AI scenarios?"
+
+**The Gap Analysis** (30 sec)
+→ Walk through the left column
+"Traditional tabletops assume things that don't hold anymore."
+"Phishing has tells — not when AI writes it. Perfect grammar, personalized from LinkedIn scrapes."
+"Voice verification works — not when the attacker clones your CFO's voice in 3 seconds."
+"Data stays where you put it — not when your techs paste client data into ChatGPT."
+"Clear forensic artifacts — AI attacks may leave nothing to find."
+
+**Scenarios to Add** (25 sec)
+→ Point to right column
+"Shadow AI data leak — employee pastes PII into ChatGPT. What's your response?"
+"Deepfake CFO call — AI-cloned voice authorizes urgent wire transfer. How do you verify?"
+"Prompt injection — malicious input hijacks your customer-facing AI. Who's liable?"
+
+**The Key Insight** (10 sec)
+→ Tap the bottom callout
+"AI incidents are non-deterministic. You can't reproduce the bug to prove it happened."
+"Your team needs to practice responding to incidents they can't fully explain."
+
+⏱ ~75 seconds | 👁 "Can't reproduce the bug" is the memorable insight` },             // Slide 25
 
   // ============================================
   // PART 4: MONDAY MORNING (30 min)
   // "What you actually do next"
   // ============================================
 
-  { type: 'operationalization' },       // Slide 17
+  { type: 'operationalization' },       // Slide 26
   { type: 'budget' },                   // Slide 18
   { type: 'learningPath' },             // Slide 19
   { type: 'multiTenant' },              // Slide 20
