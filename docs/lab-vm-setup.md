@@ -5,10 +5,12 @@ This guide explains how to set up a Windows VM with intentional security gaps fo
 ## Overview
 
 The demo requires:
-1. A Windows 10/11 VM (or Windows Server 2019+)
+1. A **Windows 10/11 Pro** VM (see note below about Server editions)
 2. Intentional security misconfigurations (we provide scripts)
 3. Atomic Red Team for safe attack simulation
 4. The endpoint collector script
+
+> ⚠️ **Avoid Windows Server 2022** — It has LSASS Protected Process Light (PPL) and Credential Guard enabled by default, which blocks credential dumping tests even with ASR rules disabled. Windows 10/11 Pro is recommended as it better represents typical MSP client endpoints.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -61,10 +63,12 @@ If you prefer to set things up manually, follow the sections below.
 
 | Component | Minimum | Recommended |
 |-----------|---------|-------------|
-| OS | Windows 10 21H2+ | Windows 11 23H2 |
+| OS | Windows 10 Pro 21H2+ | Windows 11 Pro 23H2 |
 | RAM | 4 GB | 8 GB |
 | Disk | 40 GB | 60 GB |
 | Network | NAT or Bridged | Isolated/NAT |
+
+> **Why Pro?** Windows Home editions don't support some security features (ASR rules, Group Policy) that the demo relies on. Windows Server editions have hardened defaults (PPL, Credential Guard) that block the tests.
 
 ### Recommended VM Platforms
 - **Hyper-V** (Windows Pro/Enterprise)
