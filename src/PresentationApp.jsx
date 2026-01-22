@@ -118,7 +118,7 @@ const PresentationApp = () => {
   };
 
   // Slide types that handle their own keyboard navigation (don't intercept SPACE/arrows)
-  const selfNavigatingSlides = ['attackLab'];
+  const selfNavigatingSlides = ['attackLab', 'attackPathValidator'];
 
   useEffect(() => {
     const handleKeyDown = (e) => {

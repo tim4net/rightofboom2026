@@ -5,10 +5,10 @@ import { WebglAddon } from '@xterm/addon-webgl';
 import '@xterm/xterm/css/xterm.css';
 
 /**
- * Claude Code Terminal Component
- * Embeds a live Claude Code session using xterm.js + WebSocket
+ * Shell Terminal Component
+ * A plain bash shell terminal for demos - lets you type `claude` to launch it
  */
-export function ClaudeTerminal({ theme = 'dark', className = '' }) {
+export function ShellTerminal({ theme = 'dark', className = '' }) {
   const terminalRef = useRef(null);
   const terminalInstanceRef = useRef(null);
   const fitAddonRef = useRef(null);
@@ -23,8 +23,8 @@ export function ClaudeTerminal({ theme = 'dark', className = '' }) {
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = sessionIdRef.current
-      ? `${protocol}//${window.location.host}/terminal/claude?sessionId=${sessionIdRef.current}`
-      : `${protocol}//${window.location.host}/terminal/claude`;
+      ? `${protocol}//${window.location.host}/terminal/shell?sessionId=${sessionIdRef.current}`
+      : `${protocol}//${window.location.host}/terminal/shell`;
 
     const socket = new WebSocket(wsUrl);
     socketRef.current = socket;
@@ -49,11 +49,7 @@ export function ClaudeTerminal({ theme = 'dark', className = '' }) {
           const msg = JSON.parse(data);
           if (msg.type === 'session' && msg.sessionId) {
             sessionIdRef.current = msg.sessionId;
-            sessionStorage.setItem('claude-terminal-session', msg.sessionId);
-            return;
-          }
-          if (msg.type === 'takeover') {
-            terminalInstanceRef.current?.write('\r\n\x1b[31mSession taken over by another client\x1b[0m\r\n');
+            sessionStorage.setItem('shell-terminal-session', msg.sessionId);
             return;
           }
         } catch (e) {
@@ -66,7 +62,7 @@ export function ClaudeTerminal({ theme = 'dark', className = '' }) {
     };
 
     socket.onerror = (error) => {
-      console.error('[ClaudeTerminal] WebSocket error:', error);
+      console.error('[ShellTerminal] WebSocket error:', error);
     };
 
     socket.onclose = () => {
@@ -83,7 +79,7 @@ export function ClaudeTerminal({ theme = 'dark', className = '' }) {
     if (!terminalRef.current) return;
 
     // Restore session ID from storage
-    const savedSession = sessionStorage.getItem('claude-terminal-session');
+    const savedSession = sessionStorage.getItem('shell-terminal-session');
     if (savedSession) {
       sessionIdRef.current = savedSession;
     }
@@ -91,7 +87,7 @@ export function ClaudeTerminal({ theme = 'dark', className = '' }) {
     // Create terminal instance
     const terminal = new Terminal({
       cursorBlink: true,
-      fontSize: 24,
+      fontSize: 20,
       fontFamily: 'Menlo, Monaco, "Courier New", monospace',
       theme: theme === 'dark' ? {
         background: '#0d1117',
@@ -136,11 +132,11 @@ export function ClaudeTerminal({ theme = 'dark', className = '' }) {
     try {
       const webglAddon = new WebglAddon();
       webglAddon.onContextLoss(() => {
-        console.warn('[ClaudeTerminal] WebGL context lost');
+        console.warn('[ShellTerminal] WebGL context lost');
       });
       terminal.loadAddon(webglAddon);
     } catch (e) {
-      console.warn('[ClaudeTerminal] WebGL not available:', e.message);
+      console.warn('[ShellTerminal] WebGL not available:', e.message);
     }
 
     // Open terminal in container
@@ -240,4 +236,4 @@ export function ClaudeTerminal({ theme = 'dark', className = '' }) {
   );
 }
 
-export default ClaudeTerminal;
+export default ShellTerminal;

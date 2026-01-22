@@ -907,6 +907,8 @@ wss.on('connection', (ws, req) => {
     handleClaudeTerminal(ws, url);
   } else if (pathParts[0] === 'terminal' && pathParts[1] === 'attacker') {
     handleAttackerTerminal(ws, url);
+  } else if (pathParts[0] === 'terminal' && pathParts[1] === 'shell') {
+    handleShellTerminal(ws, url);
   } else {
     ws.send('\x1b[31mUnknown terminal endpoint\x1b[0m\r\n');
     ws.close();
@@ -1169,6 +1171,99 @@ function handleAttackerTerminal(ws, url) {
   });
 }
 
+// Plain shell terminal sessions (for demo purposes - just a bash shell)
+const shellSessions = new Map();
+
+function handleShellTerminal(ws, url) {
+  const sessionId = url.searchParams.get('sessionId');
+  let session;
+
+  // Clean up orphaned sessions
+  if (!sessionId) {
+    for (const [id, oldSession] of shellSessions) {
+      if (!oldSession.ws || oldSession.ws.readyState !== 1) {
+        console.log(`Cleaning up orphaned shell session ${id.slice(0, 8)}`);
+        oldSession.pty.kill();
+        shellSessions.delete(id);
+      }
+    }
+  }
+
+  // Try to reconnect to existing session
+  if (sessionId && shellSessions.has(sessionId)) {
+    session = shellSessions.get(sessionId);
+    session.ws = ws;
+    ws.send(JSON.stringify({ type: 'session', sessionId: session.id }));
+    console.log(`Reconnected to shell session ${session.id.slice(0, 8)}`);
+  } else {
+    // Create new session with bash shell
+    const newSessionId = crypto.randomUUID();
+
+    const ptyProcess = pty.spawn('/bin/bash', [], {
+      name: 'xterm-256color',
+      cols: 120,
+      rows: 30,
+      cwd: process.env.HOME || '/tmp',
+      env: { ...process.env, TERM: 'xterm-256color' }
+    });
+
+    session = {
+      id: newSessionId,
+      pty: ptyProcess,
+      ws: ws,
+      createdAt: new Date()
+    };
+
+    shellSessions.set(newSessionId, session);
+    ws.send(JSON.stringify({ type: 'session', sessionId: newSessionId }));
+    console.log(`Created new shell session ${newSessionId.slice(0, 8)}`);
+  }
+
+  const ptyProcess = session.pty;
+
+  // PTY -> WebSocket
+  const dataHandler = (data) => {
+    if (ws.readyState === 1) {
+      ws.send(data);
+    }
+  };
+  ptyProcess.onData(dataHandler);
+
+  // WebSocket -> PTY
+  ws.on('message', (data) => {
+    const dataStr = data.toString();
+
+    // Check for resize messages
+    if (dataStr.startsWith('{')) {
+      try {
+        const msg = JSON.parse(dataStr);
+        if (msg.type === 'resize' && msg.cols && msg.rows) {
+          ptyProcess.resize(msg.cols, msg.rows);
+          return;
+        }
+      } catch (e) {
+        // Not valid JSON, treat as terminal input
+      }
+    }
+    // Terminal input
+    ptyProcess.write(dataStr);
+  });
+
+  ws.on('close', () => {
+    console.log(`Shell session ${session.id.slice(0, 8)} client disconnected`);
+    session.ws = null;
+  });
+
+  // Handle PTY exit
+  ptyProcess.onExit(({ exitCode, signal }) => {
+    console.log(`Shell PTY exited for session ${session.id.slice(0, 8)} (code: ${exitCode}, signal: ${signal})`);
+    shellSessions.delete(session.id);
+    if (ws.readyState === 1) {
+      ws.close();
+    }
+  });
+}
+
 // Clean up old sessions periodically (1 hour timeout)
 setInterval(() => {
   const now = Date.now();
@@ -1188,6 +1283,15 @@ setInterval(() => {
       console.log(`Cleaning up stale attacker session ${id.slice(0, 8)}`);
       session.pty.kill();
       attackerSessions.delete(id);
+    }
+  }
+
+  // Clean shell sessions
+  for (const [id, session] of shellSessions) {
+    if (!session.ws && (now - session.createdAt.getTime()) > 3600000) {
+      console.log(`Cleaning up stale shell session ${id.slice(0, 8)}`);
+      session.pty.kill();
+      shellSessions.delete(id);
     }
   }
 }, 60000);
