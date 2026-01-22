@@ -118,8 +118,8 @@ const AITabletopSlide = ({ theme: t }) => {
           <div className="flex items-center gap-3 justify-center">
             <Zap className="w-6 h-6 text-purple-400" />
             <p className="text-2xl text-slate-300">
-              <span className="text-purple-400 font-semibold">Key insight:</span>{' '}
-              AI incidents are non-deterministic — you can't reproduce the bug
+              <span className="text-purple-400 font-semibold">Traditional IR assumes reproducibility.</span>{' '}
+              LLMs don't comply.
             </p>
           </div>
         </div>

@@ -53,7 +53,38 @@ export const slides = [
 "It's harness it — with guardrails. That's what we're building today."
 
 ⏱ ~65 seconds | 👁 MSPs feel this tension daily — let the pause land before offering the resolution.` },            // Slide 2: The AI Dilemma
-  { type: 'attackSetup' },              // Slide 3
+  { type: 'attackSetup', notes: `**Set the stakes** (5 sec)
+"Before I show you the defenses, you need to understand why the threat landscape changed so fast."
+
+**Walk the left column** (20 sec)
+→ Gesture to 2019
+"In 2019, launching a real attack required deep skills. Network protocols. Exploit development. Reverse engineering. You needed to understand OS internals."
+"This wasn't script kiddie territory. It took YEARS of dedicated learning."
+
+**Walk the right column** (15 sec)
+→ Gesture to 2026
+"2026. What does it take now?"
+→ Pause, let them read it
+"Curiosity. And a login to an LLM."
+"That's it. The AI handles the rest."
+
+**The punchline** (15 sec)
+→ Tap the bottom section
+"Time to first attack. Years... to minutes."
+"Your nephew who got bored over winter break can now run attacks that would have required a black hat team five years ago."
+
+**MSP reality check** (15 sec)
+"For MSPs, this changes everything. The attacker pool exploded from a few thousand skilled hackers to anyone with internet access and curiosity."
+"Your clients aren't being targeted by nation-states. They're being targeted by someone who watched a YouTube tutorial and asked ChatGPT to fill in the gaps."
+
+**Bridge to demo** (5 sec)
+"I'm going to prove this to you. Let's watch an AI plan an attack in real time."
+
+⏱ ~75 seconds | 👁 "Curiosity and a login" is the line that lands — let the contrast sink in before moving on
+
+**Q&A Prep:**
+- "Isn't this fear-mongering?" → "Fair question. Let me show you — the demo is next."
+- "Are script kiddies really a threat to my clients?" → "They're the volume play. Your clients won't be breached by APT29 — they'll be breached by someone running AI-generated phishing at scale."` },              // Slide 3
   { type: 'attackLab' },                // Slide 4
   { type: 'aiVocab', notes: `**Open with the "why"** (5 sec)
 "Before I show you how to secure AI, you need to understand one fundamental split."
@@ -456,10 +487,10 @@ export const slides = [
 
 **The Key Insight** (10 sec)
 → Tap the bottom callout
-"AI incidents are non-deterministic. You can't reproduce the bug to prove it happened."
-"Your team needs to practice responding to incidents they can't fully explain."
+"Traditional IR assumes reproducibility. LLMs don't comply."
+"You can't re-run the prompt and get the same bad output. Your team needs to practice responding to incidents they can't fully explain."
 
-⏱ ~75 seconds | 👁 "Can't reproduce the bug" is the memorable insight` },             // Slide 25
+⏱ ~75 seconds | 👁 "LLMs don't comply" is the memorable punchline` },             // Slide 25
 
   // ============================================
   // PART 4: MONDAY MORNING (30 min)
