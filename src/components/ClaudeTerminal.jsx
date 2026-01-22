@@ -91,7 +91,7 @@ export function ClaudeTerminal({ theme = 'dark', className = '' }) {
     // Create terminal instance
     const terminal = new Terminal({
       cursorBlink: true,
-      fontSize: 14,
+      fontSize: 18,
       fontFamily: 'Menlo, Monaco, "Courier New", monospace',
       theme: theme === 'dark' ? {
         background: '#0d1117',
