@@ -25,13 +25,19 @@ const SafeSweepReportDemoSlide = ({ theme: t }) => {
         </a>
       </div>
 
-      {/* Report iframe - takes most of the slide */}
+      {/* Report iframe - takes most of the slide, zoomed 1.3x */}
       <div className="flex-1 rounded-xl overflow-hidden border border-slate-600 shadow-2xl bg-white">
         <iframe
           src="/samples/safe-sweep-report-example.html"
           className="w-full h-full"
           title="Safe Sweep Security Report"
-          style={{ minHeight: '600px' }}
+          style={{
+            minHeight: '600px',
+            transform: 'scale(1.3)',
+            transformOrigin: 'top left',
+            width: '77%',  /* 100/1.3 ≈ 77% to compensate for scale */
+            height: '77%'
+          }}
         />
       </div>
 
