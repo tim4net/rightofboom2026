@@ -40,7 +40,6 @@ import {
   AttackLabSlide,
   CACrateIntroSlide,
   M365DriftSlide,
-  CASandwichMappingSlide,
   PatternApplicationsSlide,
   AlertTriageSlide,
   TieredResponseSlide,
@@ -285,13 +284,6 @@ const PresentationApp = () => {
         return (
           <div className="animate-in fade-in duration-500">
             <M365DriftSlide theme={t} />
-          </div>
-        );
-
-      case 'caSandwichMapping':
-        return (
-          <div className="animate-in fade-in duration-500">
-            <CASandwichMappingSlide theme={t} />
           </div>
         );
 

@@ -20,7 +20,7 @@ export { default as SandwichExampleSlide } from './009-GuardrailSandwichInAction
 export { default as BridgeSlide } from './010-WhySandwichWorks';
 export { default as CACrateIntroSlide } from './011-CAPolicyMonitor';
 export { default as M365DriftSlide, M365ConfigDriftDemo } from './012-HowItWorks';
-export { default as CASandwichMappingSlide } from './013-MapsToSandwich';
+// 013-MapsToSandwich removed - content merged into 012-HowItWorks
 export { default as PatternApplicationsSlide } from './014-SamePatternEverywhere';
 export { default as AlertTriageSlide } from './015-AlertTriagePattern';
 export { default as TieredResponseSlide } from './016-TieredResponse';

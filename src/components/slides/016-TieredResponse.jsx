@@ -15,13 +15,13 @@ import { Zap, UserCheck, Users, Clock } from 'lucide-react';
  */
 export const TieredResponseSlide = ({ theme: t }) => {
   return (
-    <div className="w-full h-full flex flex-col px-16 py-8">
+    <div className="w-full h-full flex flex-col px-16 py-4">
       {/* Header */}
-      <div className="text-center mb-6">
-        <h2 className={`text-5xl font-bold ${t.textOnPage} mb-2`}>
+      <div className="text-center mb-3">
+        <h2 className={`text-5xl font-bold ${t.textOnPage} mb-1`}>
           The Approval Matrix
         </h2>
-        <p className="text-2xl text-slate-400">
+        <p className="text-xl text-slate-400">
           Automate or Escalate?
         </p>
       </div>
@@ -45,7 +45,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
             {/* The 2x2 Grid */}
             <div className="grid grid-cols-2 gap-2">
               {/* Top-left: Low Confidence + High Risk = ESCALATE */}
-              <div className="w-[620px] h-[280px] bg-red-500/15 border-2 border-red-500/40 rounded-tl-3xl p-6 flex flex-col">
+              <div className="w-[700px] h-[320px] bg-red-500/15 border-2 border-red-500/40 rounded-tl-3xl p-6 flex flex-col">
                 <div className="flex items-center gap-4 mb-3">
                   <div className="p-3 bg-red-500/25 rounded-xl">
                     <Users className="w-9 h-9 text-red-400" />
@@ -63,7 +63,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
               </div>
 
               {/* Top-right: High Confidence + High Risk = HUMAN APPROVES */}
-              <div className="w-[620px] h-[280px] bg-amber-500/15 border-2 border-amber-500/40 rounded-tr-3xl p-6 flex flex-col">
+              <div className="w-[700px] h-[320px] bg-amber-500/15 border-2 border-amber-500/40 rounded-tr-3xl p-6 flex flex-col">
                 <div className="flex items-center gap-4 mb-3">
                   <div className="p-3 bg-amber-500/25 rounded-xl">
                     <UserCheck className="w-9 h-9 text-amber-400" />
@@ -81,7 +81,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
               </div>
 
               {/* Bottom-left: Low Confidence + Low Risk = QUEUE */}
-              <div className="w-[620px] h-[280px] bg-slate-500/15 border-2 border-slate-500/40 rounded-bl-3xl p-6 flex flex-col">
+              <div className="w-[700px] h-[320px] bg-slate-500/15 border-2 border-slate-500/40 rounded-bl-3xl p-6 flex flex-col">
                 <div className="flex items-center gap-4 mb-3">
                   <div className="p-3 bg-slate-500/25 rounded-xl">
                     <Clock className="w-9 h-9 text-slate-400" />
@@ -99,7 +99,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
               </div>
 
               {/* Bottom-right: High Confidence + Low Risk = AUTO-EXECUTE */}
-              <div className="w-[620px] h-[280px] bg-emerald-500/15 border-2 border-emerald-500/40 rounded-br-3xl p-6 flex flex-col">
+              <div className="w-[700px] h-[320px] bg-emerald-500/15 border-2 border-emerald-500/40 rounded-br-3xl p-6 flex flex-col">
                 <div className="flex items-center gap-4 mb-3">
                   <div className="p-3 bg-emerald-500/25 rounded-xl">
                     <Zap className="w-9 h-9 text-emerald-400" />
@@ -130,7 +130,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
       </div>
 
       {/* Footer - Landing line */}
-      <div className="mt-6 flex justify-center">
+      {/* <div className="mt-6 flex justify-center">
         <div className="bg-slate-900/80 border border-slate-700 rounded-xl px-12 py-4">
           <p className="text-3xl text-slate-300">
             <span className="text-purple-400 font-semibold">AI explains every action.</span>
@@ -138,7 +138,7 @@ export const TieredResponseSlide = ({ theme: t }) => {
             <span className="text-amber-400 font-semibold">who approves.</span>
           </p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

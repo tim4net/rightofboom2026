@@ -291,27 +291,19 @@ export const slides = [
 **Dual Triggers** (10 sec)
 "Two triggers: scheduled checks plus real-time webhook from Microsoft's audit log."
 
-⏱ ~45 seconds | 👁 "AI summarizes, math decides" is the quotable line` },  // 012
+⏱ ~45 seconds | 👁 "Math detects. AI explains. You get notified." is the quotable line
 
-  { type: 'caSandwichMapping', notes: `**Connect to the Sandwich** (20 sec)
-"Remember the guardrail sandwich from earlier? Here's how the CA Policy Monitor maps to it."
-→ Walk through each layer
-
-**INPUT** (10 sec)
-"Deterministic triggers — scheduled check or Microsoft webhook. No AI deciding when to run."
-
-**AI LAYER** (15 sec)
-"The AI ONLY explains. It translates GUIDs to names. It describes the security impact."
-"But notice — AI doesn't decide what changed. Math already did that."
-
-**OUTPUT** (10 sec)
-"Deterministic actions — create a ticket, send an email. The AI can't decide to skip the alert."
+**The Sandwich Mapping** (shown with outline boxes)
+"Notice the dashed boxes — they show how this maps to the guardrail sandwich."
+→ Point to INPUT GUARDRAIL outline (steps 1-4)
+"Everything in the amber outline is deterministic. Triggers, math comparison, GUID translation. No AI involved."
+→ Point to AI LAYER outline (step 5)
+"The purple layer — AI ONLY explains. It can't change what was detected."
+→ Point to OUTPUT GUARDRAIL outline (steps 6-7)
+"Amber again — deterministic output. Ticket created, baseline updated. Every time."
 
 **The Payoff** (10 sec)
-"This is why you can trust it. If the math finds a change, you get notified. Every time."
-"AI makes it readable. It can't make it wrong."
-
-⏱ ~65 seconds | 👁 Reinforces the architecture they learned earlier` },  // 013
+"Math detects. AI explains. You get notified. If you want to trust AI in production, this is how."` },  // 012
 
   { type: 'patternApplications', notes: `**The Template** (15 sec)
 "This isn't just for Conditional Access. The same pattern works everywhere."
