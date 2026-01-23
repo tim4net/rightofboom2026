@@ -9,15 +9,17 @@ import CrateIcon from '../ui/CrateIcon';
 export const CACrateIntroSlide = ({ theme: t }) => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center px-16">
-      {/* Rewst + Crate branding - top and huge */}
-      <div className="flex items-center gap-8 mb-20">
-        <img
-          src="/images/rewst-logo.png"
-          alt="Rewst"
-          className="h-28 w-auto"
-        />
+      {/* Rewst + Crate branding - centered divider */}
+      <div className="flex items-center mb-20">
+        <div className="w-80 flex justify-end pr-8">
+          <img
+            src="/images/rewst-logo.png"
+            alt="Rewst"
+            className="h-28 w-auto"
+          />
+        </div>
         <div className="h-20 w-px bg-slate-600" />
-        <div className="flex items-center gap-4">
+        <div className="w-80 flex items-center gap-4 pl-[39px]">
           <CrateIcon className="w-16 h-16 text-amber-400" />
           <span className="text-5xl font-bold text-amber-400">Crate</span>
         </div>

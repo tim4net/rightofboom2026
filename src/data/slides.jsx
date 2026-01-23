@@ -271,32 +271,33 @@ export const slides = [
 
 ⏱ ~30 seconds | 👁 Simple transition — details on next slide` },  // 011
 
-  { type: 'm365Drift', notes: `**The Architecture** (25 sec)
-→ Walk through the flow
-"Your baseline — you store what the config SHOULD be. Your ground truth."
-"Math — set difference. What changed? Deterministic, no guessing."
-"AI — translates GUIDs to names, explains the security impact. But it never decides what changed."
-"Alert — ticket in your PSA, email to your team."
+  { type: 'm365Drift', notes: `**Walk Through the Flow** (60 sec)
+→ Point to each numbered step as you explain
 
-**The Key Line** (10 sec)
-"AI summarizes. Math decides. That's why there are no false positives from AI hallucination."
+**Step 1: TRIGGER**
+"Two ways this kicks off. Either a schedule — check every 15 minutes — or a real-time webhook from Microsoft Graph. When someone touches a Conditional Access policy, Microsoft can push that event to us immediately."
 
-**Dual Triggers** (10 sec)
-"Two triggers: scheduled checks plus real-time webhook from Microsoft's audit log."
+**Steps 2-3: FETCH + COMPARE**
+"We pull the current state from Graph API, then compare it to our stored baseline. Pure set math — added equals current minus baseline, removed equals baseline minus current. No AI, no guessing. If a policy changed, the math catches it."
 
-⏱ ~45 seconds | 👁 "Math detects. AI explains. You get notified." is the quotable line
+**Step 4: TRANSLATE**
+"Microsoft returns everything as GUIDs. This step calls Graph to translate those to human-readable names — user emails, group names, app names. Still deterministic, just a lookup."
 
-**The Sandwich Mapping** (shown with outline boxes)
-"Notice the dashed boxes — they show how this maps to the guardrail sandwich."
-→ Point to INPUT GUARDRAIL outline (steps 1-4)
-"Everything in the amber outline is deterministic. Triggers, math comparison, GUID translation. No AI involved."
-→ Point to AI LAYER outline (step 5)
-"The purple layer — AI ONLY explains. It can't change what was detected."
-→ Point to OUTPUT GUARDRAIL outline (steps 6-7)
-"Amber again — deterministic output. Ticket created, baseline updated. Every time."
+→ Point to the dashed amber box
+"Notice everything so far is in the INPUT GUARDRAIL — deterministic code. Nothing probabilistic has touched the data yet."
 
-**The Payoff** (10 sec)
-"Math detects. AI explains. You get notified. If you want to trust AI in production, this is how."` },  // 012
+**Step 5: AI ANALYSIS**
+→ Point to the purple box
+"NOW we involve AI. It receives the diff and explains the security impact in plain English. 'This change allows legacy authentication, bypassing MFA for these users.' But here's the key — the AI cannot change what was detected. It only explains."
+
+**Steps 6-7: NOTIFY + UPDATE**
+→ Point to the bottom amber box
+"Back to deterministic. Ticket gets created in your PSA. Email goes out. Baseline updates for next run. Every single time, same behavior."
+
+**The Quotable Line** (10 sec)
+"Math detects. AI explains. You get notified. That's the sandwich — and that's why AI hallucination can't cause false positives."
+
+⏱ ~70 seconds | 👁 Walk the flow top to bottom, emphasize the amber/purple/amber sandwich structure` },  // 012
 
   { type: 'patternApplications', notes: `**The Template** (15 sec)
 "This isn't just for Conditional Access. The same pattern works everywhere."
