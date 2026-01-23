@@ -257,26 +257,19 @@ export const slides = [
 - "What about APTs with dwell time?" → "You're right — that's why detection speed matters. The sandwich is most powerful when combined with continuous monitoring."
 - "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },  // 010
 
-  { type: 'caCrateIntro', notes: `**What is a Crate?** (10 sec)
-"Rewst Crates are pre-built automations. You don't write code — you configure and deploy."
-"Think of them like apps in an app store. Someone else built it, you just install and configure."
+  { type: 'caCrateIntro', notes: `**Transition: Introduce the Crate** (15 sec)
+"Let's look at a real example of the guardrail sandwich in action."
+"This is a Rewst Crate — pre-built automation you configure and deploy, no code required."
 
-**This Specific Crate** (15 sec)
-"The CA Policy Monitor watches your Conditional Access policies across all your M365 tenants."
-"It alerts you when someone weakens a policy or adds exclusions."
+**Position It** (10 sec)
+"This crate uses AI to explain security changes — but the AI is sandwiched between deterministic guardrails."
+"The next slide shows exactly how it maps to the pattern we just discussed."
 
-**Why MFA Exclusions Matter** (30 sec)
-→ Tap the red callout box
-"Here's why this matters: MFA exclusions are a skeleton key to your tenant."
-"Emergency exclusion — attacker adds a backdoor user to an MFA bypass group. Now they can log in without MFA."
-"Legacy auth backdoor — enable protocols like IMAP or SMTP that don't support MFA. Instant bypass."
-"Trusted location — add the attacker's IP to your trusted locations. Now their logins look legitimate."
-→ Land it: "These are the exact changes you want to catch within minutes, not weeks."
+**Quick Context** (5 sec)
+"Conditional Access policies control who can log in and how. Changes to these policies can create security gaps."
+"This crate catches those changes within minutes."
 
-**Detection Triggers** (5 sec)
-"The crate catches all of these: user added to exclusion, legacy auth enabled, named location modified."
-
-⏱ ~60 seconds | 👁 "Skeleton key to your tenant" is the memorable phrase` },  // 011
+⏱ ~30 seconds | 👁 Simple transition — details on next slide` },  // 011
 
   { type: 'm365Drift', notes: `**The Architecture** (25 sec)
 → Walk through the flow

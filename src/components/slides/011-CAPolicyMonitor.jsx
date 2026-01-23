@@ -10,7 +10,7 @@ export const CACrateIntroSlide = ({ theme: t }) => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center px-16">
       {/* Rewst + Crate branding - top and huge */}
-      <div className="flex items-center gap-8 mb-16">
+      <div className="flex items-center gap-8 mb-20">
         <img
           src="/images/rewst-logo.png"
           alt="Rewst"
@@ -30,7 +30,6 @@ export const CACrateIntroSlide = ({ theme: t }) => {
 
       {/* Tagline */}
       <p className="text-2xl text-slate-400 text-center max-w-3xl">
-        Know when your CA policies change—and why it matters.
       </p>
     </div>
   );
