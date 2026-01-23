@@ -46,7 +46,7 @@ param(
 
 #Requires -Version 5.1
 
-$ScriptVersion = "1.2.0"
+$ScriptVersion = "1.2.1"
 $script:tests = @()
 $script:isAdmin = $false
 $script:warnings = @()
@@ -307,7 +307,9 @@ function Test-EicarDetection {
     $eicarBase64 = "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo="
 
     $testId = [Guid]::NewGuid().ToString("N").Substring(0, 8)
-    $testPath = Join-Path $env:TEMP "eicar-test-$testId.com"
+    # Use C:\Users\Public - realistic malware drop location, not typically excluded
+    # Avoid $env:TEMP which is C:\Windows\TEMP when running as SYSTEM via RMM
+    $testPath = Join-Path "$env:SystemDrive\Users\Public" "eicar-test-$testId.com"
     $testCompleted = $false
     $wasBlocked = $false
     $blockMethod = "unknown"
