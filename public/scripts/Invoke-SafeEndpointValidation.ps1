@@ -23,7 +23,7 @@
     .\Invoke-SafeEndpointValidation.ps1 -SkipFunctionalTests
 
 .NOTES
-    Version: 1.1.0
+    Version: 1.2.2
     Author: Right of Boom 2026
     License: MIT
 
@@ -46,7 +46,7 @@ param(
 
 #Requires -Version 5.1
 
-$ScriptVersion = "1.2.1"
+$ScriptVersion = "1.2.2"
 $script:tests = @()
 $script:isAdmin = $false
 $script:warnings = @()
@@ -146,44 +146,6 @@ function Get-RegistryValueSafe {
         return $item.$Name
     } catch {
         return $DefaultValue
-    }
-}
-
-function Invoke-WebRequestWithTimeout {
-    param(
-        [string]$Uri,
-        [string]$OutFile,
-        [int]$TimeoutSeconds = 30
-    )
-
-    $webRequest = $null
-    $response = $null
-    $stream = $null
-    $fileStream = $null
-
-    try {
-        $webRequest = [System.Net.HttpWebRequest]::Create($Uri)
-        $webRequest.Timeout = $TimeoutSeconds * 1000
-        $webRequest.ReadWriteTimeout = $TimeoutSeconds * 1000
-        $webRequest.UserAgent = "SafeEndpointValidation/1.1"
-
-        $response = $webRequest.GetResponse()
-        $stream = $response.GetResponseStream()
-        $fileStream = [System.IO.File]::Create($OutFile)
-
-        $buffer = New-Object byte[] 8192
-        $bytesRead = 0
-        while (($bytesRead = $stream.Read($buffer, 0, $buffer.Length)) -gt 0) {
-            $fileStream.Write($buffer, 0, $bytesRead)
-        }
-
-        return @{ Success = $true; Error = $null }
-    } catch {
-        return @{ Success = $false; Error = $_.Exception.Message }
-    } finally {
-        if ($fileStream) { $fileStream.Close(); $fileStream.Dispose() }
-        if ($stream) { $stream.Close(); $stream.Dispose() }
-        if ($response) { $response.Close(); $response.Dispose() }
     }
 }
 
