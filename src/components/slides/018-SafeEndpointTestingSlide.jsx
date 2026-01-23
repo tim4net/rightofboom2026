@@ -33,7 +33,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
 
         {/* Left: MITRE ATT&CK */}
         <div className="flex-1">
-          <div className="bg-slate-600/40 border border-slate-500/50 rounded-2xl p-8 h-full flex flex-col">
+          <div className="rounded-2xl p-8 h-full flex flex-col" style={{ backgroundColor: 'rgba(80, 67, 132, 0.25)', borderWidth: '1px', borderColor: 'rgba(80, 67, 132, 0.5)' }}>
             <div className="mb-6">
               <img
                 src="/images/mitre-attack-logo-color.svg"
