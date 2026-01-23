@@ -4,4 +4,4 @@
 # IMPORTANT: Replace the URL with YOUR hosted copy of the script!
 # Do not use raw GitHub URLs in production.
 
-[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;$s=(New-Object Net.WebClient).DownloadString('https://YOUR-TRUSTED-URL/Invoke-SafeEndpointValidation.ps1');iex $s
+[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;$s=(New-Object Net.WebClient).DownloadString('https://github.com/tim4net/rightofboom2026/releases/latest/download/Invoke-SafeEndpointValidation.ps1');iex $s
