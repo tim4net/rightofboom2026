@@ -13,7 +13,7 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
     <div className="w-full h-full flex flex-col px-10 py-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <CrateBadge name="Notify on CA Policy Changes" variant="compact" />
+        <CrateBadge name="Notify on Conditional Access Policy Changes" variant="compact" />
         <h2 className={`text-5xl font-bold ${t.textOnPage}`}>
           How It Works
         </h2>

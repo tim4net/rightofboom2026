@@ -46,7 +46,7 @@ export function CrateBadge({ name, variant = 'default', className = '' }) {
         <img
           src="/images/rewst-logo.png"
           alt="Rewst"
-          className="h-14 w-auto"
+          className="h-20 w-auto"
         />
         <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/50 rounded-lg">
           <CrateIcon className="w-6 h-6 text-amber-400" />
