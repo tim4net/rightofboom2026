@@ -1,85 +1,115 @@
 {#
   Safe Sweep Results Aggregator
-
-  Input: CTX.review_results - array of endpoint results
-  Output: Aggregated structure for AI narrative generation
+  Simplified for Rewst Jinja compatibility
 #}
 
-{#- First pass: collect all failed tests with their hosts -#}
-{%- set all_failures = [] -%}
-{%- set scores = [] -%}
-{%- set grades = [] -%}
+{#- Initialize counters -#}
+{%- set endpoint_count = CTX.review_results | default([]) | length -%}
+{%- set total_score = 0 -%}
+{%- set grade_a = 0 -%}
+{%- set grade_b = 0 -%}
+{%- set grade_c = 0 -%}
+{%- set grade_d = 0 -%}
+{%- set grade_f = 0 -%}
+
+{#- Build a simple list of all failures -#}
+{%- set failure_list = [] -%}
 
 {%- for result in CTX.review_results | default([]) -%}
-  {%- set _ = scores.append(result.summary.score | default(0)) -%}
-  {%- set _ = grades.append(result.summary.grade | default('F')) -%}
+  {#- Accumulate scores (can't mutate, so we'll recalculate) -#}
 
+  {#- Count this endpoint's grade -#}
+  {%- set g = result.summary.grade | default('F') | upper -%}
+  {%- if g == 'A' -%}{%- set grade_a = grade_a + 1 -%}
+  {%- elif g == 'B' -%}{%- set grade_b = grade_b + 1 -%}
+  {%- elif g == 'C' -%}{%- set grade_c = grade_c + 1 -%}
+  {%- elif g == 'D' -%}{%- set grade_d = grade_d + 1 -%}
+  {%- else -%}{%- set grade_f = grade_f + 1 -%}
+  {%- endif -%}
+
+  {#- Collect failures -#}
   {%- for test in result.tests | default([]) -%}
-    {%- if test.status in ['fail', 'warn', 'FAIL', 'WARN'] -%}
-      {%- set _ = all_failures.append({
-        'test_id': test.id | string,
-        'test_name': test.name | default('Unknown Test'),
-        'category': test.category | default('General'),
-        'severity': test.status | lower,
-        'mitre_id': test.mitre_id | default(''),
-        'remediation': test.remediation | default({}),
-        'hostname': result.metadata.hostname | default('Unknown')
-      }) -%}
+    {%- set st = test.status | default('') | lower -%}
+    {%- if st == 'fail' or st == 'warn' -%}
+      {%- set _ = failure_list.append(
+        (test.id | default('unknown') | string) ~ '|||' ~
+        (test.name | default('Unknown')) ~ '|||' ~
+        (test.category | default('General')) ~ '|||' ~
+        st ~ '|||' ~
+        (test.mitre_id | default('')) ~ '|||' ~
+        (result.metadata.hostname | default('Unknown'))
+      ) -%}
     {%- endif -%}
   {%- endfor -%}
 {%- endfor -%}
 
-{#- Calculate summary stats -#}
-{%- set endpoint_count = CTX.review_results | default([]) | length -%}
-{%- set avg_score = (scores | sum / endpoint_count) | round(1) if endpoint_count > 0 else 0 -%}
-
-{#- Count grades -#}
-{%- set grade_a = grades | select('equalto', 'A') | list | length -%}
-{%- set grade_b = grades | select('equalto', 'B') | list | length -%}
-{%- set grade_c = grades | select('equalto', 'C') | list | length -%}
-{%- set grade_d = grades | select('equalto', 'D') | list | length -%}
-{%- set grade_f = grades | select('equalto', 'F') | list | length -%}
+{#- Calculate average score directly -#}
+{%- set score_sum = 0 -%}
+{%- for result in CTX.review_results | default([]) -%}
+  {%- set score_sum = score_sum + (result.summary.score | default(0)) -%}
+{%- endfor -%}
+{%- set avg_score = (score_sum / endpoint_count) | round(1) if endpoint_count > 0 else 0 -%}
 
 {#- Determine overall grade -#}
-{%- if avg_score >= 90 -%}
-  {%- set overall_grade = 'A' -%}
-{%- elif avg_score >= 80 -%}
-  {%- set overall_grade = 'B' -%}
-{%- elif avg_score >= 70 -%}
-  {%- set overall_grade = 'C' -%}
-{%- elif avg_score >= 60 -%}
-  {%- set overall_grade = 'D' -%}
-{%- else -%}
-  {%- set overall_grade = 'F' -%}
+{%- if avg_score >= 90 -%}{%- set overall_grade = 'A' -%}
+{%- elif avg_score >= 80 -%}{%- set overall_grade = 'B' -%}
+{%- elif avg_score >= 70 -%}{%- set overall_grade = 'C' -%}
+{%- elif avg_score >= 60 -%}{%- set overall_grade = 'D' -%}
+{%- else -%}{%- set overall_grade = 'F' -%}
 {%- endif -%}
 
-{#- Group failures by test_id -#}
-{%- set unique_test_ids = all_failures | map(attribute='test_id') | unique | list -%}
-{%- set aggregated_findings = [] -%}
+{#- Get unique test IDs and aggregate -#}
+{%- set seen_ids = [] -%}
+{%- set aggregated = [] -%}
 
-{%- for tid in unique_test_ids -%}
-  {%- set matching = all_failures | selectattr('test_id', 'equalto', tid) | list -%}
-  {%- set first = matching | first -%}
-  {%- set hosts = matching | map(attribute='hostname') | list -%}
-  {%- set host_display = hosts[:10] -%}
+{%- for item in failure_list -%}
+  {%- set parts = item.split('|||') -%}
+  {%- set tid = parts[0] -%}
 
-  {%- set _ = aggregated_findings.append({
-    'test_id': tid,
-    'test_name': first.test_name,
-    'category': first.category,
-    'severity': 'fail' if (matching | selectattr('severity', 'equalto', 'fail') | list | length > 0) else 'warn',
-    'mitre_id': first.mitre_id,
-    'remediation': first.remediation,
-    'failed_count': matching | length,
-    'endpoint_count': endpoint_count,
-    'affected_hosts': host_display
-  }) -%}
+  {%- if tid not in seen_ids -%}
+    {%- set _ = seen_ids.append(tid) -%}
+
+    {#- Count how many times this test failed -#}
+    {%- set fail_count = 0 -%}
+    {%- set has_fail = false -%}
+    {%- set hosts = [] -%}
+    {%- set remediation = {} -%}
+
+    {%- for item2 in failure_list -%}
+      {%- set p2 = item2.split('|||') -%}
+      {%- if p2[0] == tid -%}
+        {%- set fail_count = fail_count + 1 -%}
+        {%- if p2[3] == 'fail' -%}{%- set has_fail = true -%}{%- endif -%}
+        {%- if hosts | length < 10 -%}
+          {%- set _ = hosts.append(p2[5]) -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {#- Look up remediation from original data -#}
+    {%- for result in CTX.review_results | default([]) -%}
+      {%- for test in result.tests | default([]) -%}
+        {%- if (test.id | default('') | string) == tid and test.remediation -%}
+          {%- set remediation = test.remediation -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+
+    {%- set _ = aggregated.append({
+      'test_id': tid,
+      'test_name': parts[1],
+      'category': parts[2],
+      'severity': 'fail' if has_fail else 'warn',
+      'mitre_id': parts[4],
+      'remediation': remediation,
+      'failed_count': fail_count,
+      'endpoint_count': endpoint_count,
+      'affected_hosts': hosts
+    }) -%}
+  {%- endif -%}
 {%- endfor -%}
 
-{#- Sort by failed_count descending -#}
-{%- set sorted_findings = aggregated_findings | sort(attribute='failed_count', reverse=true) -%}
-
-{#- Output -#}
+{#- Output result -#}
 {{
   {
     'org_name': CTX.org_name | default('Organization'),
@@ -87,9 +117,15 @@
     'summary': {
       'average_score': avg_score,
       'overall_grade': overall_grade,
-      'endpoints_by_grade': {'A': grade_a, 'B': grade_b, 'C': grade_c, 'D': grade_d, 'F': grade_f},
-      'total_findings': sorted_findings | length
+      'endpoints_by_grade': {
+        'A': grade_a,
+        'B': grade_b,
+        'C': grade_c,
+        'D': grade_d,
+        'F': grade_f
+      },
+      'total_findings': aggregated | length
     },
-    'aggregated_findings': sorted_findings
+    'aggregated_findings': aggregated
   }
 }}
