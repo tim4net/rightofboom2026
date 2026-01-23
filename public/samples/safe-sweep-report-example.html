@@ -1,538 +1,378 @@
 <!DOCTYPE html>
 <!--
   Safe Sweep Email Template
-  Version: 1.2.0
+  Version: 1.3.0 - Rewst Branded
 
   Usage in Rewst:
   - Copy this entire template into your "Send Email" action's HTML body
-  - Or reference via URL if your email action supports external templates
 
   Expected context variables:
   - CTX.org_name: Organization name
   - CTX.review_results: Array of endpoint results from PowerShell script
-  - CTX.ai_response: JSON from OpenAI with executive_summary, critical_findings, etc.
-  - ORG.VARIABLES.msp_name: Your MSP name
-  - ORG.VARIABLES.msp_email: Your support email
+  - CTX.ai_response: JSON from AI with executive_summary, critical_findings, recommendations
+  - ORG.VARIABLES.name: Your MSP name
+  - ORG.VARIABLES.logo_url: URL to your logo (optional)
+
+  Rewst Brand Colors:
+  - Primary Purple: #504384
+  - Accent Teal: #1EAFAF
+  - Dark: #141121
+  - ATT&CK Red: #FA4443
 -->
 <html>
 <head>
   <meta charset="utf-8">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #141121; max-width: 700px; margin: 0 auto; padding: 20px; }
-    .header { text-align: center; padding: 30px 0; border-bottom: 2px solid #E6E6E6; }
-    .header h1 { margin: 0; font-size: 28px; color: #141121; }
-    .header p { color: #666666; margin: 8px 0 0; }
-
-    .score-badge { display: inline-block; padding: 20px 40px; border-radius: 12px; font-size: 48px; font-weight: bold; margin: 20px 0; }
-    .score-label { display: block; font-size: 18px; font-weight: normal; margin-top: 5px; }
-    .grade-A { background: #1EAFAF; color: white; }
-    .grade-B { background: #78CFCF; color: #005655; }
-    .grade-C { background: #F9A100; color: white; }
-    .grade-D { background: #F15B5B; color: white; }
-    .grade-F { background: #792E2E; color: white; }
-
-    .stats-bar { display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap; }
-    .stat { text-align: center; padding: 15px 25px; background: #F5F5F5; border-radius: 8px; min-width: 120px; }
-    .stat-value { font-size: 28px; font-weight: bold; color: #141121; }
-    .stat-label { color: #666666; font-size: 14px; }
-    .stat-pass .stat-value { color: #1EAFAF; }
-    .stat-fail .stat-value { color: #F15B5B; }
-
-    .section { margin: 30px 0; }
-    .section h2 { font-size: 20px; color: #141121; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px; }
-
-    .summary { background: #F5F5F5; padding: 20px; border-radius: 8px; font-size: 16px; }
-
-    .finding { padding: 15px; margin: 12px 0; border-left: 4px solid; border-radius: 0 8px 8px 0; background: #FAFAFA; }
-    .finding-fail { border-color: #F15B5B; background: #FEF0F0; }
-    .finding-warn { border-color: #F9A100; background: #FFF8E6; }
-    .finding-name { font-weight: 600; color: #141121; margin-bottom: 5px; }
-    .finding-detail { color: #666666; font-size: 14px; }
-
-    .remediation-item { padding: 15px; margin: 12px 0; border-left: 4px solid #F15B5B; border-radius: 0 8px 8px 0; background: #FEF0F0; }
-    .remediation-header { font-weight: 600; color: #792E2E; margin-bottom: 8px; }
-    .remediation-mitre { font-size: 12px; color: #1EAFAF; font-weight: normal; text-decoration: none; }
-    .remediation-mitre:hover { text-decoration: underline; }
-    .remediation-detail { color: #666666; font-size: 14px; margin-bottom: 10px; }
-    .remediation-method { margin: 8px 0; }
-    .remediation-label { font-weight: 600; color: #141121; font-size: 13px; }
-    .remediation-code { display: block; background: #141121; color: #1EAFAF; padding: 8px 10px; margin-top: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
-    .remediation-path { color: #504384; font-size: 13px; }
-    .remediation-link { color: #1EAFAF; font-size: 12px; margin-top: 8px; display: inline-block; }
-
-    .section-note { color: #666666; font-style: italic; font-size: 14px; margin-bottom: 15px; }
-
-    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #E6E6E6; text-align: center; color: #666666; font-size: 13px; }
-    .footer a { color: #1EAFAF; }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--[if mso]>
+  <style type="text/css">
+    table { border-collapse: collapse; }
+    .fallback-font { font-family: Arial, sans-serif; }
   </style>
+  <![endif]-->
 </head>
-<body>
-  <div class="header">
-    <h1>Security Posture Report</h1>
-    <p>Right of Boom 2026 &bull; January 23, 2026</p>
-  </div>
-
-  <div style="text-align: center;">
-    <div class="score-badge grade-F">
-      F
-      <span class="score-label">55.67/100</span>
-    </div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-value">3</div>
-      <div class="stat-label">Endpoints Scanned</div>
-    </div>
-    <div class="stat stat-pass">
-      <div class="stat-value">30</div>
-      <div class="stat-label">Tests Passed</div>
-    </div>
-    <div class="stat stat-fail">
-      <div class="stat-value">23</div>
-      <div class="stat-label">Tests Failed</div>
-    </div>
-  </div>
-
-  <!-- AI SECTION: Executive Summary -->
-  <div class="section">
-    <h2>Executive Summary</h2>
-    <div class="summary">
-      <p>Across three endpoints, baseline protections are present (Defender enabled, firewall on), but several high-impact controls are missing or not enforcing, resulting in weak prevention of common ransomware and credential-theft paths and limited investigation visibility. The most urgent gaps are that malware testing (EICAR) was not blocked, BitLocker protection is off, and key hardening/logging controls (ASR rules, Credential Guard, LLMNR disablement, command-line and PowerShell logging) are not enabled.</p>
-    </div>
-  </div>
-
-  <!-- AI SECTION: Critical Findings (prioritized by AI) -->
-  <div class="section">
-    <h2>Critical Findings</h2>
-    <div class="finding finding-fail">
-      <div class="finding-name">EICAR Malware Detection (FAIL on all 3 endpoints)</div>
-      <div class="finding-detail">This is a functional validation that the endpoint actually blocks known-bad content. If the EICAR test file is not blocked, an attacker can more easily execute commodity malware (downloaders, ransomware droppers) and establish persistence. Business risk includes higher likelihood of successful initial compromise, ransomware execution, and incident response costs because the primary prevention layer may not be reliably stopping malicious files.</div>
-    </div>
-    <div class="finding finding-fail">
-      <div class="finding-name">ASR Rules Enforcement (FAIL on all 3 endpoints)</div>
-      <div class="finding-detail">Attack Surface Reduction rules are designed to stop common enterprise attack techniques (malicious Office child processes, script abuse, LSASS credential theft, WMI persistence, email/webmail executable content). With most rules disabled/not configured, attackers can use phishing documents, scripts, and living-off-the-land techniques to gain execution, steal credentials, and move laterally. Business risk is increased probability of ransomware and domain-wide compromise from a single workstation foothold.</div>
-    </div>
-    <div class="finding finding-fail">
-      <div class="finding-name">Credential Guard (FAIL on all 3 endpoints)</div>
-      <div class="finding-detail">Credential Guard helps protect cached and derived credentials from being stolen even after an attacker gains local admin. Without it, attackers who land on a workstation can more readily extract credentials/tokens and pivot to other systems. Business risk includes rapid lateral movement, privilege escalation to high-value accounts, and broader breach impact.</div>
-    </div>
-    <div class="finding finding-fail">
-      <div class="finding-name">BitLocker Drive Encryption (FAIL on all 3 endpoints; protection off)</div>
-      <div class="finding-detail">BitLocker protects data at rest. Two endpoints show the drive is encrypted but protection is off (no key protectors), and one endpoint is fully decrypted. If a device is lost, stolen, or accessed offline, an attacker can extract sensitive data (client data, credentials, browser tokens) without needing to compromise Windows. Business risk includes reportable data breach, contractual penalties, and reputational damage.</div>
-    </div>
-    <div class="finding finding-fail">
-      <div class="finding-name">LLMNR Disabled (FAIL on all 3 endpoints)</div>
-      <div class="finding-detail">LLMNR enables name-resolution fallback that can be poisoned on local networks (e.g., Responder/Inveigh) to capture NTLM hashes and relay authentication. With LLMNR enabled, an attacker on the same network segment (or a compromised device) can harvest credentials and potentially authenticate to other services. Business risk includes credential theft and lateral movement without exploiting a software vulnerability.</div>
-    </div>
-    <div class="finding finding-fail">
-      <div class="finding-name">PowerShell Script Block Logging (FAIL on all 3 endpoints)</div>
-      <div class="finding-detail">PowerShell is a common post-exploitation tool. Without script block logging, many attacker actions (download/execute, credential access, discovery) are not recorded in a way defenders can reliably investigate. Business risk includes longer attacker dwell time, reduced ability to determine scope/impact, and higher recovery costs due to limited forensic evidence.</div>
-    </div>
-    <div class="finding finding-fail">
-      <div class="finding-name">Process Command Line Logging (FAIL on all 3 endpoints)</div>
-      <div class="finding-detail">Process creation events without command-line arguments remove critical context (what tool ran, what it targeted, what parameters were used). Attackers rely on command-line tooling for discovery, credential access, and persistence; without this telemetry, detection and incident reconstruction are significantly weaker. Business risk includes missed detections and inability to prove containment, increasing downtime and remediation scope.</div>
-    </div>
-    <div class="finding finding-fail">
-      <div class="finding-name">SMB Signing Required (FAIL on WIN10-ROB)</div>
-      <div class="finding-detail">If SMB signing is not required, NTLM relay attacks become more feasible, allowing an attacker to relay captured authentication to access SMB resources or execute actions as the victim. This is a common internal-network escalation path. Business risk includes unauthorized access to file shares, credential relay leading to broader compromise, and faster lateral movement.</div>
-    </div>
-    <div class="finding finding-fail">
-      <div class="finding-name">LSASS Protected Process (FAIL on WIN10-ROB)</div>
-      <div class="finding-detail">Without LSASS running as a protected process, credential dumping tools (e.g., Mimikatz) have an easier time extracting password hashes and secrets from memory. This accelerates privilege escalation and lateral movement. Business risk includes compromise of additional endpoints and accounts, potentially leading to domain compromise and ransomware spread.</div>
-    </div>
-    <div class="finding finding-warn">
-      <div class="finding-name">AV Exclusion Audit (WARN on WIN11-ROB and WIN10-ROB: C:\Temp excluded)</div>
-      <div class="finding-detail">Broad exclusions like C:\Temp create a safe haven where malware can be written and executed with reduced scanning. Attackers frequently stage payloads in temporary directories. Business risk includes reduced effectiveness of antivirus and higher likelihood of successful execution and persistence.</div>
-    </div>
-    <div class="finding finding-warn">
-      <div class="finding-name">NetBIOS over TCP/IP Disabled (WARN on all 3 endpoints)</div>
-      <div class="finding-detail">NetBIOS can increase exposure to legacy name-resolution and enumeration behaviors that attackers abuse for discovery and credential interception on local networks. While not always exploitable alone, it compounds risk when combined with LLMNR/NTLM-based attacks. Business risk includes easier internal reconnaissance and increased credential attack surface.</div>
-    </div>
-    <div class="finding finding-warn">
-      <div class="finding-name">PowerShell Module Logging (WARN on all 3 endpoints)</div>
-      <div class="finding-detail">Module logging provides additional visibility into PowerShell module usage. Without it, defenders lose detail that can help detect and investigate attacker tradecraft. Business risk includes reduced detection fidelity and slower investigations.</div>
-    </div>
-    <div class="finding finding-warn">
-      <div class="finding-name">Local Administrator Sprawl (WARN on WIN11-ROB and WIN10-ROB: 3 admins)</div>
-      <div class="finding-detail">More local administrators increases the chance that a compromised user account yields administrative control, enabling credential theft, disabling security controls, and persistence. Business risk includes faster escalation from a single phish and broader compromise.</div>
-    </div>
-  </div>
-
-  <!-- DETERMINISTIC SECTION: Remediation Steps (directly from script JSON) -->
-  <div class="section">
-    <h2>Remediation Steps</h2>
-    <p class="section-note">Fix commands provided from validated security baselines — copy and run directly.</p>
-
-        <div class="remediation-item">
-          <div class="remediation-header">
-            ASR Rules Enforcement
-<span class="remediation-mitre">(Multiple)</span>          </div>
-          <div class="remediation-detail">0 rules in Block, 0 in Audit, 15 disabled/not configured</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Set-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2,56a863a9-875e-4185-98a7-b882c64b5ce5,d4f940ab-401b-4efc-aadc-ad5f3c50688a -AttackSurfaceReductionRules_Actions Enabled,Enabled,Enabled</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Microsoft Defender Exploit Guard > Attack Surface Reduction > Configure Attack Surface Reduction rules</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Attack surface reduction > Attack Surface Reduction Rules > Set each rule to Block</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            Credential Guard
-<a href="https://attack.mitre.org/techniques/T1003/" class="remediation-mitre" target="_blank">(T1003)</a>          </div>
-          <div class="remediation-detail">Credential Guard is not enabled</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 1 -Type DWord; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LsaCfgFlags" -Value 1 -Type DWord</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > System > Device Guard > Turn On Virtualization Based Security > Credential Guard Configuration: Enabled with UEFI lock</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Account protection > Credential Guard > Enable with UEFI lock</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/configure" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            LLMNR Disabled
-<a href="https://attack.mitre.org/techniques/T1557/001/" class="remediation-mitre" target="_blank">(T1557.001)</a>          </div>
-          <div class="remediation-detail">LLMNR is ENABLED - vulnerable to name poisoning attacks (Responder/Inveigh)</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -Value 0 -PropertyType DWord -Force</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Network > DNS Client > Turn off multicast name resolution > Enabled</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Devices > Configuration profiles > Create > Settings catalog > Search "LLMNR" > Turn Off Multicast Name Resolution > Enabled</span>
-          </div>
-
-          <a href="https://www.blackhillsinfosec.com/how-to-disable-llmnr-why-you-want-to/" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            BitLocker Drive Encryption
-          </div>
-          <div class="remediation-detail">BitLocker is NOT enabled - data at rest is unencrypted</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Enable-BitLocker -MountPoint "C:" -EncryptionMethod XtsAes256 -RecoveryPasswordProtector; Add-BitLockerKeyProtector -MountPoint "C:" -TpmProtector</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > BitLocker Drive Encryption > Operating System Drives > Require additional authentication at startup</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Disk encryption > BitLocker > OS Drive Settings > Encrypt = Required</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            PowerShell Script Block Logging
-<a href="https://attack.mitre.org/techniques/T1059/001/" class="remediation-mitre" target="_blank">(T1059.001)</a>          </div>
-          <div class="remediation-detail">Script block logging NOT enabled - attacker PowerShell commands won't be logged</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">@{Path="HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"; Name="EnableScriptBlockLogging"; Value=1} | ForEach-Object { New-Item -Path $_.Path -Force | Out-Null; Set-ItemProperty @_ -Type DWord }</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on PowerShell Script Block Logging > Enabled</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Devices > Configuration profiles > Settings catalog > PowerShell Script Block Logging > Enabled</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            ASR Rules Enforcement
-<span class="remediation-mitre">(Multiple)</span>          </div>
-          <div class="remediation-detail">0 rules in Block, 1 in Audit, 14 disabled/not configured</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Set-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2,56a863a9-875e-4185-98a7-b882c64b5ce5,d4f940ab-401b-4efc-aadc-ad5f3c50688a -AttackSurfaceReductionRules_Actions Enabled,Enabled,Enabled</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Microsoft Defender Exploit Guard > Attack Surface Reduction > Configure Attack Surface Reduction rules</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Attack surface reduction > Attack Surface Reduction Rules > Set each rule to Block</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            Credential Guard
-<a href="https://attack.mitre.org/techniques/T1003/" class="remediation-mitre" target="_blank">(T1003)</a>          </div>
-          <div class="remediation-detail">Credential Guard is not enabled</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 1 -Type DWord; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LsaCfgFlags" -Value 1 -Type DWord</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > System > Device Guard > Turn On Virtualization Based Security > Credential Guard Configuration: Enabled with UEFI lock</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Account protection > Credential Guard > Enable with UEFI lock</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/configure" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            LLMNR Disabled
-<a href="https://attack.mitre.org/techniques/T1557/001/" class="remediation-mitre" target="_blank">(T1557.001)</a>          </div>
-          <div class="remediation-detail">LLMNR is ENABLED - vulnerable to name poisoning attacks (Responder/Inveigh)</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -Value 0 -PropertyType DWord -Force</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Network > DNS Client > Turn off multicast name resolution > Enabled</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Devices > Configuration profiles > Create > Settings catalog > Search "LLMNR" > Turn Off Multicast Name Resolution > Enabled</span>
-          </div>
-
-          <a href="https://www.blackhillsinfosec.com/how-to-disable-llmnr-why-you-want-to/" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            BitLocker Drive Encryption
-          </div>
-          <div class="remediation-detail">BitLocker is NOT enabled - data at rest is unencrypted</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Enable-BitLocker -MountPoint "C:" -EncryptionMethod XtsAes256 -RecoveryPasswordProtector; Add-BitLockerKeyProtector -MountPoint "C:" -TpmProtector</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > BitLocker Drive Encryption > Operating System Drives > Require additional authentication at startup</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Disk encryption > BitLocker > OS Drive Settings > Encrypt = Required</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            PowerShell Script Block Logging
-<a href="https://attack.mitre.org/techniques/T1059/001/" class="remediation-mitre" target="_blank">(T1059.001)</a>          </div>
-          <div class="remediation-detail">Script block logging NOT enabled - attacker PowerShell commands won't be logged</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">@{Path="HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"; Name="EnableScriptBlockLogging"; Value=1} | ForEach-Object { New-Item -Path $_.Path -Force | Out-Null; Set-ItemProperty @_ -Type DWord }</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on PowerShell Script Block Logging > Enabled</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Devices > Configuration profiles > Settings catalog > PowerShell Script Block Logging > Enabled</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            ASR Rules Enforcement
-<span class="remediation-mitre">(Multiple)</span>          </div>
-          <div class="remediation-detail">0 rules in Block, 1 in Audit, 14 disabled/not configured</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Set-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2,56a863a9-875e-4185-98a7-b882c64b5ce5,d4f940ab-401b-4efc-aadc-ad5f3c50688a -AttackSurfaceReductionRules_Actions Enabled,Enabled,Enabled</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Microsoft Defender Exploit Guard > Attack Surface Reduction > Configure Attack Surface Reduction rules</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Attack surface reduction > Attack Surface Reduction Rules > Set each rule to Block</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            Credential Guard
-<a href="https://attack.mitre.org/techniques/T1003/" class="remediation-mitre" target="_blank">(T1003)</a>          </div>
-          <div class="remediation-detail">Credential Guard is not enabled</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 1 -Type DWord; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LsaCfgFlags" -Value 1 -Type DWord</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > System > Device Guard > Turn On Virtualization Based Security > Credential Guard Configuration: Enabled with UEFI lock</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Account protection > Credential Guard > Enable with UEFI lock</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/configure" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            LSASS Protected Process
-<a href="https://attack.mitre.org/techniques/T1003/001/" class="remediation-mitre" target="_blank">(T1003.001)</a>          </div>
-          <div class="remediation-detail">LSASS is NOT protected - vulnerable to credential dumping tools like Mimikatz</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RunAsPPL" -Value 1 -Type DWord; Restart-Computer</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > System > Local Security Authority > Configure LSASS to run as a protected process > Enabled with UEFI Lock</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Account protection > Local Security Authority > LSASS > Enabled with UEFI Lock</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            LLMNR Disabled
-<a href="https://attack.mitre.org/techniques/T1557/001/" class="remediation-mitre" target="_blank">(T1557.001)</a>          </div>
-          <div class="remediation-detail">LLMNR is ENABLED - vulnerable to name poisoning attacks (Responder/Inveigh)</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -Value 0 -PropertyType DWord -Force</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Network > DNS Client > Turn off multicast name resolution > Enabled</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Devices > Configuration profiles > Create > Settings catalog > Search "LLMNR" > Turn Off Multicast Name Resolution > Enabled</span>
-          </div>
-
-          <a href="https://www.blackhillsinfosec.com/how-to-disable-llmnr-why-you-want-to/" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            BitLocker Drive Encryption
-          </div>
-          <div class="remediation-detail">BitLocker is NOT enabled - data at rest is unencrypted</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">Enable-BitLocker -MountPoint "C:" -EncryptionMethod XtsAes256 -RecoveryPasswordProtector; Add-BitLockerKeyProtector -MountPoint "C:" -TpmProtector</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > BitLocker Drive Encryption > Operating System Drives > Require additional authentication at startup</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Endpoint security > Disk encryption > BitLocker > OS Drive Settings > Encrypt = Required</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-        <div class="remediation-item">
-          <div class="remediation-header">
-            PowerShell Script Block Logging
-<a href="https://attack.mitre.org/techniques/T1059/001/" class="remediation-mitre" target="_blank">(T1059.001)</a>          </div>
-          <div class="remediation-detail">Script block logging NOT enabled - attacker PowerShell commands won't be logged</div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">@{Path="HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"; Name="EnableScriptBlockLogging"; Value=1} | ForEach-Object { New-Item -Path $_.Path -Force | Out-Null; Set-ItemProperty @_ -Type DWord }</code>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on PowerShell Script Block Logging > Enabled</span>
-          </div>
-
-          <div class="remediation-method">
-            <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">Devices > Configuration profiles > Settings catalog > PowerShell Script Block Logging > Enabled</span>
-          </div>
-
-          <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" class="remediation-link">Microsoft Documentation →</a>
-        </div>
-  </div>
+<body style="margin: 0; padding: 0; background-color: #F4F4F7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
+
+  <!-- Wrapper Table -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #F4F4F7;">
+    <tr>
+      <td align="center" style="padding: 20px 10px;">
+
+        <!-- Main Content Table -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+
+          <!-- Header with Rewst Purple -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #504384 0%, #3D3266 100%); background-color: #504384; padding: 30px 40px; text-align: center;">
+              <h1 style="margin: 0; color: #FFFFFF; font-size: 28px; font-weight: 600;">Security Posture Report</h1>
+              <p style="margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 16px;">
+                Right of Boom 2026 &bull; January 23, 2026
+              </p>
+            </td>
+          </tr>
+
+          <!-- Score Badge -->
+          <tr>
+            <td style="padding: 30px 40px; text-align: center; background-color: #FAFAFA; border-bottom: 1px solid #E6E6E6;"><table role="presentation" cellpadding="0" cellspacing="0" align="center">
+                <tr>
+                  <td style="background-color: #792E2E; color: #FFFFFF; padding: 20px 50px; border-radius: 12px; text-align: center;">
+                    <span style="font-size: 56px; font-weight: 700; display: block;">F</span>
+                    <span style="font-size: 18px; opacity: 0.9;">0.0/100</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Stats Row -->
+          <tr>
+            <td style="padding: 25px 20px; border-bottom: 1px solid #E6E6E6;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="33%" style="text-align: center; padding: 10px;">
+                    <div style="background-color: #F5F5F5; border-radius: 8px; padding: 15px;">
+                      <div style="font-size: 32px; font-weight: 700; color: #504384;">3</div>
+                      <div style="font-size: 13px; color: #666666; margin-top: 4px;">Endpoints</div>
+                    </div>
+                  </td>
+                  <td width="33%" style="text-align: center; padding: 10px;">
+                    <div style="background-color: #F0FAF9; border-radius: 8px; padding: 15px;">
+                      <div style="font-size: 32px; font-weight: 700; color: #1EAFAF;">—</div>
+                      <div style="font-size: 13px; color: #666666; margin-top: 4px;">Passed</div>
+                    </div>
+                  </td>
+                  <td width="33%" style="text-align: center; padding: 10px;">
+                    <div style="background-color: #FEF0F0; border-radius: 8px; padding: 15px;">
+                      <div style="font-size: 32px; font-weight: 700; color: #F15B5B;">—</div>
+                      <div style="font-size: 13px; color: #666666; margin-top: 4px;">Failed</div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Executive Summary -->
+          <tr>
+            <td style="padding: 30px 40px;">
+              <h2 style="margin: 0 0 15px; font-size: 20px; color: #504384; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px;">Executive Summary</h2>
+              <div style="background-color: #F8F7FA; border-left: 4px solid #504384; padding: 20px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.6; color: #333333;">
+                <p>Across 3 endpoints, the validation results indicate widespread gaps in malware prevention, credential protection, execution controls, and logging—creating a high likelihood that a common phishing or malware event could quickly escalate to credential theft and lateral movement. Because nearly every control tested is failing across all endpoints, the environment is currently positioned for rapid attacker progression with limited detection and response visibility.</p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Critical Findings -->
+          <tr>
+            <td style="padding: 0 40px 30px;">
+              <h2 style="margin: 0 0 15px; font-size: 20px; color: #504384; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px;">Critical Findings</h2>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">EICAR Malware Detection</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: If the endpoint security stack cannot reliably detect a known-safe test signature, real commodity malware delivered via email attachment, drive-by download, or USB is more likely to execute undetected. Attack scenario: a user opens a malicious attachment; the payload runs, establishes persistence, and begins credential theft and lateral movement before anyone is alerted. Business risk includes ransomware, data theft, and operational downtime.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">Application Control (AppLocker/WDAC)</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Without application control, users (or malware) can run untrusted binaries and scripts from common locations (Downloads, Temp, user profile paths). Attack scenario: an attacker delivers a signed-but-abused tool or a living-off-the-land dropper that executes freely, then stages additional payloads and persistence. Business risk is increased likelihood of ransomware execution and reduced ability to contain initial access.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">ASR Rules Enforcement</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Attack Surface Reduction rules are designed to block common malware behaviors (macro abuse, credential theft patterns, suspicious child processes). Attack scenario: a phishing document spawns PowerShell or a script interpreter; without ASR enforcement, the chain proceeds to download and execute payloads. Business risk includes higher infection rates and faster attacker progression from initial access to impact.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">Credential Guard</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Credential Guard helps protect cached and in-memory credentials from theft. Attack scenario: after initial compromise, an attacker dumps credentials from memory and reuses them to access file shares, servers, and cloud resources. Business risk includes domain-wide compromise, data exfiltration, and ransomware propagation.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">LSASS Protected Process</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: If LSASS is not protected, credential dumping becomes significantly easier. Attack scenario: an attacker runs a credential dumping tool and extracts password hashes or plaintext credentials, then pivots to other systems. Business risk includes rapid escalation to privileged accounts and broad compromise.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">SMB Signing Required</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Without SMB signing, attackers can more easily perform man-in-the-middle or relay-style attacks against SMB authentication and traffic. Attack scenario: an attacker on the same network relays captured authentication to access shares or execute remote actions. Business risk includes lateral movement, data exposure, and faster spread of ransomware across file shares.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">SMB Signing Required (Lateral Movement Prevention)</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Lateral movement commonly uses SMB for remote access and file operations. If SMB signing is not required, it increases the success rate of credential relay and session hijacking techniques. Business risk includes attackers moving from one endpoint to many with minimal resistance.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">BitLocker Drive Encryption</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Without full disk encryption, lost or stolen devices can expose sensitive data (email, cached files, browser sessions, tokens). Attack scenario: a laptop is lost during travel; an attacker extracts data from the drive offline. Business risk includes reportable data breach, regulatory exposure, and reputational damage.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">PowerShell Script Block Logging</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: PowerShell is a common attacker tool for execution and post-exploitation. Without script block logging, malicious commands may run with little forensic trace. Attack scenario: an attacker uses PowerShell to download payloads and enumerate the environment; defenders lack the telemetry to detect or investigate. Business risk includes delayed detection and increased incident scope/cost.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">Process Command Line Logging</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Command-line visibility is critical for detecting suspicious execution (encoded commands, LOLBIN abuse, unusual parent/child process chains). Attack scenario: malware launches system tools with malicious parameters; without command-line logs, detection rules and investigations lose key context. Business risk includes missed detections and inability to reconstruct attacker activity.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">Defender Exclusions</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Excessive or unsafe AV exclusions create blind spots where malware can run without scanning. Attack scenario: an attacker drops payloads into excluded paths or uses excluded processes to avoid detection. Business risk includes persistent undetected malware and higher ransomware success probability.</div>
+              </div>
+<div style="background-color: #FFF8E6; border-left: 4px solid #F9A100; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">LOLBIN Control (AppLocker/WDAC)</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">Why this matters: Living-off-the-land binaries (LOLBINs) are legitimate Windows tools frequently abused to evade defenses. Without controls, attackers can use built-in tools to download, execute, and persist with fewer alerts. Business risk includes stealthier attacks and reduced effectiveness of traditional antivirus-only approaches.</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Recommendations -->
+          <tr>
+            <td style="padding: 0 40px 30px;">
+              <h2 style="margin: 0 0 15px; font-size: 20px; color: #504384; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px;">Recommended Actions</h2>
+              <div style="background-color: #F5F5F5; padding: 20px; border-radius: 8px; font-size: 14px; line-height: 1.7; color: #333333;">
+                <h3>Priority 0 - Fix Immediately</h3><p>These items most directly enable common attack chains (phishing/malware execution → credential theft → lateral movement/ransomware) and/or materially reduce your ability to detect and respond. All findings below are failing on <strong>3/3 endpoints</strong>.</p><ol><li>Implement the provided remediation for <strong>EICAR Malware Detection (eicar-detection)</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>AV Exclusion Audit (av-exclusions)</strong> and <strong>Defender Exclusions (evade-defender-exclusions)</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>Application Control (exec-app-control)</strong> and <strong>LOLBIN Control (evade-lolbin-control)</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>ASR Rules Enforcement (asr-rules)</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>Credential Guard (credential-guard)</strong> and <strong>LSASS Protected Process (lsass-protection)</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>SMB Signing Required (smb-signing)</strong> and <strong>SMB Signing Required (lateral-smb-signing)</strong> (affected: 3).</li></ol><h3>Priority 1 - Fix This Week</h3><p>These items reduce attacker execution options, improve investigation capability, and limit common persistence methods. All findings below are failing on <strong>3/3 endpoints</strong>.</p><ol><li>Implement the provided remediation for <strong>PowerShell Script Block Logging</strong> tests: <strong>exec-ps-scriptblock</strong> and <strong>powershell-logging</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>PowerShell Module Logging</strong> tests: <strong>exec-ps-module-logging</strong> and <strong>powershell-module-logging</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>PowerShell Transcription (exec-ps-transcription)</strong> and <strong>Process Command Line Logging (commandline-logging)</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>PowerShell v2 Disabled (exec-ps-v2)</strong>, <strong>SmartScreen Enabled (exec-smartscreen)</strong>, and <strong>Windows Script Host Disabled (exec-wsh-disabled)</strong> (affected: 3).</li><li>Implement the provided remediation for persistence controls: <strong>AutoRun Disabled (persist-autorun)</strong>, <strong>AutoPlay Disabled (persist-autoplay)</strong>, <strong>Task Scheduler Operational Logging (persist-task-logging)</strong>, <strong>Run/RunOnce Registry Entries (persist-run-keys)</strong>, and <strong>WMI Event Subscriptions (persist-wmi-subscriptions)</strong> (affected: 3).</li></ol><h3>Priority 2 - Fix This Month</h3><p>These items harden credentials, reduce local privilege risk, and improve network posture and data protection. All findings below are failing on <strong>3/3 endpoints</strong>.</p><ol><li>Implement the provided remediation for credential hardening: <strong>LAN Manager Authentication Level (lm-compat-level)</strong>, <strong>Cached Domain Logons Limit (cached-logons)</strong>, <strong>Prevent Domain Credential Storage (disable-domain-creds)</strong>, <strong>RDP Password Saving Disabled (rdp-password-saving)</strong>, and <strong>Restrict Remote SAM Enumeration (restrict-remote-sam)</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>Admin Approval Mode (Built-in Administrator) (priv-admin-approval-mode)</strong> and <strong>Local Administrator Sprawl (local-admin-count)</strong> (affected: 3).</li><li>Implement the provided remediation for network hardening: <strong>LLMNR Disabled (llmnr-disabled)</strong> and <strong>NetBIOS over TCP/IP Disabled (netbios-disabled)</strong> (affected: 3).</li><li>Implement the provided remediation for <strong>BitLocker Drive Encryption (bitlocker-status)</strong> (affected: 3).</li></ol>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Remediation Steps -->
+          <tr>
+            <td style="padding: 0 40px 30px;">
+              <h2 style="margin: 0 0 10px; font-size: 20px; color: #504384; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px;">Remediation Steps</h2>
+              <p style="color: #666666; font-style: italic; font-size: 13px; margin: 0 0 15px;">Commands from validated security baselines — copy and run directly.</p>
+
+                  <div style="background-color: #FEF0F0; border-left: 4px solid #F15B5B; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                    <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
+                      ASR Rules Enforcement
+                        <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
+                          (Multiple)
+                        </span>
+                    </div>
+                    <div style="color: #666666; font-size: 13px; margin-bottom: 10px;">0 rules in Block, 0 in Audit, 15 disabled/not configured</div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">PowerShell:</span>
+                      <code style="display: block; background-color: #141121; color: #1EAFAF; padding: 10px 12px; margin-top: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;">Set-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2,56a863a9-875e-4185-98a7-b882c64b5ce5,d4f940ab-401b-4efc-aadc-ad5f3c50688a -AttackSurfaceReductionRules_Actions Enabled,Enabled,Enabled</code>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Group Policy:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Microsoft Defender Exploit Guard > Attack Surface Reduction > Configure Attack Surface Reduction rules</span>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Intune:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Endpoint security > Attack surface reduction > Attack Surface Reduction Rules > Set each rule to Block</span>
+                    </div>
+
+                    <a href="https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference" style="color: #1EAFAF; font-size: 12px; text-decoration: none; margin-top: 8px; display: inline-block;">Microsoft Documentation →</a>
+                  </div>
+                  <div style="background-color: #FEF0F0; border-left: 4px solid #F15B5B; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                    <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
+                      Credential Guard
+                        <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
+                          <a href="https://attack.mitre.org/techniques/T1003/" style="color: #FA4443; text-decoration: none;">(T1003)</a>
+                        </span>
+                    </div>
+                    <div style="color: #666666; font-size: 13px; margin-bottom: 10px;">Credential Guard is not enabled</div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">PowerShell:</span>
+                      <code style="display: block; background-color: #141121; color: #1EAFAF; padding: 10px 12px; margin-top: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;">Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 1 -Type DWord; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LsaCfgFlags" -Value 1 -Type DWord</code>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Group Policy:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Computer Configuration > Administrative Templates > System > Device Guard > Turn On Virtualization Based Security > Credential Guard Configuration: Enabled with UEFI lock</span>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Intune:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Endpoint security > Account protection > Credential Guard > Enable with UEFI lock</span>
+                    </div>
+
+                    <a href="https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/configure" style="color: #1EAFAF; font-size: 12px; text-decoration: none; margin-top: 8px; display: inline-block;">Microsoft Documentation →</a>
+                  </div>
+                  <div style="background-color: #FEF0F0; border-left: 4px solid #F15B5B; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                    <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
+                      LSASS Protected Process
+                        <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
+                          <a href="https://attack.mitre.org/techniques/T1003/001/" style="color: #FA4443; text-decoration: none;">(T1003.001)</a>
+                        </span>
+                    </div>
+                    <div style="color: #666666; font-size: 13px; margin-bottom: 10px;">LSASS is NOT protected - vulnerable to credential dumping tools like Mimikatz</div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">PowerShell:</span>
+                      <code style="display: block; background-color: #141121; color: #1EAFAF; padding: 10px 12px; margin-top: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;">Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RunAsPPL" -Value 1 -Type DWord; Restart-Computer</code>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Group Policy:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Computer Configuration > Administrative Templates > System > Local Security Authority > Configure LSASS to run as a protected process > Enabled with UEFI Lock</span>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Intune:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Endpoint security > Account protection > Local Security Authority > LSASS > Enabled with UEFI Lock</span>
+                    </div>
+
+                    <a href="https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection" style="color: #1EAFAF; font-size: 12px; text-decoration: none; margin-top: 8px; display: inline-block;">Microsoft Documentation →</a>
+                  </div>
+                  <div style="background-color: #FEF0F0; border-left: 4px solid #F15B5B; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                    <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
+                      SMB Signing Required
+                        <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
+                          <a href="https://attack.mitre.org/techniques/T1021/002/" style="color: #FA4443; text-decoration: none;">(T1021.002)</a>
+                        </span>
+                    </div>
+                    <div style="color: #666666; font-size: 13px; margin-bottom: 10px;">SMB signing is not required</div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">PowerShell:</span>
+                      <code style="display: block; background-color: #141121; color: #1EAFAF; padding: 10px 12px; margin-top: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;">Set-SmbServerConfiguration -RequireSecuritySignature $true -EnableSecuritySignature $true -Force</code>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Group Policy:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Microsoft network server: Digitally sign communications (always) > Enabled</span>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Intune:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Devices > Configuration profiles > Settings catalog > Microsoft network server: Digitally sign communications (always) > Enabled</span>
+                    </div>
+
+                    <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/overview-server-message-block-signing" style="color: #1EAFAF; font-size: 12px; text-decoration: none; margin-top: 8px; display: inline-block;">Microsoft Documentation →</a>
+                  </div>
+                  <div style="background-color: #FEF0F0; border-left: 4px solid #F15B5B; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                    <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
+                      BitLocker Drive Encryption
+                    </div>
+                    <div style="color: #666666; font-size: 13px; margin-bottom: 10px;">BitLocker is NOT enabled - data at rest is unencrypted</div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">PowerShell:</span>
+                      <code style="display: block; background-color: #141121; color: #1EAFAF; padding: 10px 12px; margin-top: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;">Enable-BitLocker -MountPoint "C:" -EncryptionMethod XtsAes256 -RecoveryPasswordProtector; Add-BitLockerKeyProtector -MountPoint "C:" -TpmProtector</code>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Group Policy:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Computer Configuration > Administrative Templates > Windows Components > BitLocker Drive Encryption > Operating System Drives > Require additional authentication at startup</span>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Intune:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Endpoint security > Disk encryption > BitLocker > OS Drive Settings > Encrypt = Required</span>
+                    </div>
+
+                    <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/" style="color: #1EAFAF; font-size: 12px; text-decoration: none; margin-top: 8px; display: inline-block;">Microsoft Documentation →</a>
+                  </div>
+                  <div style="background-color: #FEF0F0; border-left: 4px solid #F15B5B; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                    <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
+                      PowerShell Script Block Logging
+                        <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
+                          <a href="https://attack.mitre.org/techniques/T1059/001/" style="color: #FA4443; text-decoration: none;">(T1059.001)</a>
+                        </span>
+                    </div>
+                    <div style="color: #666666; font-size: 13px; margin-bottom: 10px;">Script block logging NOT enabled - attacker PowerShell commands won't be logged</div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">PowerShell:</span>
+                      <code style="display: block; background-color: #141121; color: #1EAFAF; padding: 10px 12px; margin-top: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;">New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" -Name "EnableScriptBlockLogging" -Value 1 -Type DWord</code>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Group Policy:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on PowerShell Script Block Logging > Enabled</span>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Intune:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Devices > Configuration profiles > Settings catalog > PowerShell Script Block Logging > Enabled</span>
+                    </div>
+
+                    <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" style="color: #1EAFAF; font-size: 12px; text-decoration: none; margin-top: 8px; display: inline-block;">Microsoft Documentation →</a>
+                  </div>
+                  <div style="background-color: #FEF0F0; border-left: 4px solid #F15B5B; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                    <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
+                      LLMNR Disabled
+                        <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
+                          <a href="https://attack.mitre.org/techniques/T1557/001/" style="color: #FA4443; text-decoration: none;">(T1557.001)</a>
+                        </span>
+                    </div>
+                    <div style="color: #666666; font-size: 13px; margin-bottom: 10px;">LLMNR is ENABLED - vulnerable to name poisoning attacks (Responder/Inveigh)</div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">PowerShell:</span>
+                      <code style="display: block; background-color: #141121; color: #1EAFAF; padding: 10px 12px; margin-top: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;">New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -Value 0 -PropertyType DWord -Force</code>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Group Policy:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Computer Configuration > Administrative Templates > Network > DNS Client > Turn off multicast name resolution > Enabled</span>
+                    </div>
+
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Intune:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">Devices > Configuration profiles > Create > Settings catalog > Search "LLMNR" > Turn Off Multicast Name Resolution > Enabled</span>
+                    </div>
+
+                    <a href="https://www.blackhillsinfosec.com/how-to-disable-llmnr-why-you-want-to/" style="color: #1EAFAF; font-size: 12px; text-decoration: none; margin-top: 8px; display: inline-block;">Microsoft Documentation →</a>
+                  </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #504384; padding: 25px 40px; text-align: center;">
+              <p style="margin: 0 0 8px; color: rgba(255,255,255,0.9); font-size: 14px;">
+                Report generated by <strong>tfour.net</strong>
+              </p>
+              <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">
+                January 23, 2026 &bull; Powered by Rewst &bull; Safe Sweep v1.3.0
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Main Content Table -->
+
+      </td>
+    </tr>
+  </table>
+  <!-- /Wrapper Table -->
 
 </body>
 </html>
