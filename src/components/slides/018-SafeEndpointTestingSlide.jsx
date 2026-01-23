@@ -8,12 +8,12 @@ import React from 'react';
  */
 const WorkstationMitigationsSlide = ({ theme: t }) => {
   const categories = [
-    { name: 'Credential Protection', count: '8-10', color: 'text-purple-400', techniques: 'T1003, T1558, T1552' },
-    { name: 'Execution Controls', count: '10-15', color: 'text-red-400', techniques: 'T1059, T1204, T1047' },
-    { name: 'Privilege Escalation', count: '4-6', color: 'text-amber-400', techniques: 'T1548, T1134, T1078' },
-    { name: 'Lateral Movement', count: '6-8', color: 'text-cyan-400', techniques: 'T1021, T1570, T1563' },
-    { name: 'Defense Evasion', count: '4-6', color: 'text-emerald-400', techniques: 'T1562, T1027, T1218' },
-    { name: 'Persistence Prevention', count: '5-8', color: 'text-pink-400', techniques: 'T1547, T1053, T1546' },
+    { name: 'Credential Protection', count: '8-10', color: 'text-purple-400', impact: 'Stops credential dumping & theft' },
+    { name: 'Execution Controls', count: '10-15', color: 'text-red-400', impact: 'Blocks malicious scripts & payloads' },
+    { name: 'Privilege Escalation', count: '4-6', color: 'text-amber-400', impact: 'Prevents unauthorized elevation' },
+    { name: 'Lateral Movement', count: '6-8', color: 'text-cyan-400', impact: 'Limits spread across network' },
+    { name: 'Defense Evasion', count: '4-6', color: 'text-emerald-400', impact: 'Maintains security visibility' },
+    { name: 'Persistence Prevention', count: '5-8', color: 'text-pink-400', impact: 'Blocks attacker footholds' },
   ];
 
   return (
@@ -85,7 +85,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
       {/* Coverage categories */}
       <div className="w-full max-w-7xl">
         <div className="text-center mb-3">
-          <span className="text-slate-400 text-lg">95 settings across 6 categories — each mitigates specific ATT&CK techniques</span>
+          <span className="text-slate-400 text-lg">95 settings across 6 categories — mapped to MITRE ATT&CK mitigations</span>
         </div>
         <div className="grid grid-cols-6 gap-4">
           {categories.map((cat) => (
@@ -93,7 +93,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
               <div className={`text-3xl font-bold ${cat.color}`}>{cat.count}</div>
               <div className="text-xs text-slate-500 uppercase tracking-wide">settings</div>
               <div className="text-lg text-slate-300 font-medium mt-2">{cat.name}</div>
-              <div className={`text-sm mt-1 font-mono ${cat.color}`}>{cat.techniques}</div>
+              <div className="text-sm mt-1 text-slate-400">{cat.impact}</div>
             </div>
           ))}
         </div>
