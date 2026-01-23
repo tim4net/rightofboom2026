@@ -3,13 +3,6 @@
   Safe Sweep Email Template
   Version: 1.2.0
 
-  Rewst Brand Palette (from Visual Guidelines PDF):
-  - Bot Teal (Primary 50%): #1EAFAF, light #78CFCF, dark #005655
-  - Ops Indigo (Backgrounds 15%): #504384, dark #282242, darkest #141121
-  - Trigger Amber (Highlights 10%): #F9A100, light #FBC766
-  - Alert Coral (Warnings 5%): #F15B5B, dark #792E2E
-  - Cloud Gray (Neutral 20%): #E6E6E6, dark #666666
-
   Usage in Rewst:
   - Copy this entire template into your "Send Email" action's HTML body
   - Or reference via URL if your email action supports external templates
@@ -75,7 +68,7 @@
 <body>
   <div class="header">
     <h1>Security Posture Report</h1>
-    <p>{{ CTX.org_name|default('Organization') }} &bull; {{ now('UTC')|format_datetime('%B %d, %Y') }}</p>
+    <p>{{ CTX.org_name|default('Organization') }} &bull; {{ CTX.report_date }}</p>
   </div>
 
   <div style="text-align: center;">
@@ -125,38 +118,38 @@
     <p class="section-note">Fix commands provided from validated security baselines — copy and run directly.</p>
 
     {% for endpoint in CTX.review_results|default([]) %}
-      {% for result in endpoint.Results|default([]) %}
-        {% if result.Status in ['FAIL', 'WARN'] and result.Remediation %}
+      {% for result in endpoint.tests|default([]) %}
+        {% if result.status in ['FAIL', 'WARN'] and result.remediation %}
         <div class="remediation-item">
           <div class="remediation-header">
-            {{ result.Name }}
-            {% if result.MitreId %}<span class="remediation-mitre">({{ result.MitreId }})</span>{% endif %}
+            {{ result.name }}
+            {% if result.mitreAttackId %}<span class="remediation-mitre">({{ result.mitreAttackId }})</span>{% endif %}
           </div>
-          <div class="remediation-detail">{{ result.Detail }}</div>
+          <div class="remediation-detail">{{ result.detail }}</div>
 
-          {% if result.Remediation.PowerShell %}
+          {% if result.remediation.PowerShell %}
           <div class="remediation-method">
             <span class="remediation-label">PowerShell:</span>
-            <code class="remediation-code">{{ result.Remediation.PowerShell }}</code>
+            <code class="remediation-code">{{ result.remediation.PowerShell }}</code>
           </div>
           {% endif %}
 
-          {% if result.Remediation.GPO %}
+          {% if result.remediation.GPO %}
           <div class="remediation-method">
             <span class="remediation-label">Group Policy:</span>
-            <span class="remediation-path">{{ result.Remediation.GPO }}</span>
+            <span class="remediation-path">{{ result.remediation.GPO }}</span>
           </div>
           {% endif %}
 
-          {% if result.Remediation.Intune %}
+          {% if result.remediation.Intune %}
           <div class="remediation-method">
             <span class="remediation-label">Intune:</span>
-            <span class="remediation-path">{{ result.Remediation.Intune }}</span>
+            <span class="remediation-path">{{ result.remediation.Intune }}</span>
           </div>
           {% endif %}
 
-          {% if result.Reference %}
-          <a href="{{ result.Reference }}" class="remediation-link">Microsoft Documentation →</a>
+          {% if result.reference %}
+          <a href="{{ result.reference }}" class="remediation-link">Microsoft Documentation →</a>
           {% endif %}
         </div>
         {% endif %}
