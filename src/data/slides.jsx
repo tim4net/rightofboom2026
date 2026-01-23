@@ -27,8 +27,8 @@ export const slides = [
   // "What's actually happening"
   // ============================================
 
-  { type: 'title' },                    // Slide 0
-  { type: 'intro' },                    // Slide 1
+  { type: 'title' },                    // 000
+  { type: 'intro' },                    // 001
   { type: 'aiRiskTension', notes: `**Set up the tension** (5 sec)
 "Before we dive in, let's name the elephant in the room."
 
@@ -52,7 +52,7 @@ export const slides = [
 "The answer isn't ban AI. It's not trust AI blindly either."
 "It's harness it — with guardrails. That's what we're building today."
 
-⏱ ~65 seconds | 👁 MSPs feel this tension daily — let the pause land before offering the resolution.` },            // Slide 2: The AI Dilemma
+⏱ ~65 seconds | 👁 MSPs feel this tension daily — let the pause land before offering the resolution.` },  // 002
   { type: 'attackSetup', notes: `**Set the stakes** (5 sec)
 "Before I show you the defenses, you need to understand why the threat landscape changed so fast."
 
@@ -84,8 +84,8 @@ export const slides = [
 
 **Q&A Prep:**
 - "Isn't this fear-mongering?" → "Fair question. Let me show you — the demo is next."
-- "Are script kiddies really a threat to my clients?" → "They're the volume play. Your clients won't be breached by APT29 — they'll be breached by someone running AI-generated phishing at scale."` },              // Slide 3
-  { type: 'attackLab' },                // Slide 4
+- "Are script kiddies really a threat to my clients?" → "They're the volume play. Your clients won't be breached by APT29 — they'll be breached by someone running AI-generated phishing at scale."` },  // 003
+  { type: 'attackLab' },                // 004
   { type: 'aiVocab', notes: `**Open with the "why"** (5 sec)
 "Before I show you how to secure AI, you need to understand one fundamental split."
 
@@ -101,7 +101,7 @@ export const slides = [
 "AI is probabilistic — it predicts. Sometimes brilliantly, sometimes it hallucinates. That's not a bug, it's the nature of the technology."
 "Your job? Wrap that probabilistic engine in deterministic guardrails. That's what the next slide is about."
 
-⏱ ~60 seconds | 👁 Make eye contact on "confidently wrong" — that's the moment that lands.` },                  // Slide 4: Two Types of Logic
+⏱ ~60 seconds | 👁 Make eye contact on "confidently wrong" — that's the moment that lands.` },  // 005
   { type: 'aiVocabTerms', notes: `**Quick transition** (3 sec)
 "Now that you understand the split, here are three terms you'll hear in every AI security conversation."
 
@@ -122,7 +122,7 @@ export const slides = [
 **Bridge** (5 sec)
 "So — probabilistic AI, potential for action, potential for hallucination. But HOW does it act? That's tool use."
 
-⏱ ~70 seconds | 👁 "There is no version 3.2" usually gets a knowing laugh — let it land.` },             // Slide 5: Three Words You'll Hear
+⏱ ~70 seconds | 👁 "There is no version 3.2" usually gets a knowing laugh — let it land.` },  // 006
   { type: 'toolUse', notes: `**Transition from Agentic** (5 sec)
 "I said agentic AI takes actions. Here's HOW it takes those actions — through tool calling."
 
@@ -150,7 +150,7 @@ export const slides = [
 **Bridge to Guardrails** (5 sec)
 "This is why we need guardrails. That's next."
 
-⏱ ~80 seconds | 👁 The threat model shift is the 'aha moment' — pause after "prompt EXECUTION"` },                // Slide 6: How Agentic AI Acts
+⏱ ~80 seconds | 👁 The threat model shift is the 'aha moment' — pause after "prompt EXECUTION"` },  // 007
   { type: 'sandwich', notes: `**Quick callback** (5 sec)
 "This is the architecture that makes everything we just discussed manageable."
 
@@ -184,7 +184,7 @@ export const slides = [
 - "Check the action but not the arguments"
 - "Thresholds so high human gates never fire"
 
-⏱ ~80 seconds | 👁 "Tuesday afternoon" reframes security as operational resilience — lands well with ops folks` },                 // Slide 7: The Guardrail Sandwich
+⏱ ~80 seconds | 👁 "Tuesday afternoon" reframes security as operational resilience — lands well with ops folks` },  // 008
   { type: 'sandwichExample', notes: `**Transition** (5 sec)
 "That's the architecture. Now let's see it work — all three layers, two different outcomes."
 
@@ -212,7 +212,7 @@ export const slides = [
 **Landing** (5 sec)
 "The AI isn't wrong — it's appropriately uncertain. The human adds context. That's the partnership."
 
-⏱ ~75 seconds | 👁 The CAD project reveal is the 'aha' moment — pause and let it land` },
+⏱ ~75 seconds | 👁 The CAD project reveal is the 'aha' moment — pause and let it land` },  // 009
 
   // ============================================
   // PART 2: DEFENSIVE AUTOMATION (75 min)
@@ -255,7 +255,7 @@ export const slides = [
 
 **Q&A Prep:**
 - "What about APTs with dwell time?" → "You're right — that's why detection speed matters. The sandwich is most powerful when combined with continuous monitoring."
-- "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },                   // Slide 9
+- "Don't attackers test against similar environments?" → "Similar, yes. But not YOUR specific config, YOUR baseline deviations, YOUR log correlations. Every environment has unique quirks."` },  // 010
 
   { type: 'caCrateIntro', notes: `**What is a Crate?** (10 sec)
 "Rewst Crates are pre-built automations. You don't write code — you configure and deploy."
@@ -276,7 +276,7 @@ export const slides = [
 **Detection Triggers** (5 sec)
 "The crate catches all of these: user added to exclusion, legacy auth enabled, named location modified."
 
-⏱ ~60 seconds | 👁 "Skeleton key to your tenant" is the memorable phrase` },
+⏱ ~60 seconds | 👁 "Skeleton key to your tenant" is the memorable phrase` },  // 011
 
   { type: 'm365Drift', notes: `**The Architecture** (25 sec)
 → Walk through the flow
@@ -291,7 +291,7 @@ export const slides = [
 **Dual Triggers** (10 sec)
 "Two triggers: scheduled checks plus real-time webhook from Microsoft's audit log."
 
-⏱ ~45 seconds | 👁 "AI summarizes, math decides" is the quotable line` },
+⏱ ~45 seconds | 👁 "AI summarizes, math decides" is the quotable line` },  // 012
 
   { type: 'caSandwichMapping', notes: `**Connect to the Sandwich** (20 sec)
 "Remember the guardrail sandwich from earlier? Here's how the CA Policy Monitor maps to it."
@@ -311,7 +311,7 @@ export const slides = [
 "This is why you can trust it. If the math finds a change, you get notified. Every time."
 "AI makes it readable. It can't make it wrong."
 
-⏱ ~65 seconds | 👁 Reinforces the architecture they learned earlier` },
+⏱ ~65 seconds | 👁 Reinforces the architecture they learned earlier` },  // 013
 
   { type: 'patternApplications', notes: `**The Template** (15 sec)
 "This isn't just for Conditional Access. The same pattern works everywhere."
@@ -327,7 +327,7 @@ export const slides = [
 "Same four steps every time: Baseline, Compare, Explain, Alert."
 "You're not learning one tool. You're learning a pattern you can apply to anything."
 
-⏱ ~55 seconds | 👁 Drives home the reusability of the architecture` },
+⏱ ~55 seconds | 👁 Drives home the reusability of the architecture` },  // 014
 
   { type: 'alertTriage', notes: `**The Pattern** (15 sec)
 "We've seen config drift detection. Now let's apply the same pattern to real-time security alerts."
@@ -348,7 +348,7 @@ export const slides = [
 "You could build this in Rewst. Alert trigger, context-gathering workflow, AI synthesis, approval form."
 "Same sandwich, different filling."
 
-⏱ ~80 seconds | 👁 "Facts gathered, AI synthesizes, human decides" is the quotable line` },
+⏱ ~80 seconds | 👁 "Facts gathered, AI synthesizes, human decides" is the quotable line` },  // 015
 
   { type: 'tieredResponse', notes: `**Transition from Alert Triage** (10 sec)
 "So we have alerts coming in, context gathered, AI synthesizing. But here's the question everyone asks: When does the AI just ACT versus when do I need to approve?"
@@ -390,13 +390,13 @@ export const slides = [
 **Q&A Prep:**
 - "Who decides the thresholds?" → "You do. Start conservative — 95% for auto-execute. Lower it as you build trust in specific detections."
 - "What about after-hours?" → "Great question. Some orgs auto-execute more aggressively off-hours when human response is slow. Others get more conservative. Depends on your risk tolerance."
-- "Doesn't this slow things down?" → "Auto-execute tier handles volume. Human tiers handle judgment. You're not slowing down the 90% — you're adding quality to the 10%."` },
+- "Doesn't this slow things down?" → "Auto-execute tier handles volume. Human tiers handle judgment. You're not slowing down the 90% — you're adding quality to the 10%."` },  // 016
 
   // ============================================
   // BREAK (15 min)
   // ============================================
 
-  { type: 'break' },                    // Slide 18
+  { type: 'break' },                    // 017
 
   // ============================================
   // PART 2.5: ENDPOINT PROTECTION TESTING (new)
@@ -426,7 +426,7 @@ export const slides = [
 "We automated the critical checks into about 1,200 lines of PowerShell."
 "Let me show you the actual code..."
 
-⏱ ~70 seconds | 👁 "How do you KNOW?" is the tension builder. "$50K, free" is the STAR moment.` },
+⏱ ~70 seconds | 👁 "How do you KNOW?" is the tension builder. "$50K, free" is the STAR moment.` },  // 018
 
   { type: 'powershellCode', notes: `**Show the Real Code** (60-90 sec)
 "Let me show you what's actually running. No black box. No magic."
@@ -449,7 +449,7 @@ export const slides = [
 **Transition** (10 sec)
 "Now you've seen the code. Let me show you what it actually checks..."
 
-⏱ ~60-90 seconds | 👁 Don't read every line — scroll to show scale, pause on interesting bits` },
+⏱ ~60-90 seconds | 👁 Don't read every line — scroll to show scale, pause on interesting bits` },  // 018b
 
   { type: 'attackerChecklist', notes: `**The Attacker's Checklist** (15 sec)
 "When an attacker lands on an endpoint, they run recon. These are the exact 23 things they check."
@@ -468,7 +468,7 @@ export const slides = [
 "No agent required. Works on any Windows endpoint."
 "But raw data isn't actionable..."
 
-⏱ ~80 seconds | 👁 "We check the same things. We just check faster." is the competitive framing` },             // Slide 20
+⏱ ~80 seconds | 👁 "We check the same things. We just check faster." is the competitive framing` },  // 019
 
   { type: 'endpointSandwich', notes: `**Connect to the Architecture** (10 sec)
 "Remember the guardrail sandwich from earlier? This is how Safe Sweep implements it."
@@ -490,7 +490,7 @@ export const slides = [
 "The AI can hallucinate an explanation — that's fixable. It CAN'T hallucinate a detection."
 "The detections are deterministic. That's your ground truth."
 
-⏱ ~80 seconds | 👁 "PowerShell detects. AI explains. Human acts." is the tagline they should remember` },           // Slide 21
+⏱ ~80 seconds | 👁 "PowerShell detects. AI explains. Human acts." is the tagline they should remember` },  // 020
 
   { type: 'safeSweepResults', notes: `**The Transformation Arc** (10 sec)
 "60 seconds to scan. And then you KNOW."
@@ -513,7 +513,7 @@ export const slides = [
 **The Stats** (10 sec)
 "3 endpoints. 29 tests passed. 24 failed. Now let me show you the full report..."
 
-⏱ ~70 seconds | 👁 "Now we KNOW" is the insight — the F is the beginning, not the end` },         // Slide 22: Safe Sweep Results
+⏱ ~70 seconds | 👁 "Now we KNOW" is the insight — the F is the beginning, not the end` },  // 021
 
   { type: 'safeSweepReportDemo', notes: `**Show the Real Report** (60-90 sec)
 "This is the actual output from our lab run. Real data, real findings."
@@ -530,7 +530,7 @@ export const slides = [
 **Transition** (10 sec)
 "This is what your clients receive. Now let's validate these gaps are real with Atomic Red Team..."
 
-⏱ ~90 seconds | 👁 Let them read the actual report — it's real data, not mockup` },         // Slide 23: Report Demo
+⏱ ~90 seconds | 👁 Let them read the actual report — it's real data, not mockup` },  // 021b
 
   { type: 'attackPathValidator', notes: `**THIS IS THE MAIN DEMO** (15-20 min interactive)
 
@@ -581,16 +581,16 @@ export const slides = [
 **Q&A Prep:**
 - "Isn't this dangerous?" → "Atomic Red Team tests are safe simulations — they log what WOULD happen without actually extracting creds or dropping malware."
 - "Can I run this on production?" → "Start in a lab. Once you trust it, run collection-only on production, testing in lab that mirrors production config."
-- "What if AI gives bad advice?" → "You validate with real tests. The AI suggests, Atomic proves, you decide."` },             // Slide 22 - MAIN DEMO
+- "What if AI gives bad advice?" → "You validate with real tests. The AI suggests, Atomic proves, you decide."` },  // Demo (no numbered file)
 
   // ============================================
   // PART 3: GOVERNANCE & TRUST (35 min)
   // "How to do this without getting fired"
   // ============================================
 
-  { type: 'governance' },               // Slide 22
-  { type: 'shadowAI' },                 // Slide 15
-  { type: 'failureModes' },             // Slide 24
+  { type: 'governance' },               // 022
+  { type: 'shadowAI' },                 // 023
+  { type: 'failureModes' },             // 024
 
   { type: 'aiTabletop', notes: `**Transition from Failure Modes** (10 sec)
 "We've talked about how AI can fail. Now let's talk about preparing your team for it."
@@ -615,22 +615,22 @@ export const slides = [
 "Traditional IR assumes reproducibility. LLMs don't comply."
 "You can't re-run the prompt and get the same bad output. Your team needs to practice responding to incidents they can't fully explain."
 
-⏱ ~75 seconds | 👁 "LLMs don't comply" is the memorable punchline` },             // Slide 25
+⏱ ~75 seconds | 👁 "LLMs don't comply" is the memorable punchline` },  // 025
 
   // ============================================
   // PART 4: MONDAY MORNING (30 min)
   // "What you actually do next"
   // ============================================
 
-  { type: 'operationalization' },       // Slide 26
-  { type: 'budget' },                   // Slide 18
-  { type: 'learningPath' },             // Slide 19
-  { type: 'multiTenant' },              // Slide 20
-  { type: 'tail' },                     // Slide 21
-  { type: 'insurance' },                // Slide 22
-  { type: 'takeaways' },                // Slide 23
-  { type: 'sources' },                  // Slide 24
-  { type: 'closing' }                   // Slide 25
+  { type: 'operationalization' },       // 026
+  { type: 'budget' },                   // 027
+  { type: 'learningPath' },             // 028
+  { type: 'multiTenant' },              // 029
+  { type: 'tail' },                     // 030
+  { type: 'insurance' },                // 031
+  { type: 'takeaways' },                // 032
+  { type: 'sources' },                  // 033
+  { type: 'closing' }                   // 034
 ];
 
 // Re-export themes from centralized config
