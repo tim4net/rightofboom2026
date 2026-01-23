@@ -1,13 +1,12 @@
 {#
   Safe Sweep Narrative Prompt
 
-  Expected input: CTX.aggregated (output from safe-sweep-aggregate.jinja)
+  Expected input: CTX.results_aggregate (output from safe-sweep-aggregate.jinja)
   Contains: org_name, endpoint_count, summary, aggregated_findings
 
-  If you set the aggregation output directly to CTX.aggregated in Rewst,
-  this template will work. Alternatively, adjust the variable name below.
+  The aggregation action should publish its result as "results_aggregate".
 #}
-{%- set data = CTX.aggregated -%}
+{%- set data = CTX.results_aggregate -%}
 Analyze these aggregated endpoint security validation results for {{ data.org_name }}.
 
 Scan covered {{ data.endpoint_count }} endpoints.

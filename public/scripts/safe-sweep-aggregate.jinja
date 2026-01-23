@@ -1,7 +1,7 @@
 {#
   Safe Sweep Results Aggregator
 
-  Input: CTX.raw_results - array of endpoint results, each with:
+  Input: CTX.review_results - array of endpoint results, each with:
     - metadata.hostname
     - summary.score, summary.grade
     - tests[] with id, name, category, status, mitre_id, remediation
@@ -20,7 +20,7 @@
 ) -%}
 
 {#- Process each endpoint result -#}
-{%- for result in CTX.raw_results -%}
+{%- for result in CTX.review_results -%}
   {%- set ns.endpoint_count = ns.endpoint_count + 1 -%}
   {%- set ns.total_score = ns.total_score + (result.summary.score | default(0)) -%}
 
@@ -107,7 +107,7 @@
   }) -%}
 {%- endfor -%}
 
-{#- Output the aggregated structure -#}
+{#- Output the aggregated structure as a dict (Rewst will handle serialization) -#}
 {{
   {
     'org_name': CTX.org_name | default('Organization'),
@@ -119,5 +119,5 @@
       'total_findings': output_findings | length
     },
     'aggregated_findings': output_findings
-  } | tojson
+  }
 }}
