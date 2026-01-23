@@ -1,15 +1,25 @@
-Analyze these aggregated endpoint security validation results for {{ CTX.org_name }}.
+{#
+  Safe Sweep Narrative Prompt
 
-Scan covered {{ CTX.endpoint_count }} endpoints.
+  Expected input: CTX.aggregated (output from safe-sweep-aggregate.jinja)
+  Contains: org_name, endpoint_count, summary, aggregated_findings
 
-{% if CTX.summary %}
+  If you set the aggregation output directly to CTX.aggregated in Rewst,
+  this template will work. Alternatively, adjust the variable name below.
+#}
+{%- set data = CTX.aggregated -%}
+Analyze these aggregated endpoint security validation results for {{ data.org_name }}.
+
+Scan covered {{ data.endpoint_count }} endpoints.
+
+{% if data.summary %}
 Overall Summary:
-- Average Score: {{ CTX.summary.average_score }}%
-- Grade Distribution: {{ CTX.summary.endpoints_by_grade }}
+- Average Score: {{ data.summary.average_score }}%
+- Grade Distribution: {{ data.summary.endpoints_by_grade }}
 {% endif %}
 
 Aggregated Findings (failures grouped by test):
-{% for finding in CTX.aggregated_findings %}
+{% for finding in data.aggregated_findings %}
 - {{ finding.test_name }} ({{ finding.test_id }}): FAILED on {{ finding.failed_count }}/{{ finding.endpoint_count }} endpoints [{{ finding.severity }}]
   Category: {{ finding.category }}
   MITRE: {{ finding.mitre_id | default('N/A') }}
@@ -27,7 +37,7 @@ Respond with JSON containing HTML-formatted text (not markdown):
 {
   "executive_summary": "<p>2-3 sentence summary for executives</p>",
   "risk_level": "critical|high|medium|low",
-  "endpoint_count": {{ CTX.endpoint_count }},
+  "endpoint_count": {{ data.endpoint_count }},
   "average_score": <number>,
   "overall_grade": "A|B|C|D|F",
   "critical_findings": [
