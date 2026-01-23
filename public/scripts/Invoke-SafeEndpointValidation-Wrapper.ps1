@@ -49,7 +49,23 @@ param(
     [string]$ScriptUrl = "https://raw.githubusercontent.com/YOURUSERNAME/rightofboom2026/main/public/scripts/Invoke-SafeEndpointValidation.ps1",
 
     [Parameter(Mandatory=$false)]
-    [ValidateSet("All", "Antivirus", "ASR", "Credentials", "Network", "Encryption", "LocalSecurity", "RemoteAccess", "Logging")]
+    [ValidateSet(
+        "All",
+        "Antivirus",
+        "ASR",
+        "Credentials",
+        "CredentialProtection",
+        "ExecutionControls",
+        "PrivilegeEscalation",
+        "LateralMovement",
+        "DefenseEvasion",
+        "Persistence",
+        "Network",
+        "Encryption",
+        "LocalSecurity",
+        "RemoteAccess",
+        "Logging"
+    )]
     [string[]]$Categories = @("All"),
 
     [Parameter(Mandatory=$false)]

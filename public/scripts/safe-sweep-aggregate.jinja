@@ -1,0 +1,123 @@
+{#
+  Safe Sweep Results Aggregator
+
+  Input: CTX.raw_results - array of endpoint results, each with:
+    - metadata.hostname
+    - summary.score, summary.grade
+    - tests[] with id, name, category, status, mitre_id, remediation
+
+  Output: Aggregated structure optimized for AI context efficiency
+
+  Usage in Rewst: Use this in a Jinja action to transform raw results
+  before sending to the AI narrative generator.
+#}
+
+{%- set ns = namespace(
+  findings={},
+  total_score=0,
+  grade_counts={'A':0, 'B':0, 'C':0, 'D':0, 'F':0},
+  endpoint_count=0
+) -%}
+
+{#- Process each endpoint result -#}
+{%- for result in CTX.raw_results -%}
+  {%- set ns.endpoint_count = ns.endpoint_count + 1 -%}
+  {%- set ns.total_score = ns.total_score + (result.summary.score | default(0)) -%}
+
+  {#- Count grades -#}
+  {%- set grade = result.summary.grade | default('F') -%}
+  {%- if grade in ns.grade_counts -%}
+    {%- set _ = ns.grade_counts.update({grade: ns.grade_counts[grade] + 1}) -%}
+  {%- endif -%}
+
+  {#- Process failed tests -#}
+  {%- for test in result.tests | default([]) -%}
+    {%- if test.status in ['fail', 'warn'] -%}
+      {%- set test_id = test.id -%}
+
+      {%- if test_id not in ns.findings -%}
+        {#- First occurrence - store full test info -#}
+        {%- set _ = ns.findings.update({
+          test_id: {
+            'test_id': test_id,
+            'test_name': test.name,
+            'category': test.category | default('General'),
+            'severity': test.status,
+            'mitre_id': test.mitre_id | default(none),
+            'remediation': test.remediation | default({}),
+            'failed_count': 1,
+            'affected_hosts': [result.metadata.hostname | default('Unknown')]
+          }
+        }) -%}
+      {%- else -%}
+        {#- Additional occurrence - just increment count and add host -#}
+        {%- set existing = ns.findings[test_id] -%}
+        {%- set _ = existing.update({
+          'failed_count': existing.failed_count + 1
+        }) -%}
+        {%- set _ = existing.affected_hosts.append(result.metadata.hostname | default('Unknown')) -%}
+
+        {#- Escalate severity if this instance is worse -#}
+        {%- if test.status == 'fail' and existing.severity == 'warn' -%}
+          {%- set _ = existing.update({'severity': 'fail'}) -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{#- Sort findings by failed_count descending, then severity -#}
+{%- set sorted_findings = ns.findings.values() | sort(attribute='failed_count', reverse=true) -%}
+
+{#- Calculate average score -#}
+{%- set avg_score = (ns.total_score / ns.endpoint_count) | round(1) if ns.endpoint_count > 0 else 0 -%}
+
+{#- Determine overall grade from average -#}
+{%- if avg_score >= 90 -%}
+  {%- set overall_grade = 'A' -%}
+{%- elif avg_score >= 80 -%}
+  {%- set overall_grade = 'B' -%}
+{%- elif avg_score >= 70 -%}
+  {%- set overall_grade = 'C' -%}
+{%- elif avg_score >= 60 -%}
+  {%- set overall_grade = 'D' -%}
+{%- else -%}
+  {%- set overall_grade = 'F' -%}
+{%- endif -%}
+
+{#- Limit affected_hosts to first 10 to save context -#}
+{%- set output_findings = [] -%}
+{%- for f in sorted_findings -%}
+  {%- set host_count = f.affected_hosts | length -%}
+  {%- set limited_hosts = f.affected_hosts[:10] -%}
+  {%- if host_count > 10 -%}
+    {%- set _ = limited_hosts.append('... and ' ~ (host_count - 10) ~ ' more') -%}
+  {%- endif -%}
+
+  {%- set _ = output_findings.append({
+    'test_id': f.test_id,
+    'test_name': f.test_name,
+    'category': f.category,
+    'severity': f.severity,
+    'mitre_id': f.mitre_id,
+    'remediation': f.remediation,
+    'failed_count': f.failed_count,
+    'endpoint_count': ns.endpoint_count,
+    'affected_hosts': limited_hosts
+  }) -%}
+{%- endfor -%}
+
+{#- Output the aggregated structure -#}
+{{
+  {
+    'org_name': CTX.org_name | default('Organization'),
+    'endpoint_count': ns.endpoint_count,
+    'summary': {
+      'average_score': avg_score,
+      'overall_grade': overall_grade,
+      'endpoints_by_grade': ns.grade_counts,
+      'total_findings': output_findings | length
+    },
+    'aggregated_findings': output_findings
+  } | tojson
+}}

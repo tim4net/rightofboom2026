@@ -1,0 +1,52 @@
+Analyze these aggregated endpoint security validation results for {{ CTX.org_name }}.
+
+Scan covered {{ CTX.endpoint_count }} endpoints.
+
+{% if CTX.summary %}
+Overall Summary:
+- Average Score: {{ CTX.summary.average_score }}%
+- Grade Distribution: {{ CTX.summary.endpoints_by_grade }}
+{% endif %}
+
+Aggregated Findings (failures grouped by test):
+{% for finding in CTX.aggregated_findings %}
+- {{ finding.test_name }} ({{ finding.test_id }}): FAILED on {{ finding.failed_count }}/{{ finding.endpoint_count }} endpoints [{{ finding.severity }}]
+  Category: {{ finding.category }}
+  MITRE: {{ finding.mitre_id | default('N/A') }}
+  Remediation: {{ finding.remediation | tojson }}
+{% endfor %}
+
+IMPORTANT: Use the remediation steps provided above. DO NOT invent your own.
+
+Your job:
+1. Explain WHY each finding matters (attack scenarios, business risk)
+2. Prioritize fixes based on: severity, how many endpoints affected, and attack chain impact
+3. Write an executive summary a non-technical person can understand
+
+Respond with JSON containing HTML-formatted text (not markdown):
+{
+  "executive_summary": "<p>2-3 sentence summary for executives</p>",
+  "risk_level": "critical|high|medium|low",
+  "endpoint_count": {{ CTX.endpoint_count }},
+  "average_score": <number>,
+  "overall_grade": "A|B|C|D|F",
+  "critical_findings": [
+    {
+      "test_id": "ID",
+      "name": "Finding name",
+      "failed_count": <number>,
+      "detail": "Why this matters - attack scenario",
+      "severity": "fail|warn"
+    }
+  ],
+  "recommendations": "<h3>Priority 0 - Fix Immediately</h3><p>Brief context</p><ol><li>Action item with affected count</li></ol><h3>Priority 1 - Fix This Week</h3><ol><li>...</li></ol><h3>Priority 2 - Fix This Month</h3><ol><li>...</li></ol>"
+}
+
+HTML tags to use:
+- <h3> for priority headings
+- <ol>/<li> for numbered steps
+- <ul>/<li> for bullet lists
+- <strong> for emphasis
+- <p> for paragraphs
+
+Do NOT use markdown (no ##, **, -, etc.)

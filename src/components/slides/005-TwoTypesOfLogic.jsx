@@ -21,7 +21,7 @@ const AIVocabSlide = ({ theme: t }) => {
         <div className="flex flex-col">
           <div className="text-amber-400 text-6xl font-black mb-6 tracking-tight">Deterministic</div>
           <div className="text-3xl text-white mb-6 leading-snug">
-            Same input, same output.<br />Every time.
+            Same input == same output,<br />every time.
           </div>
 
           {/* Code example - stronger visual treatment */}

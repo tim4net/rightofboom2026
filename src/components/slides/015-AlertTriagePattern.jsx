@@ -157,7 +157,7 @@ export const AlertTriagePatternSlide = ({ theme: t }) => {
       </div>
 
       {/* Footer */}
-      <div className="mt-4 flex justify-center">
+      {/* <div className="mt-4 flex justify-center">
         <div className="bg-slate-900/80 border border-slate-700 rounded-xl px-10 py-4">
           <p className="text-2xl text-slate-300">
             <span className="text-amber-400 font-semibold">Facts gathered.</span>
@@ -169,7 +169,7 @@ export const AlertTriagePatternSlide = ({ theme: t }) => {
             <span className="text-slate-500">— But when can we automate that decision?</span>
           </p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
