@@ -23,7 +23,7 @@
     .\Invoke-SafeEndpointValidation.ps1 -SkipFunctionalTests
 
 .NOTES
-    Version: 1.2.2
+    Version: 1.2.3
     Author: Right of Boom 2026
     License: MIT
 
@@ -46,7 +46,7 @@ param(
 
 #Requires -Version 5.1
 
-$ScriptVersion = "1.2.2"
+$ScriptVersion = "1.2.3"
 $script:tests = @()
 $script:isAdmin = $false
 $script:warnings = @()
@@ -298,27 +298,62 @@ function Test-EicarDetection {
             $testCompleted = $true
 
         } catch {
-            # Write was blocked - this is good
-            $wasBlocked = $true
-            $blockMethod = "write-blocked"
-            $testCompleted = $true
+            $errorMsg = $_.Exception.Message.ToLower()
+
+            # Check if this is actually an AV block vs other error (permissions, etc.)
+            # Defender typically includes "virus" or "malware" or "threat" in the error
+            $avKeywords = @("virus", "malware", "threat", "infected", "quarantine", "defender", "antivirus")
+            $isAvBlock = $false
+            foreach ($keyword in $avKeywords) {
+                if ($errorMsg -match $keyword) {
+                    $isAvBlock = $true
+                    break
+                }
+            }
+
+            if ($isAvBlock) {
+                # Write was blocked by AV - this is good
+                $wasBlocked = $true
+                $blockMethod = "write-blocked-by-av"
+                $testCompleted = $true
+            } else {
+                # Write failed for another reason (permissions, path, etc.) - not a valid test
+                $wasBlocked = $false
+                $blockMethod = "write-error-not-av"
+                $testCompleted = $false
+                # Store the actual error for diagnosis
+                $script:eicarWriteError = $_.Exception.Message
+            }
+        }
+
+        # Determine status and detail based on test outcome
+        $status = "FAIL"
+        $detail = ""
+
+        if ($blockMethod -eq "write-error-not-av") {
+            # Write failed but NOT due to AV - inconclusive test
+            $status = "ERROR"
+            $detail = "EICAR test inconclusive - write failed due to non-AV error: $($script:eicarWriteError)"
+        } elseif ($wasBlocked) {
+            $status = "PASS"
+            $detail = "EICAR test file blocked via $blockMethod"
+        } else {
+            $status = "FAIL"
+            $detail = "EICAR test file was NOT blocked - antivirus may not be functioning"
         }
 
         Add-TestResult `
             -Id "eicar-detection" `
             -Category "Antivirus" `
             -Name "EICAR Malware Detection" `
-            -Status $(if ($wasBlocked) { "PASS" } else { "FAIL" }) `
-            -Detail $(if ($wasBlocked) {
-                "EICAR test file blocked via $blockMethod"
-            } else {
-                "EICAR test file was NOT blocked - antivirus may not be functioning"
-            }) `
+            -Status $status `
+            -Detail $detail `
             -Evidence @{
                 blocked     = $wasBlocked
                 method      = $blockMethod
                 testPath    = $testPath
                 testId      = $testId
+                writeError  = $script:eicarWriteError
             }
 
     } catch {
