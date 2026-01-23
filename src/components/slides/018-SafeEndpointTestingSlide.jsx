@@ -21,7 +21,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className={`text-6xl font-black mb-4 ${t.textOnPage}`}>
-          Workstation Configuration Mitigations
+          MITRE ATT&CK Endpoint Posture Check
         </h2>
         <p className={`text-3xl ${t.accentColor} font-medium`}>
  
@@ -33,7 +33,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
 
         {/* Left: MITRE ATT&CK */}
         <div className="flex-1">
-          <div className="bg-slate-800/50 border border-slate-600/50 rounded-2xl p-8 h-full flex flex-col">
+          <div className="bg-slate-600/40 border border-slate-500/50 rounded-2xl p-8 h-full flex flex-col">
             <div className="mb-6">
               <img
                 src="/images/mitre-attack-logo-color.svg"
