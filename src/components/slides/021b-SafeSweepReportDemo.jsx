@@ -33,8 +33,8 @@ const SafeSweepReportDemoSlide = ({ theme: t }) => {
           title="Safe Sweep Security Report"
           style={{
             minHeight: '600px',
-            transform: 'scale(1.3)',
-            transformOrigin: 'top left',
+            transform: 'scale(2)',
+            transformOrigin: 'top center',
             width: '77%',  /* 100/1.3 ≈ 77% to compensate for scale */
             height: '77%'
           }}

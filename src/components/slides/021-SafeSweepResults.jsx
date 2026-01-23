@@ -16,8 +16,8 @@ import {
 const SafeSweepResultsSlide = ({ theme: t }) => {
   // Real data from lab run: 3 endpoints, January 23, 2026
   const grade = "F";
-  const score = 54;
-  const stats = { endpoints: 3, passed: 29, failed: 24 };
+  const score = 56;
+  const stats = { endpoints: 3, passed: 30, failed: 23 };
 
   // Top 3 critical findings from actual AI-generated report
   const topFindings = [
