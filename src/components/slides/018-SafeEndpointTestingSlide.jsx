@@ -24,7 +24,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
           Workstation Configuration Mitigations
         </h2>
         <p className={`text-3xl ${t.accentColor} font-medium`}>
-          Every Windows setting MITRE says stops attackers — validated automatically
+ 
         </p>
       </div>
 
@@ -36,7 +36,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
           <div className="bg-slate-800/50 border border-slate-600/50 rounded-2xl p-8 h-full flex flex-col">
             <div className="mb-6">
               <img
-                src="/images/mitre-attack-logo.png"
+                src="/images/mitre-attack-logo-color.svg"
                 alt="MITRE ATT&CK"
                 className="h-12 w-auto"
               />
@@ -56,23 +56,23 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
         {/* Right: Our Approach */}
         <div className="flex-1">
           <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-8 h-full flex flex-col">
-            <h3 className="text-3xl font-bold text-emerald-400 mb-6">Our Approach</h3>
+            <h3 className="text-3xl font-bold text-emerald-400 mb-6">The Automation</h3>
             <div className="space-y-4 flex-1">
               <div className="flex items-start gap-3">
                 <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Extract every <span className="text-white font-semibold">workstation config</span> MITRE recommends</span>
+                <span className="text-2xl text-slate-300">Extracts <span className="text-white font-semibold">workstation configs</span> MITRE recommends</span>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Build <span className="text-white font-semibold">PowerShell checks</span> for each setting</span>
+                <span className="text-2xl text-slate-300">Builds <span className="text-white font-semibold">PowerShell checks</span> for each setting</span>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Run via <span className="text-white font-semibold">RMM/Rewst</span> across all endpoints</span>
+                <span className="text-2xl text-slate-300">Runs <span className="text-white font-semibold">via RMM/Rewst</span> across all endpoints</span>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Report gaps with <span className="text-white font-semibold">remediation steps</span></span>
+                <span className="text-2xl text-slate-300">Emails a gap report with <span className="text-white font-semibold">remediation steps</span></span>
               </div>
             </div>
             <div className="text-xl text-slate-400 mt-4">
