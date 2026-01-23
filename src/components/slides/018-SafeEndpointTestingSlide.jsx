@@ -84,11 +84,15 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
 
       {/* Coverage categories */}
       <div className="w-full max-w-7xl">
+        <div className="text-center mb-3">
+          <span className="text-slate-400 text-lg">95 settings across 6 categories — each mitigates specific ATT&CK techniques</span>
+        </div>
         <div className="grid grid-cols-6 gap-4">
           {categories.map((cat) => (
             <div key={cat.name} className="bg-slate-800/50 border border-slate-600/30 rounded-xl p-4 text-center">
               <div className={`text-3xl font-bold ${cat.color}`}>{cat.count}</div>
-              <div className="text-lg text-slate-300 font-medium mt-1">{cat.name}</div>
+              <div className="text-xs text-slate-500 uppercase tracking-wide">settings</div>
+              <div className="text-lg text-slate-300 font-medium mt-2">{cat.name}</div>
               <div className={`text-sm mt-1 font-mono ${cat.color}`}>{cat.techniques}</div>
             </div>
           ))}
