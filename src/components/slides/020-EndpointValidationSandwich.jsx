@@ -1,167 +1,127 @@
 import React from 'react';
 import {
-  Zap, Terminal, FileText,
-  ArrowRight, Clock, CheckCircle2, ShieldCheck
+  Terminal, Brain, User,
+  ArrowDown, ShieldCheck
 } from 'lucide-react';
 
 /**
- * Endpoint Validation Sandwich - Simplified 3-Step Workflow
+ * The Guardrail Sandwich in Action Slide
  *
- * STRATEGIC REDESIGN:
- * - Time comparison is now the HERO element at top
- * - "No AI touches the endpoint" moved up as key trust signal
- * - Workflow steps remain clear but secondary to the "60 seconds" message
- * - Creates resolution to Slide 20's tension: "How long does YOUR audit take?"
+ * RESTRUCTURED: Previously "Safe Sweep: How It Works" (3-step workflow with time comparison).
+ * Now shows how Safe Sweep implements the guardrail sandwich architecture from slide 008.
+ *
+ * 3-layer horizontal stack matching the visual language of slide 008:
+ * INPUT: PowerShell → 23 checks → JSON
+ * AI: Claude/GPT → correlate, prioritize → graded report
+ * OUTPUT: Human → review, approve → action
  *
  * Key message: "PowerShell detects. AI explains. Human acts."
  */
-const EndpointValidationSandwichSlide = ({ theme: t }) => {
-  const steps = [
-    {
-      num: 1,
-      name: "TRIGGER",
-      detail: "Schedule or manual via your RMM",
-      icon: Zap,
-      color: "emerald"
-    },
-    {
-      num: 2,
-      name: "SCAN",
-      detail: "23 security checks in PowerShell",
-      icon: Terminal,
-      color: "amber"
-    },
-    {
-      num: 3,
-      name: "REPORT",
-      detail: "AI grades + emails findings",
-      icon: FileText,
-      color: "purple"
-    }
-  ];
-
-  const colorMap = {
-    emerald: {
-      text: 'text-emerald-400',
-      bg: 'bg-emerald-500/20',
-      border: 'border-emerald-500/50',
-      numBg: 'bg-emerald-500'
-    },
-    amber: {
-      text: 'text-amber-400',
-      bg: 'bg-amber-500/20',
-      border: 'border-amber-500/50',
-      numBg: 'bg-amber-500'
-    },
-    purple: {
-      text: 'text-purple-400',
-      bg: 'bg-purple-500/20',
-      border: 'border-purple-500/50',
-      numBg: 'bg-purple-500'
-    }
-  };
-
-  const rmmPlatforms = [
-    "Datto", "N-able", "NinjaOne", "Kaseya", "ConnectWise", "ImmyBot"
-  ];
-
+const GuardrailSandwichInActionSlide = ({ theme: t }) => {
   return (
-    <div className="w-full h-full flex flex-col px-16 py-8">
-      {/* Header with Title */}
-      <div className="text-center mb-4">
-        <h2 className={`text-5xl font-black ${t.textOnPage}`}>
-          Safe Sweep: How It Works
+    <div className="w-full h-full flex flex-col px-16 py-10">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <h2 className={`text-5xl font-black mb-3 ${t.textOnPage}`}>
+          The Guardrail Sandwich in Action
         </h2>
+        <p className="text-3xl font-medium">
+          <span className="text-amber-400">PowerShell detects.</span>
+          <span className="text-slate-500 mx-2">→</span>
+          <span className="text-red-400">AI explains.</span>
+          <span className="text-slate-500 mx-2">→</span>
+          <span className="text-emerald-400">Human acts.</span>
+        </p>
       </div>
 
-      {/* HERO ELEMENT: Time Comparison - The Answer to "How long does YOUR audit take?" */}
-      <div className="flex justify-center items-center gap-6 mb-6">
-        {/* Manual Time */}
-        <div className={`${t.cardBg} px-10 py-6 rounded-2xl border-2 border-red-500/40`}>
-          <div className="text-center">
-            <div className="text-xl text-slate-500 uppercase tracking-wide mb-2">Manual audit</div>
-            <div className="text-6xl font-black text-red-400">2-4 hours</div>
-            <div className="text-xl text-slate-500 mt-1">per endpoint</div>
-          </div>
-        </div>
+      {/* The Sandwich Stack */}
+      <div className="flex-1 flex flex-col items-center justify-center max-w-5xl mx-auto w-full gap-4">
 
-        {/* Arrow */}
-        <div className="flex flex-col items-center">
-          <ArrowRight className="w-12 h-12 text-emerald-400" />
-        </div>
-
-        {/* Safe Sweep Time */}
-        <div className={`${t.cardBg} px-10 py-6 rounded-2xl border-2 border-emerald-500/40`}>
-          <div className="text-center">
-            <div className="text-xl text-slate-500 uppercase tracking-wide mb-2">Safe Sweep</div>
-            <div className="text-6xl font-black text-emerald-400">60 seconds</div>
-            <div className="text-xl text-slate-500 mt-1">all endpoints</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Trust Signal - Moved Up */}
-      <div className="flex justify-center mb-6">
-        <div className={`${t.cardBg} px-6 py-3 rounded-xl border border-emerald-500/30 flex items-center gap-3`}>
-          <ShieldCheck className="w-7 h-7 text-emerald-400" />
-          <span className="text-2xl text-emerald-400 font-semibold">No AI touches the endpoint</span>
-          <span className="text-2xl text-slate-400">— PowerShell only, read-only checks</span>
-        </div>
-      </div>
-
-      {/* 3-Step Workflow - Clear but Secondary */}
-      <div className="flex items-stretch justify-center gap-3 mb-6">
-        {steps.map((step, i) => {
-          const colors = colorMap[step.color];
-          const IconComponent = step.icon;
-
-          return (
-            <React.Fragment key={i}>
-              {/* Step Card */}
-              <div className={`${t.cardBg} rounded-xl border-2 ${colors.border} p-5 flex-1 max-w-xs flex flex-col items-center justify-center`}>
-                {/* Step Number */}
-                <div className={`${colors.numBg} w-10 h-10 rounded-full flex items-center justify-center mb-2`}>
-                  <span className="text-2xl font-black text-white">{step.num}</span>
+        {/* Input Layer - Deterministic PowerShell */}
+        <div className="w-full bg-amber-500/10 border-2 border-amber-500/40 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="bg-amber-500/20 p-3 rounded-xl">
+                <Terminal className="w-10 h-10 text-amber-400" />
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-amber-400">
+                  INPUT: PowerShell Detection
                 </div>
-
-                {/* Icon + Name Row */}
-                <div className="flex items-center gap-3 mb-2">
-                  <IconComponent className={`w-8 h-8 ${colors.text}`} />
-                  <div className={`text-3xl font-black ${colors.text}`}>
-                    {step.name}
-                  </div>
-                </div>
-
-                {/* Detail */}
-                <div className="text-xl text-slate-400 text-center">
-                  {step.detail}
+                <div className="text-xl text-slate-400 mt-1">
+                  Deterministic • Read-only • No AI involved
                 </div>
               </div>
+            </div>
+            <div className="text-right">
+              <div className="text-xl text-slate-500">23 checks → JSON output</div>
+              <div className="text-xl text-amber-400 font-semibold">Every endpoint, every time</div>
+            </div>
+          </div>
+        </div>
 
-              {/* Arrow (except after last) */}
-              {i < steps.length - 1 && (
-                <div className="flex items-center">
-                  <ArrowRight className="w-8 h-8 text-slate-600" />
+        {/* Arrow Down */}
+        <ArrowDown className="w-8 h-8 text-slate-600" />
+
+        {/* AI Core - Explanation Layer (red = probabilistic, matches slide 008) */}
+        <div className="w-full bg-red-500/10 border-2 border-red-500/40 rounded-xl p-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="bg-red-500/20 p-3 rounded-xl">
+                <Brain className="w-10 h-10 text-red-400" />
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-red-400">
+                  AI: Correlation & Prioritization
                 </div>
-              )}
-            </React.Fragment>
-          );
-        })}
-      </div>
+                <div className="text-xl text-slate-400 mt-1">
+                  Claude/GPT analyzes JSON • Grades severity • Explains findings
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-xl text-slate-500">Processes structured data only</div>
+              <div className="text-xl text-red-400 font-semibold">Never touches endpoint</div>
+            </div>
+          </div>
+        </div>
 
-      {/* RMM Support Row */}
-      <div className="flex justify-center mb-4">
-        <div className="flex items-center gap-3">
-          <span className="text-xl text-slate-500">Works with your RMM:</span>
-          {rmmPlatforms.map((rmm, i) => (
-            <span key={i} className="text-xl text-slate-400 bg-slate-800/50 px-3 py-1 rounded">
-              {rmm}
-            </span>
-          ))}
+        {/* Arrow Down */}
+        <ArrowDown className="w-8 h-8 text-slate-600" />
+
+        {/* Output Layer - Human Action */}
+        <div className="w-full bg-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="bg-emerald-500/20 p-3 rounded-xl">
+                <User className="w-10 h-10 text-emerald-400" />
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-emerald-400">
+                  OUTPUT: Human Review & Action
+                </div>
+                <div className="text-xl text-slate-400 mt-1">
+                  Graded report • Remediation steps • Approve before execution
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-xl text-slate-500">Review findings</div>
+              <div className="text-xl text-emerald-400 font-semibold">Human remains in control</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Key Tagline - The Sound Bite */}
+      {/* Trust Callout */}
+      <div className="flex justify-center mt-6 mb-4">
+        <div className={`${t.cardBg} px-8 py-4 rounded-xl border-2 border-emerald-500/40 flex items-center gap-4`}>
+          <ShieldCheck className="w-8 h-8 text-emerald-400" />
+          <span className="text-3xl text-emerald-400 font-bold">No AI touches the endpoint</span>
+        </div>
+      </div>
+
+      {/* Tagline */}
       <div className="text-center">
         <p className="text-3xl">
           <span className="text-amber-400 font-bold">PowerShell detects.</span>
@@ -175,4 +135,4 @@ const EndpointValidationSandwichSlide = ({ theme: t }) => {
   );
 };
 
-export default EndpointValidationSandwichSlide;
+export default GuardrailSandwichInActionSlide;

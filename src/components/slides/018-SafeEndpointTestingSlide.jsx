@@ -1,90 +1,141 @@
 import React from 'react';
-import { Shield, FlaskConical, Target, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Shield, FlaskConical, Target, CheckCircle2, Users, ExternalLink } from 'lucide-react';
 
 /**
- * Safe Endpoint Testing - Framing Slide
+ * Atomic Red Team Introduction Slide
  *
- * Sets up the "safe testing" philosophy for MSPs:
- * - Scoped targets (test ring / lab)
- * - Two-tier approach: production-safe vs lab-fidelity
- * - Expected alerts + rollback/cleanup
+ * RESTRUCTURED: Previously "Safe Endpoint Testing" principles.
+ * Now introduces Atomic Red Team as the testing toolkit that powers Safe Sweep.
+ *
+ * 3-column layout: What It Is | Why It's Safe | How It Works
+ * Sets up the narrative: "But running raw Atomic tests requires expertise..."
  */
-const SafeEndpointTestingSlide = ({ theme: t }) => {
-  const title = "Safe Endpoint Testing";
-  const subtitle = "How to validate without breaking production";
-
-  const principles = [
+const AtomicRedTeamSlide = ({ theme: t }) => {
+  const columns = [
     {
-      icon: Target,
-      label: "Scoped Targets",
-      description: "Test ring or lab VMs only — never production without isolation",
-      color: "text-blue-400",
-      bgColor: "bg-blue-500/20",
-      borderColor: "border-blue-500/30"
-    },
-    {
+      title: "What It Is",
       icon: FlaskConical,
-      label: "Two-Tier Testing",
-      description: "Built-in safe checks for prod, Atomic Red Team for lab fidelity",
-      color: "text-emerald-400",
-      bgColor: "bg-emerald-500/20",
-      borderColor: "border-emerald-500/30"
+      color: "emerald",
+      points: [
+        "Library of attack simulations",
+        "Mapped to MITRE ATT&CK framework",
+        "Used by red/blue teams worldwide",
+        "Free and open source"
+      ]
     },
     {
-      icon: AlertTriangle,
-      label: "Expected Alerts",
-      description: "Know what should fire — validate detection, not just execution",
-      color: "text-amber-400",
-      bgColor: "bg-amber-500/20",
-      borderColor: "border-amber-500/30"
+      title: "Why It's Safe",
+      icon: Shield,
+      color: "amber",
+      points: [
+        "Self-contained tests",
+        "Built-in cleanup routines",
+        "Scoped to single endpoints",
+        "No persistent modifications"
+      ]
     },
     {
-      icon: CheckCircle2,
-      label: "Rollback Ready",
-      description: "Every test has a cleanup step — leave no artifacts behind",
-      color: "text-purple-400",
-      bgColor: "bg-purple-500/20",
-      borderColor: "border-purple-500/30"
+      title: "How It Works",
+      icon: Target,
+      color: "purple",
+      points: [
+        "Define test (technique ID)",
+        "Execute simulation safely",
+        "Verify detection triggered",
+        "Automated rollback/cleanup"
+      ]
     }
   ];
 
+  const colorMap = {
+    emerald: {
+      text: 'text-emerald-400',
+      bg: 'bg-emerald-500/15',
+      border: 'border-emerald-500/40'
+    },
+    amber: {
+      text: 'text-amber-400',
+      bg: 'bg-amber-500/15',
+      border: 'border-amber-500/40'
+    },
+    purple: {
+      text: 'text-purple-400',
+      bg: 'bg-purple-500/15',
+      border: 'border-purple-500/40'
+    }
+  };
+
   return (
-    <div className="animate-in fade-in duration-500">
+    <div className="w-full h-full flex flex-col px-16 py-10">
       {/* Header */}
-      <div className="text-center mb-10">
-        <div className={`mb-6 ${t.accentBg} w-20 h-20 rounded-full flex items-center justify-center mx-auto ${t.accentGlow}`}>
-          <Shield className="w-10 h-10 text-white" />
-        </div>
-        <h2 className={`text-5xl md:text-7xl font-black mb-4 ${t.textOnPage}`}>
-          {title}
+      <div className="text-center mb-8">
+        <h2 className={`text-6xl font-black mb-4 ${t.textOnPage}`}>
+          Automating Atomic Red Team Tests
         </h2>
-        <p className={`text-2xl md:text-3xl ${t.accentColor} font-medium`}>
-          {subtitle}
+        <p className={`text-3xl ${t.accentColor} font-medium`}>
+          Safe attack simulations. Real validation. Open source.
         </p>
       </div>
 
-      {/* Four Principles Grid */}
-      <div className="grid grid-cols-2 gap-6 mb-10">
-        {principles.map((p, i) => (
-          <div
-            key={i}
-            className={`${t.cardBg} p-6 rounded-xl border ${p.borderColor} hover:border-opacity-60 transition-all`}
-          >
-            <div className="flex items-start gap-4">
-              <div className={`${p.bgColor} p-3 rounded-lg flex-shrink-0`}>
-                <p.icon className={`w-8 h-8 ${p.color}`} />
+      {/* 3-Column Layout */}
+      <div className="flex-1 grid grid-cols-3 gap-6 max-w-6xl mx-auto w-full">
+        {columns.map((col, i) => {
+          const colors = colorMap[col.color];
+          const IconComponent = col.icon;
+
+          return (
+            <div
+              key={i}
+              className={`${t.cardBg} rounded-2xl border-2 ${colors.border} p-6 flex flex-col`}
+            >
+              {/* Column Header */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className={`${colors.bg} p-3 rounded-xl`}>
+                  <IconComponent className={`w-10 h-10 ${colors.text}`} />
+                </div>
+                <h3 className={`text-3xl font-bold ${colors.text}`}>
+                  {col.title}
+                </h3>
               </div>
-              <div>
-                <div className={`text-2xl font-bold ${p.color} mb-2`}>{p.label}</div>
-                <p className="text-xl text-slate-300">{p.description}</p>
+
+              {/* Points */}
+              <div className="space-y-4 flex-1">
+                {col.points.map((point, j) => (
+                  <div key={j} className="flex items-start gap-3">
+                    <CheckCircle2 className={`w-6 h-6 ${colors.text} flex-shrink-0 mt-0.5`} />
+                    <span className="text-2xl text-slate-300">{point}</span>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
+      {/* Value Proposition - STAR Moment */}
+      <div className="flex justify-center mt-6 mb-4">
+        <div className={`${t.cardBg} px-8 py-4 rounded-xl border border-amber-500/40`}>
+          <p className="text-2xl text-center">
+            <span className="text-amber-400 font-bold">$50K+ red team testing</span>
+            <span className="text-slate-400"> — free, open source, run it Monday morning</span>
+          </p>
+          <p className="text-xl text-slate-500 text-center mt-2">
+            Created by Red Canary • atomicredteam.io • 1,500+ techniques
+          </p>
+        </div>
+      </div>
+
+      {/* Transition Hook */}
+      <div className="text-center">
+        <p className="text-2xl text-slate-400">
+          We automated the critical checks into ~1,200 lines of PowerShell...
+        </p>
+        <p className="text-3xl text-amber-400 font-semibold mt-2">
+          Let me show you the actual code →
+        </p>
+      </div>
     </div>
   );
 };
 
-export default SafeEndpointTestingSlide;
+export default AtomicRedTeamSlide;

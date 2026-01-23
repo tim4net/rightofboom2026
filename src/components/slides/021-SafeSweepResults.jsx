@@ -1,19 +1,17 @@
 import React from 'react';
 import {
-  AlertTriangle, Shield, FileText, ArrowRight, TrendingUp
+  AlertTriangle, FileText, ArrowRight, TrendingUp
 } from 'lucide-react';
 
 /**
- * Safe Sweep Results - The Starting Point (Not the End State)
+ * From F to A in 60 Seconds Slide
  *
- * STRATEGIC REDESIGN:
- * - Reframed as "Your Starting Point" not "What you receive"
- * - The F grade is the BEGINNING of improvement, not a static output
- * - Added transformation arc: "This F becomes an A"
- * - Sets up the demo with forward momentum
+ * UPDATED: Minor changes from "Your Starting Point" to "From F to A in 60 Seconds"
+ * - New title emphasizes the transformation journey
+ * - Maintains F grade → AI recommendations → A grade layout
+ * - Updated transition hook to set up Atomic Red Team demo
  *
- * Key message: "Now we KNOW. And knowing in 60 seconds beats finding out
- * from an incident responder."
+ * Key message: "Know your gaps before attackers do"
  */
 const SafeSweepResultsSlide = ({ theme: t }) => {
   const grade = "F";
@@ -22,66 +20,50 @@ const SafeSweepResultsSlide = ({ theme: t }) => {
   const topFindings = [
     {
       finding: "LSASS Unprotected",
-      explanation: "Every logged-in password stolen in 30 seconds"
+      explanation: "Every logged-in password can be stolen in 30 seconds"
     },
     {
       finding: "ASR Rules Disabled",
-      explanation: "Macros run malware without resistance"
+      explanation: "Macros can execute malware without resistance"
     },
     {
       finding: "LLMNR Enabled",
-      explanation: "Attackers intercept credentials on the network"
+      explanation: "Attackers can intercept credentials on the network"
     }
   ];
 
   return (
     <div className="w-full h-full flex flex-col px-16 py-8">
-      {/* Header - Reframed as Starting Point */}
+      {/* Header */}
       <div className="text-center mb-4">
         <h2 className={`text-5xl font-black mb-2 ${t.textOnPage}`}>
-          Your Starting Point
+          Scan in 60 Seconds. Know Today.
         </h2>
-        <p className={`text-2xl ${t.accentColor} font-medium`}>
-          A lab endpoint with intentional gaps — just like the ones attackers find in the wild
+        <p className={`text-3xl ${t.accentColor} font-medium`}>
+          Find your gaps before attackers do
         </p>
       </div>
 
       {/* Main Content - Grade + Findings + Transformation */}
-      <div className="flex-1 flex items-center justify-center gap-8">
+      <div className="flex-1 flex items-center justify-center gap-10">
 
-        {/* Left: Grade with Transformation Arc */}
+        {/* Left: F Grade */}
         <div className="flex flex-col items-center">
-          {/* Before Grade - HUGE */}
-          <div className="text-xl text-slate-500 uppercase tracking-wide mb-2">Before</div>
-          <div className="bg-red-500 w-48 h-48 rounded-3xl flex flex-col items-center justify-center shadow-2xl shadow-red-500/30 mb-3">
-            <span className="text-[8rem] font-black text-white leading-none">{grade}</span>
+          <div className="text-xl text-slate-500 uppercase tracking-wide mb-3">Before</div>
+          <div className="bg-red-500 w-44 h-44 rounded-3xl flex flex-col items-center justify-center shadow-2xl shadow-red-500/30">
+            <span className="text-[7rem] font-black text-white leading-none">{grade}</span>
           </div>
-          <div className="text-3xl font-bold text-slate-300 mb-4">
+          <div className="text-3xl font-bold text-slate-300 mt-3">
             {score} / 100
-          </div>
-
-          {/* Transformation Arrow */}
-          <div className="flex items-center gap-4 mb-4">
-            <TrendingUp className="w-8 h-8 text-emerald-400" />
-            <ArrowRight className="w-6 h-6 text-slate-500" />
-          </div>
-
-          {/* After Grade - Smaller, shows transformation */}
-          <div className="text-xl text-slate-500 uppercase tracking-wide mb-2">After remediation</div>
-          <div className="bg-emerald-500 w-28 h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg shadow-emerald-500/30">
-            <span className="text-6xl font-black text-white leading-none">A</span>
-          </div>
-          <div className="text-xl text-slate-400 mt-2">
-            ~2 hours of work
           </div>
         </div>
 
-        {/* Right: Top 3 Findings */}
-        <div className="flex-1 max-w-2xl">
+        {/* Center: AI Recommendations */}
+        <div className="flex-1 max-w-xl">
           <div className="flex items-center gap-3 mb-4">
             <AlertTriangle className="w-7 h-7 text-red-400" />
             <h3 className="text-2xl font-bold text-red-400 uppercase tracking-wide">
-              Why it failed
+              AI-Generated Findings
             </h3>
           </div>
 
@@ -89,7 +71,7 @@ const SafeSweepResultsSlide = ({ theme: t }) => {
             {topFindings.map((item, i) => (
               <div
                 key={i}
-                className={`${t.cardBg} rounded-xl border-l-4 border-red-500 p-5`}
+                className={`${t.cardBg} rounded-xl border-l-4 border-red-500 p-4`}
               >
                 {/* Finding Name */}
                 <div className="flex items-center gap-3 mb-1">
@@ -109,26 +91,43 @@ const SafeSweepResultsSlide = ({ theme: t }) => {
             ))}
           </div>
 
-          {/* AI Explanation Note */}
+          {/* AI Remediation Note */}
           <div className={`${t.cardBg} rounded-xl border border-purple-500/30 p-4 mt-4`}>
             <div className="flex items-center gap-3">
               <FileText className="w-6 h-6 text-purple-400 flex-shrink-0" />
               <p className="text-xl text-slate-300">
                 <span className="text-purple-400 font-semibold">AI includes remediation steps</span>
-                {' '}- PowerShell commands, GPO paths, Microsoft docs links
+                {' '}- PowerShell commands, GPO paths, MS docs
               </p>
             </div>
           </div>
         </div>
+
+        {/* Transformation Arrow */}
+        <div className="flex flex-col items-center">
+          <TrendingUp className="w-10 h-10 text-emerald-400 mb-2" />
+          <ArrowRight className="w-8 h-8 text-slate-500" />
+        </div>
+
+        {/* Right: A Grade */}
+        <div className="flex flex-col items-center">
+          <div className="text-xl text-slate-500 uppercase tracking-wide mb-3">After</div>
+          <div className="bg-emerald-500 w-44 h-44 rounded-3xl flex flex-col items-center justify-center shadow-2xl shadow-emerald-500/30">
+            <span className="text-[7rem] font-black text-white leading-none">A</span>
+          </div>
+          <div className="text-xl text-slate-400 mt-3">
+            ~2 hours of work
+          </div>
+        </div>
       </div>
 
-      {/* Footer - The Key Insight + Demo Setup */}
+      {/* Footer - Key Insight + Demo Setup */}
       <div className="mt-4 text-center">
         <p className="text-2xl text-slate-300 mb-3">
           The point isn't that it failed — the point is that now we <span className="text-emerald-400 font-bold">KNOW</span>.
         </p>
         <p className="text-3xl text-amber-400 font-semibold">
-          Want to see this run live?
+          Want to see this run live? Let's validate these gaps with Atomic Red Team →
         </p>
       </div>
     </div>

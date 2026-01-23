@@ -1,50 +1,72 @@
 import React from 'react';
 import {
   Eye, Key, Network, Lock,
-  AlertTriangle, Clock
+  Terminal, Clock
 } from 'lucide-react';
 
 /**
- * What Attackers Check First - Reorganized by Attacker Goals
+ * The 23 PowerShell Checks Slide
  *
- * Instead of Windows feature categories, this slide organizes misconfigurations
- * by what attackers are trying to ACCOMPLISH - making the "so what" immediately clear.
+ * RESTRUCTURED: Previously "What Attackers Check First" (4 attack phases).
+ * Now organized by the same 4 attacker goals but with the FULL 23 checks shown.
  *
- * 4 Attack Phases: Stay Hidden | Steal Credentials | Spread Laterally | Hold Data Hostage
+ * 4-column grid showing exactly what PowerShell validates:
+ * Stay Hidden | Steal Creds | Spread | Hold Hostage
+ *
+ * Key message: "23 checks. 60 seconds. Zero AI guessing."
  */
-const WhatAttackersCheckFirstSlide = ({ theme: t }) => {
-  const attackPhases = [
+const PowerShellChecksSlide = ({ theme: t }) => {
+  const checkCategories = [
     {
-      question: "Can I stay hidden?",
+      goal: "Stay Hidden",
       icon: Eye,
       color: "red",
-      finding: "Real-time AV disabled",
-      consequence: "Malware runs undetected for weeks",
-      timeToExploit: "Instant"
+      checks: [
+        "Real-time AV status",
+        "Defender exclusions",
+        "ASR rules enabled",
+        "Script block logging",
+        "PowerShell logging",
+        "Audit policies"
+      ]
     },
     {
-      question: "Can I steal credentials?",
+      goal: "Steal Creds",
       icon: Key,
       color: "red",
-      finding: "LSASS unprotected",
-      consequence: "All logged-in passwords in 30 seconds",
-      timeToExploit: "30 sec"
+      checks: [
+        "LSASS protection",
+        "Credential Guard",
+        "WDigest disabled",
+        "Cached logon limit",
+        "DPAPI settings"
+      ]
     },
     {
-      question: "Can I spread?",
+      goal: "Spread",
       icon: Network,
       color: "amber",
-      finding: "LLMNR/NetBIOS enabled",
-      consequence: "Poison names, intercept auth, pivot to any machine",
-      timeToExploit: "5 min"
+      checks: [
+        "LLMNR disabled",
+        "NetBIOS disabled",
+        "SMB signing",
+        "Admin shares",
+        "RDP security",
+        "Firewall status"
+      ]
     },
     {
-      question: "Can I hold data hostage?",
+      goal: "Hold Hostage",
       icon: Lock,
       color: "amber",
-      finding: "BitLocker disabled",
-      consequence: "Disk readable from USB boot, no encryption barrier",
-      timeToExploit: "10 min"
+      checks: [
+        "BitLocker status",
+        "Backup config",
+        "VSS protection",
+        "Recovery settings",
+        "Secure Boot",
+        "UAC level"
+      ]
     }
   ];
 
@@ -53,95 +75,97 @@ const WhatAttackersCheckFirstSlide = ({ theme: t }) => {
       return {
         text: 'text-red-400',
         bg: 'bg-red-500/15',
-        border: 'border-red-500/50',
-        badge: 'bg-red-500/30'
+        border: 'border-red-500/40',
+        bullet: 'bg-red-500'
       };
     }
     return {
       text: 'text-amber-400',
       bg: 'bg-amber-500/15',
-      border: 'border-amber-500/50',
-      badge: 'bg-amber-500/30'
+      border: 'border-amber-500/40',
+      bullet: 'bg-amber-500'
     };
   };
 
   return (
-    <div className="w-full h-full flex flex-col px-16 py-10">
+    <div className="w-full h-full flex flex-col px-16 py-8">
       {/* Header */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6">
         <div className="flex items-center justify-center gap-4 mb-3">
-          <AlertTriangle className="w-12 h-12 text-red-400" />
-          <h2 className={`text-6xl font-black ${t.textOnPage}`}>
+          <Terminal className="w-10 h-10 text-amber-400" />
+          <h2 className={`text-5xl font-black ${t.textOnPage}`}>
             What Attackers Check First
           </h2>
         </div>
         <p className={`text-3xl ${t.accentColor} font-medium`}>
-          4 questions. 4 misconfigs. Total compromise.
+          23 checks. 60 seconds. We check faster.
         </p>
       </div>
 
-      {/* Attack Phases Grid - 2x2 */}
-      <div className="flex-1 grid grid-cols-2 gap-6 max-w-6xl mx-auto w-full">
-        {attackPhases.map((phase, i) => {
-          const colors = getColorClasses(phase.color);
-          const IconComponent = phase.icon;
+      {/* 4-Column Grid */}
+      <div className="flex-1 grid grid-cols-4 gap-4 max-w-7xl mx-auto w-full">
+        {checkCategories.map((cat, i) => {
+          const colors = getColorClasses(cat.color);
+          const IconComponent = cat.icon;
 
           return (
             <div
               key={i}
-              className={`${t.cardBg} rounded-2xl border-2 ${colors.border} p-6 flex flex-col`}
+              className={`${t.cardBg} rounded-xl border-2 ${colors.border} p-4 flex flex-col`}
             >
-              {/* Question Header */}
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`${colors.bg} p-3 rounded-xl`}>
-                  <IconComponent className={`w-10 h-10 ${colors.text}`} />
+              {/* Category Header */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`${colors.bg} p-2 rounded-lg`}>
+                  <IconComponent className={`w-7 h-7 ${colors.text}`} />
                 </div>
-                <h3 className={`text-3xl font-bold ${colors.text}`}>
-                  {phase.question}
+                <h3 className={`text-2xl font-bold ${colors.text}`}>
+                  {cat.goal}
                 </h3>
               </div>
 
-              {/* Finding */}
-              <div className="mb-3">
-                <div className="text-xl text-slate-500 uppercase tracking-wide mb-1">
-                  They find:
-                </div>
-                <div className="text-2xl font-semibold text-slate-200">
-                  {phase.finding}
-                </div>
-              </div>
-
-              {/* Consequence - the "so what" */}
-              <div className="flex-1">
-                <div className="text-xl text-slate-500 uppercase tracking-wide mb-1">
-                  Which means:
-                </div>
-                <div className={`text-2xl font-bold ${colors.text}`}>
-                  {phase.consequence}
-                </div>
-              </div>
-
-              {/* Time to Exploit Badge */}
-              <div className="mt-4 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-slate-500" />
-                <span className={`${colors.badge} px-3 py-1 rounded-lg text-xl font-medium ${colors.text}`}>
-                  {phase.timeToExploit}
-                </span>
+              {/* Checks List */}
+              <div className="space-y-2 flex-1">
+                {cat.checks.map((check, j) => (
+                  <div key={j} className="flex items-center gap-2">
+                    <div className={`w-2 h-2 ${colors.bullet} rounded-full flex-shrink-0`} />
+                    <span className="text-xl text-slate-300">{check}</span>
+                  </div>
+                ))}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Footer - Creates tension for next slide to resolve */}
-      <div className="text-center mt-6">
-        <p className="text-3xl text-slate-300">
-          Attackers run this in <span className="text-red-400 font-bold">60 seconds</span>.{' '}
-          <span className="text-amber-400 italic">How long does YOUR audit take?</span>
+      {/* Count Badge */}
+      <div className="flex justify-center mt-4 mb-2">
+        <div className={`${t.cardBg} px-6 py-3 rounded-xl border border-emerald-500/30 flex items-center gap-4`}>
+          <div className="flex items-center gap-2">
+            <Clock className="w-6 h-6 text-emerald-400" />
+            <span className="text-2xl text-emerald-400 font-bold">60 seconds</span>
+          </div>
+          <span className="text-slate-600">|</span>
+          <span className="text-2xl text-slate-300">
+            <span className="text-emerald-400 font-bold">23</span> security checks
+          </span>
+          <span className="text-slate-600">|</span>
+          <span className="text-2xl text-slate-300">
+            Pure <span className="text-amber-400 font-bold">PowerShell</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Transition Hook */}
+      <div className="text-center mt-2">
+        <p className="text-2xl text-slate-400">
+          Raw data isn't actionable...
+        </p>
+        <p className="text-3xl text-amber-400 font-semibold">
+          Here's how we turn 23 checks into a graded report →
         </p>
       </div>
     </div>
   );
 };
 
-export default WhatAttackersCheckFirstSlide;
+export default PowerShellChecksSlide;

@@ -403,87 +403,122 @@ export const slides = [
   // "Safely test endpoint detection"
   // ============================================
 
-  { type: 'safeEndpointTesting', notes: `**Transition from Break** (10 sec)
-"Welcome back. Before we get into governance, I want to show you something practical."
-"We've talked about config drift detection in the cloud. Now let's bring it to the endpoint."
+  { type: 'safeEndpointTesting', notes: `**Tension-Building Opener** (15 sec)
+"Welcome back. Let me ask you a question:"
+→ Pause, make eye contact
+"How do you KNOW your endpoint defenses actually work?"
+"You deployed Defender. You enabled ASR. You checked the boxes."
+"But did you TEST it? Most MSPs have never validated whether their hardening actually stops attacks."
 
-**The Four Principles** (40 sec)
-→ Walk through each card
-"Scoped targets — you don't run this on production first. Test ring, lab VMs, or a single workstation you control."
-"Two-tier testing — built-in Windows checks for production safety, Atomic Red Team for lab fidelity."
-"Expected alerts — know what SHOULD fire. If your EDR doesn't alert on LSASS access, you have a gap."
-"Rollback ready — every test cleans up after itself. No lingering artifacts."
+**Introduce Atomic Red Team** (30 sec)
+→ Walk through the three columns
+"Atomic Red Team is how you validate. Real attack simulations, safely executed."
+"Mapped to MITRE ATT&CK — every test corresponds to a documented technique."
+"Self-contained with built-in cleanup. No persistent modifications, no mess."
 
-**Vendor-neutral** (10 sec)
-"Notice: no Intune required. PowerShell works on any Windows endpoint — Datto, NinjaRMM, whatever you use."
+**The STAR Moment** (15 sec)
+→ Tap the value proposition box
+"This is $50K worth of red team testing — free, open source."
+"The same techniques Fortune 500 companies pay consultants to run."
+"You can run these Monday morning."
 
-⏱ ~60 seconds | 👁 "Test ring, not production" is the key takeaway` },              // Slide 19
+**The Hook** (10 sec)
+"We automated the critical checks into about 1,200 lines of PowerShell."
+"Let me show you the actual code..."
 
-  { type: 'attackerChecklist', notes: `**The Attacker's First 5 Minutes** (10 sec)
-"When an attacker lands on an endpoint, what do they check first?"
-"These are the exact things you should be validating proactively."
+⏱ ~70 seconds | 👁 "How do you KNOW?" is the tension builder. "$50K, free" is the STAR moment.` },
 
-**Walk the List** (50 sec)
-→ Point to each row
-"ASR rules — if these are disabled or audit-only, they can dump LSASS credentials trivially."
-"AV exclusions — if C:\\Temp or user profiles are excluded, that's where they drop malware."
-"Local admin sprawl — shared local admin across your fleet means one cred = everywhere."
-"PowerShell logging — if this is off, you have no forensic trail of what they ran."
-"Credential caching — cached domain creds on workstations enable offline attacks."
+  { type: 'powershellCode', notes: `**Show the Real Code** (60-90 sec)
+"Let me show you what's actually running. No black box. No magic."
+→ The full script loads with syntax highlighting — scroll through it
 
-**The Commands** (10 sec)
-"Every check has a PowerShell one-liner. These work on any Windows machine."
-"You could run these manually, or push them via your RMM to every endpoint."
+**Scroll through key sections** (as audience interest dictates)
+→ Lines 1-30: Help documentation and parameters
+→ Lines 80-125: Add-TestResult function — how every check is recorded
+→ Lines 210-300: Antivirus category — EICAR test, exclusion audit
+→ Lines 465-575: ASR rules — all 15 critical rules validated
+→ Lines 580-680: Credential protection — LSASS, Credential Guard, WDigest
+→ Lines 680-820: Network security — firewall, SMB signing, LLMNR
+→ Lines 1160-1246: Main execution and JSON output
 
-⏱ ~70 seconds | 👁 The commands on the right are copy-pasteable — screenshot-friendly` },             // Slide 20
+**The Point** (20 sec)
+"This is 1,246 lines of PowerShell. No AI in the detection loop."
+"You can read every line. You can audit every check. You can fork it and customize it."
+"That's the 'deterministic' in 'deterministic detection.'"
+
+**Transition** (10 sec)
+"Now you've seen the code. Let me show you what it actually checks..."
+
+⏱ ~60-90 seconds | 👁 Don't read every line — scroll to show scale, pause on interesting bits` },
+
+  { type: 'attackerChecklist', notes: `**The Attacker's Checklist** (15 sec)
+"When an attacker lands on an endpoint, they run recon. These are the exact 23 things they check."
+→ Pause: "We check the same things. We just check faster."
+
+**Walk the Columns** (50 sec)
+→ Point to each column, left to right
+"Can I Stay Hidden? — AV status, exclusions, ASR rules, logging. Weak here = malware runs undetected."
+"Can I Steal Credentials? — LSASS protection, Credential Guard, WDigest. The keys to every account."
+"Can I Spread? — LLMNR, NetBIOS, SMB signing. One machine becomes the whole network."
+"Can I Hold Data Hostage? — BitLocker, backups, recovery. Your ransomware resilience."
+
+**The Key Numbers** (15 sec)
+→ Point to the badge at the bottom
+"23 checks. 60 seconds. Pure PowerShell. We check faster than they do."
+"No agent required. Works on any Windows endpoint."
+"But raw data isn't actionable..."
+
+⏱ ~80 seconds | 👁 "We check the same things. We just check faster." is the competitive framing` },             // Slide 20
 
   { type: 'endpointSandwich', notes: `**Connect to the Architecture** (10 sec)
-"Remember the guardrail sandwich? Same pattern, different filling."
-"This is how you validate endpoint configuration at scale."
+"Remember the guardrail sandwich from earlier? This is how Safe Sweep implements it."
+"Same architecture, applied to endpoint validation."
 
-**Walk the Layers** (40 sec)
-→ Point to each layer
-"DETERMINISTIC CHECKS — PowerShell queries, registry reads. Facts, not opinions. Same output every time."
-"AI ANALYSIS — correlate findings, explain the security impact, prioritize what to fix first."
-"HUMAN APPROVES — review recommendations, approve changes, track exceptions with justification."
+**Walk the Layers** (45 sec)
+→ Point to each layer, top to bottom
+"INPUT: PowerShell runs 23 checks, outputs JSON. Deterministic, read-only, no AI involved."
+"AI LAYER: Claude or GPT analyzes the JSON. Correlates findings. Grades severity. Explains in plain English."
+→ Pause, tap the AI layer: "But notice — AI only processes structured data. It never touches the endpoint."
+"OUTPUT: Human reviews the graded report. Approves remediation. Takes action."
 
-**The Key Insight** (15 sec)
-→ Tap the bottom message
-"This is critical: AI is not the sensor. Your EDR, your config baselines — those are the sensors."
-"AI explains what they find. It doesn't replace them."
+**The Trust Callout** (15 sec)
+→ Point to the green box at the bottom
+"This is the key insight: No AI touches the endpoint."
+"PowerShell detects. AI explains. Human acts."
 
-**MSP Application** (10 sec)
-"You could build this as a Rewst workflow. Run checks across all endpoints, AI synthesizes, human reviews."
-"Same pattern as CA drift detection, just different data sources."
+**Why This Matters** (10 sec)
+"The AI can hallucinate an explanation — that's fixable. It CAN'T hallucinate a detection."
+"The detections are deterministic. That's your ground truth."
 
-⏱ ~75 seconds | 👁 "AI is not the sensor" is the quotable line — reinforce it` },           // Slide 21
+⏱ ~80 seconds | 👁 "PowerShell detects. AI explains. Human acts." is the tagline they should remember` },           // Slide 21
 
-  { type: 'safeSweepResults', notes: `**Sample Report Walkthrough** (60-90 sec)
-"Here's what stakeholders actually receive. Let's look at real output from lab endpoints."
+  { type: 'safeSweepResults', notes: `**The Transformation Arc** (10 sec)
+"60 seconds to scan. And then you KNOW."
+"Here's what that knowledge looks like."
 
-**The Grade** (15 sec)
-→ Point to the giant F
-"F. 52.5 out of 100. Two endpoints, 16 failures."
-"This isn't abstract — these are your lab machines with intentional gaps."
+**The F Grade** (20 sec)
+→ Point to the left side, the big red F
+"52 out of 100. This is a lab endpoint with intentional gaps."
+"Same gaps you'll find in real client environments. LSASS unprotected, ASR disabled, LLMNR enabled."
+"These aren't hypothetical — these are exploitable attack paths."
 
-**Critical Findings** (30 sec)
-→ Walk through the red cards
-"EICAR not blocked — AV says it's active, but the test file persisted. Why?"
-"ASR rules disabled — zero rules in Block mode. 14 not even configured."
-"Credential Guard off, LSASS unprotected, LLMNR enabled, BitLocker issues."
-"Each of these is a specific attack path an attacker would use."
+**The AI-Generated Findings** (30 sec)
+→ Walk through the center cards
+"The AI translates each technical finding into plain English."
+"LSASS Unprotected — means every logged-in password can be stolen in 30 seconds."
+"ASR Rules Disabled — means macros can execute malware without resistance."
+"LLMNR Enabled — means attackers can intercept credentials on the network."
+→ Point to purple box: "And it includes remediation steps. PowerShell commands, GPO paths, Microsoft docs links."
 
-**The AI Recommendations** (20 sec)
-→ Point to purple box
-"The AI doesn't just list problems — it prioritizes."
-"Priority 0: Fix the EICAR issue. Enable ASR rules."
-"It includes remediation steps and links to Microsoft docs."
+**The A Grade** (15 sec)
+→ Point to the right side
+"After remediation — about 2 hours of work — you're at an A."
+"The point isn't that it failed. The point is now we KNOW."
 
-**The Value** (10 sec)
-"This generates automatically. Weekly, after config changes, on demand."
-"No analyst time spent writing reports. They spend time fixing issues instead."
+**Demo Transition** (10 sec)
+"Want to see this run live? Let's validate these gaps with Atomic Red Team..."
 
-⏱ ~75 seconds | 👁 The F grade is memorable — let it land before explaining why` },         // Slide 22: Safe Sweep Results
+⏱ ~85 seconds | 👁 "Now we KNOW" is the insight — the F is the beginning, not the end` },         // Slide 22: Safe Sweep Results
 
   { type: 'attackPathValidator', notes: `**THIS IS THE MAIN DEMO** (15-20 min interactive)
 
