@@ -151,9 +151,9 @@
                     <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
                       {{ result.name }}
                       {% if result.mitreAttackId %}
-                        <span style="font-size: 12px; color: #1EAFAF; font-weight: normal; margin-left: 8px;">
+                        <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
                           {% if result.mitreAttackId.startswith('T') %}
-                          <a href="https://attack.mitre.org/techniques/{{ result.mitreAttackId | replace('.', '/') }}/" style="color: #1EAFAF; text-decoration: none;">({{ result.mitreAttackId }})</a>
+                          <a href="https://attack.mitre.org/techniques/{{ result.mitreAttackId | replace('.', '/') }}/" style="color: #FA4443; text-decoration: none;">({{ result.mitreAttackId }})</a>
                           {% else %}
                           ({{ result.mitreAttackId }})
                           {% endif %}
