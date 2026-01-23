@@ -1,141 +1,101 @@
 import React from 'react';
-import { Shield, FlaskConical, Target, CheckCircle2, Users, ExternalLink } from 'lucide-react';
 
 /**
- * Atomic Red Team Introduction Slide
+ * MITRE ATT&CK Workstation Mitigations
  *
- * RESTRUCTURED: Previously "Safe Endpoint Testing" principles.
- * Now introduces Atomic Red Team as the testing toolkit that powers Safe Sweep.
- *
- * 3-column layout: What It Is | Why It's Safe | How It Works
- * Sets up the narrative: "But running raw Atomic tests requires expertise..."
+ * Introduces the concept of validating every Windows configuration
+ * that MITRE identifies as a mitigation against attack techniques.
  */
-const AtomicRedTeamSlide = ({ theme: t }) => {
-  const columns = [
-    {
-      title: "What It Is",
-      icon: FlaskConical,
-      color: "emerald",
-      points: [
-        "Library of attack simulations",
-        "Mapped to MITRE ATT&CK framework",
-        "Used by red/blue teams worldwide",
-        "Free and open source"
-      ]
-    },
-    {
-      title: "Why It's Safe",
-      icon: Shield,
-      color: "amber",
-      points: [
-        "Self-contained tests",
-        "Built-in cleanup routines",
-        "Scoped to single endpoints",
-        "No persistent modifications"
-      ]
-    },
-    {
-      title: "How It Works",
-      icon: Target,
-      color: "purple",
-      points: [
-        "Define test (technique ID)",
-        "Execute simulation safely",
-        "Verify detection triggered",
-        "Automated rollback/cleanup"
-      ]
-    }
+const WorkstationMitigationsSlide = ({ theme: t }) => {
+  const categories = [
+    { name: 'Credential Protection', count: '8-10', color: 'text-purple-400', techniques: 'T1003, T1558, T1552' },
+    { name: 'Execution Controls', count: '10-15', color: 'text-red-400', techniques: 'T1059, T1204, T1047' },
+    { name: 'Privilege Escalation', count: '4-6', color: 'text-amber-400', techniques: 'T1548, T1134, T1078' },
+    { name: 'Lateral Movement', count: '6-8', color: 'text-cyan-400', techniques: 'T1021, T1570, T1563' },
+    { name: 'Defense Evasion', count: '4-6', color: 'text-emerald-400', techniques: 'T1562, T1027, T1218' },
+    { name: 'Persistence Prevention', count: '5-8', color: 'text-pink-400', techniques: 'T1547, T1053, T1546' },
   ];
 
-  const colorMap = {
-    emerald: {
-      text: 'text-emerald-400',
-      bg: 'bg-emerald-500/15',
-      border: 'border-emerald-500/40'
-    },
-    amber: {
-      text: 'text-amber-400',
-      bg: 'bg-amber-500/15',
-      border: 'border-amber-500/40'
-    },
-    purple: {
-      text: 'text-purple-400',
-      bg: 'bg-purple-500/15',
-      border: 'border-purple-500/40'
-    }
-  };
-
   return (
-    <div className="w-full h-full flex flex-col px-16 py-10">
+    <div className="w-full h-full flex flex-col items-center justify-center px-20 py-12">
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className={`text-6xl font-black mb-4 ${t.textOnPage}`}>
-          Automating Atomic Red Team Tests
+          Workstation Configuration Mitigations
         </h2>
         <p className={`text-3xl ${t.accentColor} font-medium`}>
-          Safe attack simulations. Real validation. Open source.
+          Every Windows setting MITRE says stops attackers — validated automatically
         </p>
       </div>
 
-      {/* 3-Column Layout */}
-      <div className="flex-1 grid grid-cols-3 gap-6 max-w-6xl mx-auto w-full">
-        {columns.map((col, i) => {
-          const colors = colorMap[col.color];
-          const IconComponent = col.icon;
+      {/* Two-column layout */}
+      <div className="flex gap-12 w-full max-w-7xl mb-8">
 
-          return (
-            <div
-              key={i}
-              className={`${t.cardBg} rounded-2xl border-2 ${colors.border} p-6 flex flex-col`}
-            >
-              {/* Column Header */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className={`${colors.bg} p-3 rounded-xl`}>
-                  <IconComponent className={`w-10 h-10 ${colors.text}`} />
-                </div>
-                <h3 className={`text-3xl font-bold ${colors.text}`}>
-                  {col.title}
-                </h3>
+        {/* Left: MITRE ATT&CK */}
+        <div className="flex-1">
+          <div className="bg-slate-800/50 border border-slate-600/50 rounded-2xl p-8 h-full flex flex-col">
+            <div className="mb-6">
+              <img
+                src="/images/mitre-attack-logo.png"
+                alt="MITRE ATT&CK"
+                className="h-12 w-auto"
+              />
+            </div>
+            <p className="text-2xl text-slate-300 leading-relaxed mb-6 flex-1">
+              The ATT&CK framework documents <span className="text-cyan-400 font-semibold">what attackers do</span> and
+              <span className="text-emerald-400 font-semibold"> how to stop them</span>.
+              Each technique includes specific configuration mitigations —
+              registry keys, group policies, and security settings that make attacks harder.
+            </p>
+            <div className="text-xl text-cyan-400">
+              attack.mitre.org
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Our Approach */}
+        <div className="flex-1">
+          <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-8 h-full flex flex-col">
+            <h3 className="text-3xl font-bold text-emerald-400 mb-6">Our Approach</h3>
+            <div className="space-y-4 flex-1">
+              <div className="flex items-start gap-3">
+                <span className="text-emerald-400 text-2xl">✓</span>
+                <span className="text-2xl text-slate-300">Extract every <span className="text-white font-semibold">workstation config</span> MITRE recommends</span>
               </div>
-
-              {/* Points */}
-              <div className="space-y-4 flex-1">
-                {col.points.map((point, j) => (
-                  <div key={j} className="flex items-start gap-3">
-                    <CheckCircle2 className={`w-6 h-6 ${colors.text} flex-shrink-0 mt-0.5`} />
-                    <span className="text-2xl text-slate-300">{point}</span>
-                  </div>
-                ))}
+              <div className="flex items-start gap-3">
+                <span className="text-emerald-400 text-2xl">✓</span>
+                <span className="text-2xl text-slate-300">Build <span className="text-white font-semibold">PowerShell checks</span> for each setting</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-emerald-400 text-2xl">✓</span>
+                <span className="text-2xl text-slate-300">Run via <span className="text-white font-semibold">RMM/Rewst</span> across all endpoints</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-emerald-400 text-2xl">✓</span>
+                <span className="text-2xl text-slate-300">Report gaps with <span className="text-white font-semibold">remediation steps</span></span>
               </div>
             </div>
-          );
-        })}
-      </div>
-
-      {/* Value Proposition - STAR Moment */}
-      <div className="flex justify-center mt-6 mb-4">
-        <div className={`${t.cardBg} px-8 py-4 rounded-xl border border-amber-500/40`}>
-          <p className="text-2xl text-center">
-            <span className="text-amber-400 font-bold">$50K+ red team testing</span>
-            <span className="text-slate-400"> — free, open source, run it Monday morning</span>
-          </p>
-          <p className="text-xl text-slate-500 text-center mt-2">
-            Created by Red Canary • atomicredteam.io • 1,500+ techniques
-          </p>
+            <div className="text-xl text-slate-400 mt-4">
+              The script validates 95 settings and runs through your RMM without interaction.
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Transition Hook */}
-      <div className="text-center">
-        <p className="text-2xl text-slate-400">
-          We automated the critical checks into ~1,200 lines of PowerShell...
-        </p>
-        <p className="text-3xl text-amber-400 font-semibold mt-2">
-          Let me show you the actual code →
-        </p>
+      {/* Coverage categories */}
+      <div className="w-full max-w-7xl">
+        <div className="grid grid-cols-6 gap-4">
+          {categories.map((cat) => (
+            <div key={cat.name} className="bg-slate-800/50 border border-slate-600/30 rounded-xl p-4 text-center">
+              <div className={`text-3xl font-bold ${cat.color}`}>{cat.count}</div>
+              <div className="text-lg text-slate-300 font-medium mt-1">{cat.name}</div>
+              <div className="text-sm text-slate-500 mt-1 font-mono">{cat.techniques}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-export default AtomicRedTeamSlide;
+export default WorkstationMitigationsSlide;

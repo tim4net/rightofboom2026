@@ -96,6 +96,22 @@ const MySlide = ({ slide, theme: t }) => {
 - `text-base` (16px) - TOO SMALL for projection
 - `text-lg` (18px) - TOO SMALL for projection body text (ok for citations only)
 
+### BANNED Writing Patterns
+
+**These patterns scream "AI wrote this" and irritate humans. NEVER use them:**
+
+- **Bullet-point marketing triplets:** `X • Y • Z` with parallel adjective-noun structure
+  - ❌ `95 checks • 22+ techniques • Fully automated`
+  - ❌ `Fast deployment • Easy setup • Instant results`
+  - ✅ `We wrote 95 checks. They run unattended.`
+  - ✅ Just say what it does in plain sentences.
+
+- **Formulaic parallel lists:** Three items with identical grammatical structure
+  - ❌ `Simple to use. Easy to deploy. Ready to scale.`
+  - ✅ Write like a human, vary your structure.
+
+When in doubt: Read it out loud. If it sounds like a LinkedIn post or a SaaS landing page, rewrite it.
+
 ### Design Principles
 
 1. **Less text, bigger fonts** - If it doesn't fit, remove content, don't shrink fonts

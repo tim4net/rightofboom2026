@@ -23,7 +23,7 @@
     .\Invoke-SafeEndpointValidation.ps1 -SkipFunctionalTests
 
 .NOTES
-    Version: 1.2.3
+    Version: 1.3.0
     Author: Right of Boom 2026
     License: MIT
 
@@ -34,7 +34,23 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$false)]
-    [ValidateSet("All", "Antivirus", "ASR", "Credentials", "Network", "Encryption", "LocalSecurity", "RemoteAccess", "Logging")]
+    [ValidateSet(
+        "All",
+        "Antivirus",
+        "ASR",
+        "Credentials",
+        "CredentialProtection",
+        "ExecutionControls",
+        "PrivilegeEscalation",
+        "LateralMovement",
+        "DefenseEvasion",
+        "Persistence",
+        "Network",
+        "Encryption",
+        "LocalSecurity",
+        "RemoteAccess",
+        "Logging"
+    )]
     [string[]]$Categories = @("All"),
 
     [Parameter(Mandatory=$false)]
@@ -46,7 +62,7 @@ param(
 
 #Requires -Version 5.1
 
-$ScriptVersion = "1.2.3"
+$ScriptVersion = "1.3.0"
 $script:tests = @()
 $script:isAdmin = $false
 $script:warnings = @()
@@ -576,7 +592,7 @@ function Test-ASRCategory {
 # ============================================================================
 
 function Test-CredentialsCategory {
-    if (-not (Test-CategoryEnabled "Credentials")) { return }
+    if (-not (Test-CategoryEnabled "Credentials") -and -not (Test-CategoryEnabled "CredentialProtection")) { return }
 
     # --- Test: Credential Guard ---
     try {
@@ -670,6 +686,1266 @@ function Test-CredentialsCategory {
             Intune = 'Devices > Configuration profiles > Settings catalog > Search "WDigest" > Use Logon Credential > Disabled'
             Note = 'Default disabled on Windows 8.1+ but verify explicitly. No reboot required.'
         }
+
+    # --- Test: LAN Manager Authentication Level (NTLMv2) ---
+    $lmCompat = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LmCompatibilityLevel" -DefaultValue 3
+    $lmStatus = if ($lmCompat -ge 5) { "PASS" } elseif ($lmCompat -ge 3) { "WARN" } else { "FAIL" }
+
+    Add-TestResult `
+        -Id "lm-compat-level" `
+        -Category "Credential Protection" `
+        -Name "LAN Manager Authentication Level" `
+        -Status $lmStatus `
+        -Detail $(if ($lmCompat -ge 5) {
+            "NTLMv2 only is enforced (LmCompatibilityLevel=$lmCompat)"
+        } elseif ($lmCompat -ge 3) {
+            "NTLMv2 is preferred but weaker LM/NTLM may still be allowed (LmCompatibilityLevel=$lmCompat)"
+        } else {
+            "Weak LM/NTLM authentication allowed (LmCompatibilityLevel=$lmCompat)"
+        }) `
+        -Evidence @{ LmCompatibilityLevel = $lmCompat } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level" `
+        -MitreId "T1552.001" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LmCompatibilityLevel" -Value 5 -Type DWord'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Network security: LAN Manager authentication level > Send NTLMv2 response only. Refuse LM & NTLM'
+            Intune = 'Devices > Configuration profiles > Settings catalog > LAN Manager authentication level > Send NTLMv2 response only. Refuse LM & NTLM'
+        }
+
+    # --- Test: Do Not Store LAN Manager Hash ---
+    $noLmHash = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "NoLMHash" -DefaultValue 0
+
+    Add-TestResult `
+        -Id "no-lm-hash" `
+        -Category "Credential Protection" `
+        -Name "Do Not Store LM Hash" `
+        -Status $(if ($noLmHash -eq 1) { "PASS" } else { "FAIL" }) `
+        -Detail $(if ($noLmHash -eq 1) {
+            "LM hash storage is disabled"
+        } else {
+            "LM hash storage is allowed - weak hashes can be recovered"
+        }) `
+        -Evidence @{ NoLMHash = $noLmHash } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-security-do-not-store-lan-manager-hash-value-on-next-password-change" `
+        -MitreId "T1552.001" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "NoLMHash" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Network security: Do not store LAN Manager hash value on next password change > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Do not store LAN Manager hash value on next password change > Enabled'
+        }
+
+    # --- Test: Cached Logons Count ---
+    $cachedLogonsRaw = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "CachedLogonsCount" -DefaultValue $null
+    $cachedLogons = 10
+    $parsed = $false
+    if ($null -ne $cachedLogonsRaw) {
+        $parsed = [int]::TryParse($cachedLogonsRaw.ToString(), [ref]$cachedLogons)
+    }
+
+    $cacheStatus = if ($cachedLogons -le 4) { "PASS" } elseif ($cachedLogons -le 10) { "WARN" } else { "FAIL" }
+    if (-not $parsed -and $null -ne $cachedLogonsRaw) { $cacheStatus = "WARN" }
+
+    Add-TestResult `
+        -Id "cached-logons" `
+        -Category "Credential Protection" `
+        -Name "Cached Domain Logons Limit" `
+        -Status $cacheStatus `
+        -Detail $(if ($cachedLogons -le 4) {
+            "Cached logons set to $cachedLogons (lower is better)"
+        } elseif ($cachedLogons -le 10) {
+            "Cached logons set to $cachedLogons (consider reducing)"
+        } else {
+            "Cached logons set to $cachedLogons - high exposure if device is stolen"
+        }) `
+        -Evidence @{
+            CachedLogonsCountRaw = $cachedLogonsRaw
+            CachedLogonsCount    = $cachedLogons
+            parsed               = $parsed
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-number-of-previous-logons-to-cache" `
+        -MitreId "T1003" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "CachedLogonsCount" -Value "4" -Type String'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Interactive logon: Number of previous logons to cache > 4 (or 0 for high-security)'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Cached logons count > 4'
+            Note = 'Lower values improve security but can affect offline logon capability.'
+        }
+
+    # --- Test: Disable Domain Credentials Storage ---
+    $disableDomainCreds = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "DisableDomainCreds" -DefaultValue 0
+
+    Add-TestResult `
+        -Id "disable-domain-creds" `
+        -Category "Credential Protection" `
+        -Name "Prevent Domain Credential Storage" `
+        -Status $(if ($disableDomainCreds -eq 1) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($disableDomainCreds -eq 1) {
+            "Domain credentials are not stored locally"
+        } else {
+            "Domain credentials can be stored locally (Credential Manager)"
+        }) `
+        -Evidence @{ DisableDomainCreds = $disableDomainCreds } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-do-not-allow-storage-of-passwords-and-credentials-for-network-authentication" `
+        -MitreId "T1552.001" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "DisableDomainCreds" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Network access: Do not allow storage of passwords and credentials for network authentication > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Do not allow storage of passwords and credentials for network authentication > Enabled'
+        }
+
+    # --- Test: Disable RDP Password Saving ---
+    $disableRdpPwdSave = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" -Name "DisablePasswordSaving" -DefaultValue 0
+
+    Add-TestResult `
+        -Id "rdp-password-saving" `
+        -Category "Credential Protection" `
+        -Name "RDP Password Saving Disabled" `
+        -Status $(if ($disableRdpPwdSave -eq 1) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($disableRdpPwdSave -eq 1) {
+            "RDP clients are prevented from saving passwords"
+        } else {
+            "RDP password saving may be allowed - credentials can persist on endpoints"
+        }) `
+        -Evidence @{ DisablePasswordSaving = $disableRdpPwdSave } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/remote-desktop-services-do-not-allow-passwords-to-be-saved" `
+        -MitreId "T1552.001" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" -Name "DisablePasswordSaving" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Connection Client > Do not allow passwords to be saved > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Do not allow passwords to be saved > Enabled'
+        }
+
+    # --- Test: Restrict Remote SAM Calls ---
+    $restrictRemoteSam = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RestrictRemoteSAM" -DefaultValue $null
+    $restrictSet = -not [string]::IsNullOrWhiteSpace($restrictRemoteSam)
+
+    Add-TestResult `
+        -Id "restrict-remote-sam" `
+        -Category "Credential Protection" `
+        -Name "Restrict Remote SAM Enumeration" `
+        -Status $(if ($restrictSet) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($restrictSet) {
+            "Remote SAM enumeration is restricted"
+        } else {
+            "Remote SAM enumeration may be allowed"
+        }) `
+        -Evidence @{ RestrictRemoteSAM = $restrictRemoteSam } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-restrict-clients-allowed-to-make-remote-calls-to-sam" `
+        -MitreId "T1003.002" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RestrictRemoteSAM" -Value "O:BAG:BAD:(A;;RC;;;BA)" -Type String'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Network access: Restrict clients allowed to make remote calls to SAM'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Restrict clients allowed to make remote calls to SAM'
+            Note = 'Use the Microsoft security baseline recommended SDDL. Test in pilot before broad deployment.'
+        }
+}
+
+# ============================================================================
+# CATEGORY: EXECUTION CONTROLS
+# ============================================================================
+
+function Test-ExecutionControlsCategory {
+    if (-not (Test-CategoryEnabled "ExecutionControls")) { return }
+
+    # --- Test: PowerShell Script Block Logging ---
+    $psScriptBlock = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" -Name "EnableScriptBlockLogging" -DefaultValue 0
+    $psScriptBlockEnabled = ($psScriptBlock -eq 1)
+
+    Add-TestResult `
+        -Id "exec-ps-scriptblock" `
+        -Category "Execution Controls" `
+        -Name "PowerShell Script Block Logging" `
+        -Status $(if ($psScriptBlockEnabled) { "PASS" } else { "FAIL" }) `
+        -Detail $(if ($psScriptBlockEnabled) { "Script block logging is enabled" } else { "Script block logging is not enabled" }) `
+        -Evidence @{ EnableScriptBlockLogging = $psScriptBlock } `
+        -Reference "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" `
+        -MitreId "T1059.001" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" -Name "EnableScriptBlockLogging" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on PowerShell Script Block Logging > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > PowerShell Script Block Logging > Enabled'
+        }
+
+    # --- Test: PowerShell Module Logging ---
+    $psModuleLogging = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Name "EnableModuleLogging" -DefaultValue 0
+    $psModuleEnabled = ($psModuleLogging -eq 1)
+
+    Add-TestResult `
+        -Id "exec-ps-module-logging" `
+        -Category "Execution Controls" `
+        -Name "PowerShell Module Logging" `
+        -Status $(if ($psModuleEnabled) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($psModuleEnabled) { "Module logging is enabled" } else { "Module logging is not enabled" }) `
+        -Evidence @{ EnableModuleLogging = $psModuleLogging } `
+        -Reference "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" `
+        -MitreId "T1059.001" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Name "EnableModuleLogging" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on Module Logging > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > PowerShell Module Logging > Enabled'
+        }
+
+    # --- Test: PowerShell Transcription ---
+    $psTranscription = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" -Name "EnableTranscripting" -DefaultValue 0
+    $psTranscriptEnabled = ($psTranscription -eq 1)
+
+    Add-TestResult `
+        -Id "exec-ps-transcription" `
+        -Category "Execution Controls" `
+        -Name "PowerShell Transcription" `
+        -Status $(if ($psTranscriptEnabled) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($psTranscriptEnabled) { "PowerShell transcription is enabled" } else { "PowerShell transcription is not enabled" }) `
+        -Evidence @{ EnableTranscripting = $psTranscription } `
+        -Reference "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" `
+        -MitreId "T1059.001" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" -Name "EnableTranscripting" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on PowerShell Transcription > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > PowerShell Transcription > Enabled'
+        }
+
+    # --- Test: PowerShell v2 Disabled ---
+    if (Test-CommandExists "Get-WindowsOptionalFeature") {
+        try {
+            $psV2 = Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2" -ErrorAction Stop
+            $psV2Root = Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2Root" -ErrorAction SilentlyContinue
+            $psV2Enabled = ($psV2.State -eq "Enabled") -or ($psV2Root -and $psV2Root.State -eq "Enabled")
+
+            Add-TestResult `
+                -Id "exec-ps-v2" `
+                -Category "Execution Controls" `
+                -Name "PowerShell v2 Disabled" `
+                -Status $(if (-not $psV2Enabled) { "PASS" } else { "FAIL" }) `
+                -Detail $(if (-not $psV2Enabled) { "PowerShell v2 is disabled" } else { "PowerShell v2 is enabled (legacy engine without modern logging)" }) `
+                -Evidence @{
+                    PowerShellV2State     = $psV2.State.ToString()
+                    PowerShellV2RootState = if ($psV2Root) { $psV2Root.State.ToString() } else { "Unknown" }
+                } `
+                -Reference "https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/wmf/whats-new/disable-windows-powershell-2-0" `
+                -MitreId "T1059.001" `
+                -Remediation @{
+                    PowerShell = 'Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart'
+                    GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on Script Execution (set to a modern, signed policy) and disable legacy PowerShell v2 feature'
+                    Intune = 'Devices > Configuration profiles > Settings catalog > Windows Optional Features > Disable MicrosoftWindowsPowerShellV2'
+                }
+
+        } catch {
+            Add-TestResult `
+                -Id "exec-ps-v2" `
+                -Category "Execution Controls" `
+                -Name "PowerShell v2 Disabled" `
+                -Status "WARN" `
+                -Detail "Unable to query PowerShell v2 optional feature: $($_.Exception.Message)" `
+                -Evidence @{ error = $_.Exception.Message } `
+                -MitreId "T1059.001" `
+                -Remediation @{
+                    PowerShell = 'Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart'
+                    GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on Script Execution (set to a modern, signed policy) and disable legacy PowerShell v2 feature'
+                    Intune = 'Devices > Configuration profiles > Settings catalog > Windows Optional Features > Disable MicrosoftWindowsPowerShellV2'
+                }
+        }
+    } else {
+        Add-TestResult `
+            -Id "exec-ps-v2" `
+            -Category "Execution Controls" `
+            -Name "PowerShell v2 Disabled" `
+            -Status "SKIP" `
+            -Detail "Optional features cmdlets not available on this system" `
+            -Evidence @{ cmdletExists = $false } `
+            -MitreId "T1059.001" `
+            -Remediation @{
+                PowerShell = 'Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart'
+                GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on Script Execution (set to a modern, signed policy) and disable legacy PowerShell v2 feature'
+                Intune = 'Devices > Configuration profiles > Settings catalog > Windows Optional Features > Disable MicrosoftWindowsPowerShellV2'
+            }
+    }
+
+    # --- Test: PowerShell Execution Policy (LocalMachine) ---
+    try {
+        $execPolicy = Get-ExecutionPolicy -Scope LocalMachine
+        $policyStatus = switch ($execPolicy) {
+            "AllSigned" { "PASS" }
+            "RemoteSigned" { "PASS" }
+            "Undefined" { "WARN" }
+            "Bypass" { "FAIL" }
+            "Unrestricted" { "FAIL" }
+            default { "WARN" }
+        }
+
+        Add-TestResult `
+            -Id "exec-ps-execution-policy" `
+            -Category "Execution Controls" `
+            -Name "PowerShell Execution Policy (LocalMachine)" `
+            -Status $policyStatus `
+            -Detail "Execution policy is $execPolicy" `
+            -Evidence @{ ExecutionPolicy = $execPolicy } `
+            -Reference "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies" `
+            -MitreId "T1059.001" `
+            -Remediation @{
+                PowerShell = 'Set-ExecutionPolicy -ExecutionPolicy AllSigned -Scope LocalMachine'
+                GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on Script Execution > Allow only signed scripts'
+                Intune = 'Devices > Configuration profiles > Settings catalog > PowerShell Script Execution > Allow only signed scripts'
+            }
+
+    } catch {
+        Add-TestResult `
+            -Id "exec-ps-execution-policy" `
+            -Category "Execution Controls" `
+            -Name "PowerShell Execution Policy (LocalMachine)" `
+            -Status "WARN" `
+            -Detail "Unable to read execution policy: $($_.Exception.Message)" `
+            -Evidence @{ error = $_.Exception.Message } `
+            -MitreId "T1059.001" `
+            -Remediation @{
+                PowerShell = 'Set-ExecutionPolicy -ExecutionPolicy AllSigned -Scope LocalMachine'
+                GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on Script Execution > Allow only signed scripts'
+                Intune = 'Devices > Configuration profiles > Settings catalog > PowerShell Script Execution > Allow only signed scripts'
+            }
+    }
+
+    # --- Test: AMSI Providers Registered ---
+    if (Test-Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers") {
+        $amsiProviders = @(Get-ChildItem -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -ErrorAction SilentlyContinue)
+        $amsiCount = $amsiProviders.Count
+
+        Add-TestResult `
+            -Id "exec-amsi-providers" `
+            -Category "Execution Controls" `
+            -Name "AMSI Providers Registered" `
+            -Status $(if ($amsiCount -gt 0) { "PASS" } else { "WARN" }) `
+            -Detail $(if ($amsiCount -gt 0) { "$amsiCount AMSI provider(s) registered" } else { "No AMSI providers registered" }) `
+            -Evidence @{ providerCount = $amsiCount } `
+            -Reference "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal" `
+            -MitreId "T1059.001" `
+            -Remediation @{
+                PowerShell = 'Repair-WindowsImage -Online -RestoreHealth'
+                GPO = 'Ensure Microsoft Defender and AMSI-capable AV is installed and healthy'
+                Intune = 'Endpoint security > Antivirus > Ensure Microsoft Defender is enabled'
+                Note = 'AMSI providers are typically registered by Defender or third-party AV.'
+            }
+    } else {
+        Add-TestResult `
+            -Id "exec-amsi-providers" `
+            -Category "Execution Controls" `
+            -Name "AMSI Providers Registered" `
+            -Status "WARN" `
+            -Detail "AMSI provider registry key not found" `
+            -Evidence @{ keyExists = $false } `
+            -MitreId "T1059.001" `
+            -Remediation @{
+                PowerShell = 'Repair-WindowsImage -Online -RestoreHealth'
+                GPO = 'Ensure Microsoft Defender and AMSI-capable AV is installed and healthy'
+                Intune = 'Endpoint security > Antivirus > Ensure Microsoft Defender is enabled'
+                Note = 'AMSI providers are typically registered by Defender or third-party AV.'
+            }
+    }
+
+    # --- Test: Application Control (AppLocker or WDAC) ---
+    $applockerEnforced = $false
+    $applockerAudit = $false
+    $applockerRules = 0
+
+    if (Test-CommandExists "Get-AppLockerPolicy") {
+        try {
+            $appPolicy = Get-AppLockerPolicy -Effective -ErrorAction Stop
+            $collections = @($appPolicy.RuleCollections)
+            $applockerRules = ($collections | ForEach-Object { $_.Rules.Count } | Measure-Object -Sum).Sum
+            $applockerEnforced = ($collections | Where-Object { $_.EnforcementMode -eq "Enforced" -and $_.Rules.Count -gt 0 }).Count -gt 0
+            $applockerAudit = ($collections | Where-Object { $_.EnforcementMode -eq "AuditOnly" -and $_.Rules.Count -gt 0 }).Count -gt 0
+        } catch {
+            $applockerRules = 0
+        }
+    }
+
+    $wdacPolicyPath = Join-Path $env:windir "System32\CodeIntegrity\CiPolicies\Active"
+    $wdacPolicies = if (Test-Path $wdacPolicyPath) {
+        @(Get-ChildItem -Path $wdacPolicyPath -Filter *.cip -ErrorAction SilentlyContinue)
+    } else { @() }
+    $wdacActive = ($wdacPolicies.Count -gt 0)
+
+    $appControlStatus = if ($wdacActive -or $applockerEnforced) { "PASS" }
+                        elseif ($applockerAudit) { "WARN" }
+                        else { "FAIL" }
+
+    Add-TestResult `
+        -Id "exec-app-control" `
+        -Category "Execution Controls" `
+        -Name "Application Control (AppLocker/WDAC)" `
+        -Status $appControlStatus `
+        -Detail $(if ($wdacActive) {
+            "WDAC policy active"
+        } elseif ($applockerEnforced) {
+            "AppLocker rules enforced"
+        } elseif ($applockerAudit) {
+            "AppLocker in audit mode (no enforcement)"
+        } else {
+            "No application control policy detected"
+        }) `
+        -Evidence @{
+            wdacPolicies      = @($wdacPolicies | ForEach-Object { $_.Name })
+            appLockerRules    = $applockerRules
+            appLockerEnforced = $applockerEnforced
+            appLockerAudit    = $applockerAudit
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control" `
+        -MitreId "T1204" `
+        -Remediation @{
+            PowerShell = 'New-CIPolicy -Level Publisher -FilePath ".\\WDAC.xml"; ConvertFrom-CIPolicy ".\\WDAC.xml" ".\\WDAC.cip"; Copy-Item ".\\WDAC.cip" "$env:windir\\System32\\CodeIntegrity\\CiPolicies\\Active\\"'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Application Control Policies > AppLocker > Enforce rules for EXE/DLL, Script, MSI, and Packaged apps'
+            Intune = 'Endpoint security > Application control > Windows Defender Application Control (WDAC) > Enable'
+            Note = 'Start in audit mode, validate, then enforce.'
+        }
+
+    # --- Test: SmartScreen Enabled ---
+    $smartScreenPolicy = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableSmartScreen" -DefaultValue $null
+    $smartScreenShell = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" -Name "SmartScreenEnabled" -DefaultValue $null
+    $smartScreenEnabled = ($smartScreenPolicy -eq 1) -or ($smartScreenShell -in @("RequireAdmin", "Warn"))
+
+    Add-TestResult `
+        -Id "exec-smartscreen" `
+        -Category "Execution Controls" `
+        -Name "SmartScreen Enabled" `
+        -Status $(if ($smartScreenEnabled) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($smartScreenEnabled) { "SmartScreen is enabled" } else { "SmartScreen not enabled by policy" }) `
+        -Evidence @{
+            EnableSmartScreen = $smartScreenPolicy
+            SmartScreenEnabled = $smartScreenShell
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-smartscreen/windows-defender-smartscreen-overview" `
+        -MitreId "T1204" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableSmartScreen" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > File Explorer > Configure Windows Defender SmartScreen > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Configure Windows Defender SmartScreen > Enabled'
+        }
+
+    # --- Test: Windows Script Host Disabled ---
+    $wshEnabled = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Name "Enabled" -DefaultValue 1
+    $wshDisabled = ($wshEnabled -eq 0)
+
+    Add-TestResult `
+        -Id "exec-wsh-disabled" `
+        -Category "Execution Controls" `
+        -Name "Windows Script Host Disabled" `
+        -Status $(if ($wshDisabled) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($wshDisabled) { "Windows Script Host is disabled" } else { "Windows Script Host is enabled (VBScript/JS execution allowed)" }) `
+        -Evidence @{ WSHEnabled = $wshEnabled } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-smartscreen/windows-script-host" `
+        -MitreId "T1059.005" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Name "Enabled" -Value 0 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows Script Host > Prevent Windows Script Host from running > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Prevent Windows Script Host from running > Enabled'
+        }
+
+    # --- Test: Office Macros Blocked from Internet ---
+    $officeApps = @("Word", "Excel", "PowerPoint", "Access")
+    $macroBlockValues = @()
+    foreach ($app in $officeApps) {
+        $val = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\$app\Security" -Name "BlockContentExecutionFromInternet" -DefaultValue $null
+        if ($null -ne $val) {
+            $macroBlockValues += [ordered]@{ app = $app; value = $val }
+        }
+    }
+
+    if ($macroBlockValues.Count -eq 0) {
+        Add-TestResult `
+            -Id "exec-office-macro-internet" `
+            -Category "Execution Controls" `
+            -Name "Office Macros from Internet Blocked" `
+            -Status "SKIP" `
+            -Detail "Office policy keys not found (Office may not be installed or policy not configured)" `
+            -Evidence @{ policyDetected = $false } `
+            -MitreId "T1204.002" `
+            -Remediation @{
+                PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\Word\Security" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\Word\Security" -Name "BlockContentExecutionFromInternet" -Value 1 -Type DWord'
+                GPO = 'Computer Configuration > Administrative Templates > Microsoft Office 2016 > Security Settings > Block macros from running in Office files from the Internet > Enabled'
+                Intune = 'Devices > Configuration profiles > Settings catalog > Block macros from running in Office files from the Internet > Enabled'
+            }
+    } else {
+        $blockedAll = ($macroBlockValues | Where-Object { $_.value -ne 1 }).Count -eq 0
+        $macroStatus = if ($blockedAll) { "PASS" } else { "WARN" }
+
+        Add-TestResult `
+            -Id "exec-office-macro-internet" `
+            -Category "Execution Controls" `
+            -Name "Office Macros from Internet Blocked" `
+            -Status $macroStatus `
+            -Detail $(if ($blockedAll) { "All detected Office apps block macros from the internet" } else { "Not all Office apps block macros from the internet" }) `
+            -Evidence @{ apps = $macroBlockValues } `
+            -Reference "https://learn.microsoft.com/en-us/deployoffice/security/internet-macros-blocked" `
+            -MitreId "T1204.002" `
+            -Remediation @{
+                PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\Word\Security" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\Word\Security" -Name "BlockContentExecutionFromInternet" -Value 1 -Type DWord'
+                GPO = 'Computer Configuration > Administrative Templates > Microsoft Office 2016 > Security Settings > Block macros from running in Office files from the Internet > Enabled'
+                Intune = 'Devices > Configuration profiles > Settings catalog > Block macros from running in Office files from the Internet > Enabled'
+            }
+    }
+
+    # --- Test: Office Macro Warning Level ---
+    $macroWarningValues = @()
+    foreach ($app in $officeApps) {
+        $val = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\$app\Security" -Name "VBAWarnings" -DefaultValue $null
+        if ($null -ne $val) {
+            $macroWarningValues += [ordered]@{ app = $app; value = $val }
+        }
+    }
+
+    if ($macroWarningValues.Count -eq 0) {
+        Add-TestResult `
+            -Id "exec-office-macro-warnings" `
+            -Category "Execution Controls" `
+            -Name "Office Macro Warning Level" `
+            -Status "SKIP" `
+            -Detail "Office macro warning policies not detected" `
+            -Evidence @{ policyDetected = $false } `
+            -MitreId "T1204.002" `
+            -Remediation @{
+                PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\Word\Security" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\Word\Security" -Name "VBAWarnings" -Value 4 -Type DWord'
+                GPO = 'Computer Configuration > Administrative Templates > Microsoft Office 2016 > Security Settings > VBA Macro Notification Settings > Disable all without notification (or only signed macros)'
+                Intune = 'Devices > Configuration profiles > Settings catalog > VBA Macro Notification Settings > Disable all without notification'
+            }
+    } else {
+        $macroWeak = ($macroWarningValues | Where-Object { $_.value -in @(0, 1) }).Count -gt 0
+        $macroOk = ($macroWarningValues | Where-Object { $_.value -in @(3, 4) }).Count -eq $macroWarningValues.Count
+        $macroStatus = if ($macroOk) { "PASS" } elseif ($macroWeak) { "FAIL" } else { "WARN" }
+
+        Add-TestResult `
+            -Id "exec-office-macro-warnings" `
+            -Category "Execution Controls" `
+            -Name "Office Macro Warning Level" `
+            -Status $macroStatus `
+            -Detail "VBA warning levels: $(@($macroWarningValues | ForEach-Object { $_.app + '=' + $_.value }) -join ', ')" `
+            -Evidence @{ apps = $macroWarningValues } `
+            -Reference "https://learn.microsoft.com/en-us/deployoffice/security/vba-macro-notifications" `
+            -MitreId "T1204.002" `
+            -Remediation @{
+                PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\Word\Security" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Office\16.0\Word\Security" -Name "VBAWarnings" -Value 4 -Type DWord'
+                GPO = 'Computer Configuration > Administrative Templates > Microsoft Office 2016 > Security Settings > VBA Macro Notification Settings > Disable all without notification (or only signed macros)'
+                Intune = 'Devices > Configuration profiles > Settings catalog > VBA Macro Notification Settings > Disable all without notification'
+            }
+    }
+
+    # --- Test: WMI Activity Logging ---
+    $wmiLogEnabled = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-WMI-Activity/Operational" -Name "Enabled" -DefaultValue 0
+    $wmiLogStatus = ($wmiLogEnabled -eq 1)
+
+    Add-TestResult `
+        -Id "exec-wmi-logging" `
+        -Category "Execution Controls" `
+        -Name "WMI Activity Logging" `
+        -Status $(if ($wmiLogStatus) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($wmiLogStatus) { "WMI Activity Operational log is enabled" } else { "WMI Activity Operational log is disabled" }) `
+        -Evidence @{ WmiLogEnabled = $wmiLogEnabled } `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/wmisdk/enable-wmi-activity-tracing" `
+        -MitreId "T1047" `
+        -Remediation @{
+            PowerShell = 'wevtutil sl "Microsoft-Windows-WMI-Activity/Operational" /e:true'
+            GPO = 'Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Object Access > Audit Other Object Access Events > Success'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Audit Other Object Access Events > Success'
+        }
+}
+
+# ============================================================================
+# CATEGORY: PRIVILEGE ESCALATION PREVENTION
+# ============================================================================
+
+function Test-PrivilegeEscalationCategory {
+    if (-not (Test-CategoryEnabled "PrivilegeEscalation")) { return }
+
+    # --- Test: UAC Enabled ---
+    $enableLUA = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -DefaultValue 1
+    $uacEnabled = ($enableLUA -eq 1)
+
+    Add-TestResult `
+        -Id "priv-uac-enabled" `
+        -Category "Privilege Escalation Prevention" `
+        -Name "User Account Control Enabled" `
+        -Status $(if ($uacEnabled) { "PASS" } else { "FAIL" }) `
+        -Detail $(if ($uacEnabled) { "UAC is enabled" } else { "UAC is disabled" }) `
+        -Evidence @{ EnableLUA = $enableLUA } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-run-all-administrators-in-admin-approval-mode" `
+        -MitreId "T1548" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > User Account Control: Run all administrators in Admin Approval Mode > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Run all administrators in Admin Approval Mode > Enabled'
+            Note = 'Requires reboot.'
+        }
+
+    # --- Test: Admin Approval Mode for Built-in Administrator ---
+    $filterAdminToken = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "FilterAdministratorToken" -DefaultValue 0
+    $adminApproval = ($filterAdminToken -eq 1)
+
+    Add-TestResult `
+        -Id "priv-admin-approval-mode" `
+        -Category "Privilege Escalation Prevention" `
+        -Name "Admin Approval Mode (Built-in Administrator)" `
+        -Status $(if ($adminApproval) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($adminApproval) { "Built-in Administrator uses Admin Approval Mode" } else { "Built-in Administrator not in Admin Approval Mode" }) `
+        -Evidence @{ FilterAdministratorToken = $filterAdminToken } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-admin-approval-mode-for-the-built-in-administrator-account" `
+        -MitreId "T1548" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "FilterAdministratorToken" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > User Account Control: Admin Approval Mode for the Built-in Administrator account > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Admin Approval Mode for the Built-in Administrator account > Enabled'
+        }
+
+    # --- Test: UAC Consent Prompt Behavior (Admins) ---
+    $consentPromptAdmin = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -DefaultValue 5
+    $adminPromptStatus = if ($consentPromptAdmin -in @(2, 5)) { "PASS" }
+                         elseif ($consentPromptAdmin -eq 4) { "WARN" }
+                         else { "FAIL" }
+
+    Add-TestResult `
+        -Id "priv-consent-prompt-admin" `
+        -Category "Privilege Escalation Prevention" `
+        -Name "UAC Consent Prompt for Administrators" `
+        -Status $adminPromptStatus `
+        -Detail "ConsentPromptBehaviorAdmin = $consentPromptAdmin" `
+        -Evidence @{ ConsentPromptBehaviorAdmin = $consentPromptAdmin } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-behavior-of-the-elevation-prompt-for-administrators-in-admin-approval-mode" `
+        -MitreId "T1548" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 5 -Type DWord'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > User Account Control: Behavior of the elevation prompt for administrators > Prompt for credentials on the secure desktop'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Behavior of the elevation prompt for administrators > Prompt for credentials on the secure desktop'
+        }
+
+    # --- Test: UAC Secure Desktop ---
+    $secureDesktop = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "PromptOnSecureDesktop" -DefaultValue 1
+    $secureDesktopEnabled = ($secureDesktop -eq 1)
+
+    Add-TestResult `
+        -Id "priv-secure-desktop" `
+        -Category "Privilege Escalation Prevention" `
+        -Name "UAC Secure Desktop" `
+        -Status $(if ($secureDesktopEnabled) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($secureDesktopEnabled) { "Secure Desktop is enabled for UAC prompts" } else { "Secure Desktop is disabled for UAC prompts" }) `
+        -Evidence @{ PromptOnSecureDesktop = $secureDesktop } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation" `
+        -MitreId "T1548" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "PromptOnSecureDesktop" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > User Account Control: Switch to the secure desktop when prompting for elevation > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Switch to the secure desktop when prompting for elevation > Enabled'
+        }
+
+    # --- Test: Always Install Elevated Disabled ---
+    $aieLM = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" -Name "AlwaysInstallElevated" -DefaultValue 0
+    $aieCU = Get-RegistryValueSafe -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Installer" -Name "AlwaysInstallElevated" -DefaultValue 0
+    $aieEnabled = ($aieLM -eq 1) -or ($aieCU -eq 1)
+
+    Add-TestResult `
+        -Id "priv-always-install-elevated" `
+        -Category "Privilege Escalation Prevention" `
+        -Name "AlwaysInstallElevated Disabled" `
+        -Status $(if (-not $aieEnabled) { "PASS" } else { "FAIL" }) `
+        -Detail $(if (-not $aieEnabled) { "AlwaysInstallElevated is disabled" } else { "AlwaysInstallElevated is enabled - MSI packages can elevate" }) `
+        -Evidence @{
+            AlwaysInstallElevatedHKLM = $aieLM
+            AlwaysInstallElevatedHKCU = $aieCU
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/windows-installer-always-install-with-elevated-privileges" `
+        -MitreId "T1548" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" -Name "AlwaysInstallElevated" -Value 0 -Type DWord; New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Installer" -Force | Out-Null; Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Installer" -Name "AlwaysInstallElevated" -Value 0 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows Installer > Always install with elevated privileges > Disabled (also set user policy)'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Always install with elevated privileges > Disabled'
+        }
+}
+
+# ============================================================================
+# CATEGORY: LATERAL MOVEMENT PREVENTION
+# ============================================================================
+
+function Test-LateralMovementCategory {
+    if (-not (Test-CategoryEnabled "LateralMovement")) { return }
+
+    # --- Test: RDP Network Level Authentication ---
+    $rdpDisabled = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -DefaultValue 1
+    $nlaRequired = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -DefaultValue 0
+    $rdpEnabled = ($rdpDisabled -ne 1)
+
+    Add-TestResult `
+        -Id "lateral-rdp-nla" `
+        -Category "Lateral Movement Prevention" `
+        -Name "RDP Network Level Authentication" `
+        -Status $(if (-not $rdpEnabled) { "PASS" } elseif ($nlaRequired -eq 1) { "PASS" } else { "FAIL" }) `
+        -Detail $(if (-not $rdpEnabled) { "RDP is disabled" } elseif ($nlaRequired -eq 1) { "NLA is required for RDP" } else { "NLA is not required for RDP" }) `
+        -Evidence @{
+            rdpEnabled  = $rdpEnabled
+            nlaRequired = ($nlaRequired -eq 1)
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-allow-access" `
+        -MitreId "T1021.001" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Security > Require user authentication for remote connections by using NLA > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Require user authentication for remote connections by using NLA > Enabled'
+        }
+
+    # --- Test: RDP TLS Security Layer ---
+    $securityLayer = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "SecurityLayer" -DefaultValue 0
+    $tlsRequired = ($securityLayer -eq 2)
+
+    Add-TestResult `
+        -Id "lateral-rdp-tls" `
+        -Category "Lateral Movement Prevention" `
+        -Name "RDP TLS Security Layer" `
+        -Status $(if (-not $rdpEnabled) { "PASS" } elseif ($tlsRequired) { "PASS" } else { "WARN" }) `
+        -Detail $(if (-not $rdpEnabled) { "RDP is disabled" } elseif ($tlsRequired) { "RDP requires TLS (SecurityLayer=2)" } else { "RDP does not enforce TLS (SecurityLayer=$securityLayer)" }) `
+        -Evidence @{ SecurityLayer = $securityLayer } `
+        -Reference "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-allow-access" `
+        -MitreId "T1021.001" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "SecurityLayer" -Value 2 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Security > Require use of specific security layer for remote (RDP) connections > SSL (TLS 1.0)'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Require use of specific security layer for remote connections > SSL'
+        }
+
+    # --- Test: SMB Signing Required ---
+    if (Test-CommandExists "Get-SmbServerConfiguration") {
+        try {
+            $smbConfig = Get-SmbServerConfiguration -ErrorAction Stop
+            Add-TestResult `
+                -Id "lateral-smb-signing" `
+                -Category "Lateral Movement Prevention" `
+                -Name "SMB Signing Required" `
+                -Status $(if ($smbConfig.RequireSecuritySignature) { "PASS" } else { "FAIL" }) `
+                -Detail $(if ($smbConfig.RequireSecuritySignature) { "SMB signing is required" } else { "SMB signing is not required" }) `
+                -Evidence @{
+                    RequireSecuritySignature = $smbConfig.RequireSecuritySignature
+                    EnableSecuritySignature  = $smbConfig.EnableSecuritySignature
+                } `
+                -Reference "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/overview-server-message-block-signing" `
+                -MitreId "T1021.002" `
+                -Remediation @{
+                    PowerShell = 'Set-SmbServerConfiguration -RequireSecuritySignature $true -EnableSecuritySignature $true -Force'
+                    GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Microsoft network server: Digitally sign communications (always) > Enabled'
+                    Intune = 'Devices > Configuration profiles > Settings catalog > Microsoft network server: Digitally sign communications (always) > Enabled'
+                }
+        } catch {
+            Add-TestResult `
+                -Id "lateral-smb-signing" `
+                -Category "Lateral Movement Prevention" `
+                -Name "SMB Signing Required" `
+                -Status "WARN" `
+                -Detail "Unable to query SMB server configuration: $($_.Exception.Message)" `
+                -Evidence @{ error = $_.Exception.Message } `
+                -MitreId "T1021.002" `
+                -Remediation @{
+                    PowerShell = 'Set-SmbServerConfiguration -RequireSecuritySignature $true -EnableSecuritySignature $true -Force'
+                    GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Microsoft network server: Digitally sign communications (always) > Enabled'
+                    Intune = 'Devices > Configuration profiles > Settings catalog > Microsoft network server: Digitally sign communications (always) > Enabled'
+                }
+        }
+    } else {
+        Add-TestResult `
+            -Id "lateral-smb-signing" `
+            -Category "Lateral Movement Prevention" `
+            -Name "SMB Signing Required" `
+            -Status "SKIP" `
+            -Detail "SMB server cmdlets not available" `
+            -Evidence @{ cmdletExists = $false } `
+            -MitreId "T1021.002" `
+            -Remediation @{
+                PowerShell = 'Set-SmbServerConfiguration -RequireSecuritySignature $true -EnableSecuritySignature $true -Force'
+                GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Microsoft network server: Digitally sign communications (always) > Enabled'
+                Intune = 'Devices > Configuration profiles > Settings catalog > Microsoft network server: Digitally sign communications (always) > Enabled'
+            }
+    }
+
+    # --- Test: SMBv1 Disabled ---
+    $smb1Enabled = $false
+    $smb1Server = $null
+    $smb1FeatureState = $null
+
+    if (Test-CommandExists "Get-SmbServerConfiguration") {
+        try {
+            $smbConfig = Get-SmbServerConfiguration -ErrorAction Stop
+            $smb1Server = $smbConfig.EnableSMB1Protocol
+            if ($smb1Server -eq $true) { $smb1Enabled = $true }
+        } catch { }
+    }
+    if (Test-CommandExists "Get-WindowsOptionalFeature") {
+        try {
+            $smb1Feature = Get-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -ErrorAction Stop
+            $smb1FeatureState = $smb1Feature.State.ToString()
+            if ($smb1FeatureState -eq "Enabled") { $smb1Enabled = $true }
+        } catch { }
+    }
+
+    Add-TestResult `
+        -Id "lateral-smbv1-disabled" `
+        -Category "Lateral Movement Prevention" `
+        -Name "SMBv1 Disabled" `
+        -Status $(if (-not $smb1Enabled) { "PASS" } else { "FAIL" }) `
+        -Detail $(if (-not $smb1Enabled) { "SMBv1 is disabled" } else { "SMBv1 is enabled" }) `
+        -Evidence @{
+            SmbServerSMB1Enabled  = $smb1Server
+            SmbFeatureState       = $smb1FeatureState
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows-server/storage/file-server/troubleshoot/detect-enable-and-disable-smbv1-v2-v3" `
+        -MitreId "T1021.002" `
+        -Remediation @{
+            PowerShell = 'Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart'
+            GPO = 'Computer Configuration > Administrative Templates > Network > Lanman Workstation > Enable insecure guest logons > Disabled (and remove SMBv1 feature)'
+            Intune = 'Devices > Configuration profiles > Settings catalog > SMB1Protocol > Disabled'
+        }
+
+    # --- Test: WinRM Remote Shell Access ---
+    $winrmService = Get-CimInstance -ClassName Win32_Service -Filter "Name='WinRM'" -ErrorAction SilentlyContinue
+    $allowRemoteShell = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" -Name "AllowRemoteShellAccess" -DefaultValue $null
+    $winrmRunning = ($winrmService -and $winrmService.State -eq "Running")
+    $winrmRestricted = ($allowRemoteShell -eq 0)
+
+    Add-TestResult `
+        -Id "lateral-winrm-shell" `
+        -Category "Lateral Movement Prevention" `
+        -Name "WinRM Remote Shell Restricted" `
+        -Status $(if (-not $winrmRunning) { "PASS" } elseif ($winrmRestricted) { "PASS" } else { "WARN" }) `
+        -Detail $(if (-not $winrmRunning) { "WinRM service is not running" } elseif ($winrmRestricted) { "WinRM remote shell access is disabled by policy" } else { "WinRM remote shell access may be allowed" }) `
+        -Evidence @{
+            winrmState           = if ($winrmService) { $winrmService.State } else { "Unknown" }
+            allowRemoteShellAccess = $allowRemoteShell
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/winrm/installation-and-configuration-for-windows-remote-management" `
+        -MitreId "T1021.006" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" -Name "AllowRemoteShellAccess" -Value 0 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Windows Remote Management (WinRM) > WinRM Service > Allow remote server management through WinRM > Disabled (or restrict)'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Allow remote server management through WinRM > Disabled'
+        }
+
+    # --- Test: Remote Registry Disabled ---
+    $remoteReg = Get-CimInstance -ClassName Win32_Service -Filter "Name='RemoteRegistry'" -ErrorAction SilentlyContinue
+    $remoteRegDisabled = ($remoteReg -and $remoteReg.StartMode -eq "Disabled")
+
+    Add-TestResult `
+        -Id "lateral-remote-registry" `
+        -Category "Lateral Movement Prevention" `
+        -Name "Remote Registry Service Disabled" `
+        -Status $(if ($remoteRegDisabled) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($remoteRegDisabled) { "Remote Registry service is disabled" } else { "Remote Registry service is not disabled" }) `
+        -Evidence @{
+            startMode = if ($remoteReg) { $remoteReg.StartMode } else { "Unknown" }
+            state     = if ($remoteReg) { $remoteReg.State } else { "Unknown" }
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/services/remote-registry-service" `
+        -MitreId "T1021" `
+        -Remediation @{
+            PowerShell = 'Set-Service -Name RemoteRegistry -StartupType Disabled; Stop-Service -Name RemoteRegistry -Force'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > System Services > Remote Registry > Disabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Remote Registry > Startup type: Disabled'
+        }
+
+    # --- Test: SMB Insecure Guest Logons Disabled ---
+    $guestAuth = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" -Name "AllowInsecureGuestAuth" -DefaultValue 0
+    $guestDisabled = ($guestAuth -eq 0)
+
+    Add-TestResult `
+        -Id "lateral-smb-guest" `
+        -Category "Lateral Movement Prevention" `
+        -Name "SMB Insecure Guest Logons Disabled" `
+        -Status $(if ($guestDisabled) { "PASS" } else { "FAIL" }) `
+        -Detail $(if ($guestDisabled) { "Insecure guest logons are disabled" } else { "Insecure guest logons are allowed" }) `
+        -Evidence @{ AllowInsecureGuestAuth = $guestAuth } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-security-enable-insecure-guest-logons" `
+        -MitreId "T1021.002" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" -Name "AllowInsecureGuestAuth" -Value 0 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Network > Lanman Workstation > Enable insecure guest logons > Disabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Enable insecure guest logons > Disabled'
+        }
+
+    # --- Test: Local Account Token Filtering ---
+    $tokenFilter = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "LocalAccountTokenFilterPolicy" -DefaultValue 0
+    $tokenFiltered = ($tokenFilter -eq 0)
+
+    Add-TestResult `
+        -Id "lateral-token-filter" `
+        -Category "Lateral Movement Prevention" `
+        -Name "Local Account Token Filtering" `
+        -Status $(if ($tokenFiltered) { "PASS" } else { "FAIL" }) `
+        -Detail $(if ($tokenFiltered) { "Local account token filtering is enabled" } else { "Local account token filtering is disabled" }) `
+        -Evidence @{ LocalAccountTokenFilterPolicy = $tokenFilter } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-sharing-and-security-model-for-local-accounts" `
+        -MitreId "T1021.002" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "LocalAccountTokenFilterPolicy" -Value 0 -Type DWord'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > Network access: Sharing and security model for local accounts > Classic - local users authenticate as themselves'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Sharing and security model for local accounts > Classic'
+        }
+}
+
+# ============================================================================
+# CATEGORY: DEFENSE EVASION PREVENTION
+# ============================================================================
+
+function Test-DefenseEvasionCategory {
+    if (-not (Test-CategoryEnabled "DefenseEvasion")) { return }
+
+    # --- Test: Defender Tamper Protection ---
+    if (Test-CommandExists "Get-MpComputerStatus") {
+        try {
+            $defender = Get-MpComputerStatus -ErrorAction Stop
+            Add-TestResult `
+                -Id "evade-tamper-protection" `
+                -Category "Defense Evasion Prevention" `
+                -Name "Defender Tamper Protection" `
+                -Status $(if ($defender.IsTamperProtected) { "PASS" } else { "FAIL" }) `
+                -Detail $(if ($defender.IsTamperProtected) { "Tamper protection is enabled" } else { "Tamper protection is disabled" }) `
+                -Evidence @{ IsTamperProtected = $defender.IsTamperProtected } `
+                -Reference "https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/tamper-protection" `
+                -MitreId "T1562.001" `
+                -Remediation @{
+                    PowerShell = 'Set-MpPreference -DisableTamperProtection $false'
+                    GPO = 'Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Tamper Protection > Enabled'
+                    Intune = 'Endpoint security > Antivirus > Tamper protection > Enabled'
+                }
+        } catch {
+            Add-TestResult `
+                -Id "evade-tamper-protection" `
+                -Category "Defense Evasion Prevention" `
+                -Name "Defender Tamper Protection" `
+                -Status "WARN" `
+                -Detail "Unable to query Defender tamper protection: $($_.Exception.Message)" `
+                -Evidence @{ error = $_.Exception.Message } `
+                -MitreId "T1562.001" `
+                -Remediation @{
+                    PowerShell = 'Set-MpPreference -DisableTamperProtection $false'
+                    GPO = 'Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Tamper Protection > Enabled'
+                    Intune = 'Endpoint security > Antivirus > Tamper protection > Enabled'
+                }
+        }
+    } else {
+        Add-TestResult `
+            -Id "evade-tamper-protection" `
+            -Category "Defense Evasion Prevention" `
+            -Name "Defender Tamper Protection" `
+            -Status "SKIP" `
+            -Detail "Defender cmdlets not available" `
+            -Evidence @{ cmdletExists = $false } `
+            -MitreId "T1562.001" `
+            -Remediation @{
+                PowerShell = 'Set-MpPreference -DisableTamperProtection $false'
+                GPO = 'Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Tamper Protection > Enabled'
+                Intune = 'Endpoint security > Antivirus > Tamper protection > Enabled'
+            }
+    }
+
+    # --- Test: Defender Not Disabled by Policy ---
+    $disableAntiSpyware = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -DefaultValue 0
+    $disableAntiVirus = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiVirus" -DefaultValue 0
+    $defenderDisabled = ($disableAntiSpyware -eq 1) -or ($disableAntiVirus -eq 1)
+
+    Add-TestResult `
+        -Id "evade-defender-disabled" `
+        -Category "Defense Evasion Prevention" `
+        -Name "Defender Not Disabled by Policy" `
+        -Status $(if (-not $defenderDisabled) { "PASS" } else { "FAIL" }) `
+        -Detail $(if (-not $defenderDisabled) { "Defender is not disabled by policy" } else { "Defender is disabled by policy" }) `
+        -Evidence @{
+            DisableAntiSpyware = $disableAntiSpyware
+            DisableAntiVirus   = $disableAntiVirus
+        } `
+        -Reference "https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/troubleshoot-microsoft-defender-antivirus" `
+        -MitreId "T1562.001" `
+        -Remediation @{
+            PowerShell = 'Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -ErrorAction SilentlyContinue; Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiVirus" -ErrorAction SilentlyContinue'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Turn off Microsoft Defender Antivirus > Disabled'
+            Intune = 'Endpoint security > Antivirus > Microsoft Defender Antivirus > Enabled'
+        }
+
+    # --- Test: Defender Exclusions ---
+    if (Test-CommandExists "Get-MpPreference") {
+        try {
+            $mpPref = Get-MpPreference -ErrorAction Stop
+            $exclusionCount = @($mpPref.ExclusionPath + $mpPref.ExclusionProcess + $mpPref.ExclusionExtension).Where({ $_ -ne $null }).Count
+
+            Add-TestResult `
+                -Id "evade-defender-exclusions" `
+                -Category "Defense Evasion Prevention" `
+                -Name "Defender Exclusions" `
+                -Status $(if ($exclusionCount -eq 0) { "PASS" } else { "WARN" }) `
+                -Detail $(if ($exclusionCount -eq 0) { "No Defender exclusions configured" } else { "$exclusionCount Defender exclusion(s) configured" }) `
+                -Evidence @{
+                    ExclusionPath      = $mpPref.ExclusionPath
+                    ExclusionProcess   = $mpPref.ExclusionProcess
+                    ExclusionExtension = $mpPref.ExclusionExtension
+                } `
+                -Reference "https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-exclusions-microsoft-defender-antivirus" `
+                -MitreId "T1562.001" `
+                -Remediation @{
+                    PowerShell = 'Get-MpPreference | Select-Object -ExpandProperty ExclusionPath'
+                    GPO = 'Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Exclusions > Configure with minimal necessary exclusions'
+                    Intune = 'Endpoint security > Antivirus > Exclusions > Remove unnecessary exclusions'
+                }
+        } catch {
+            Add-TestResult `
+                -Id "evade-defender-exclusions" `
+                -Category "Defense Evasion Prevention" `
+                -Name "Defender Exclusions" `
+                -Status "WARN" `
+                -Detail "Unable to query Defender exclusions: $($_.Exception.Message)" `
+                -Evidence @{ error = $_.Exception.Message } `
+                -MitreId "T1562.001" `
+                -Remediation @{
+                    PowerShell = 'Get-MpPreference | Select-Object -ExpandProperty ExclusionPath'
+                    GPO = 'Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Exclusions > Configure with minimal necessary exclusions'
+                    Intune = 'Endpoint security > Antivirus > Exclusions > Remove unnecessary exclusions'
+                }
+        }
+    } else {
+        Add-TestResult `
+            -Id "evade-defender-exclusions" `
+            -Category "Defense Evasion Prevention" `
+            -Name "Defender Exclusions" `
+            -Status "SKIP" `
+            -Detail "Defender preference cmdlets not available" `
+            -Evidence @{ cmdletExists = $false } `
+            -MitreId "T1562.001" `
+            -Remediation @{
+                PowerShell = 'Get-MpPreference | Select-Object -ExpandProperty ExclusionPath'
+                GPO = 'Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Exclusions > Configure with minimal necessary exclusions'
+                Intune = 'Endpoint security > Antivirus > Exclusions > Remove unnecessary exclusions'
+            }
+    }
+
+    # --- Test: Windows Event Log Service Running ---
+    $eventLogService = Get-CimInstance -ClassName Win32_Service -Filter "Name='eventlog'" -ErrorAction SilentlyContinue
+    $eventLogHealthy = ($eventLogService -and $eventLogService.State -eq "Running" -and $eventLogService.StartMode -eq "Auto")
+
+    Add-TestResult `
+        -Id "evade-eventlog-service" `
+        -Category "Defense Evasion Prevention" `
+        -Name "Windows Event Log Service" `
+        -Status $(if ($eventLogHealthy) { "PASS" } else { "FAIL" }) `
+        -Detail $(if ($eventLogHealthy) { "Event Log service is running and set to Auto" } else { "Event Log service not running or not set to Auto" }) `
+        -Evidence @{
+            state     = if ($eventLogService) { $eventLogService.State } else { "Unknown" }
+            startMode = if ($eventLogService) { $eventLogService.StartMode } else { "Unknown" }
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/eventlog/eventlog-key" `
+        -MitreId "T1562.002" `
+        -Remediation @{
+            PowerShell = 'Set-Service -Name eventlog -StartupType Automatic; Start-Service -Name eventlog'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > System Services > Windows Event Log > Startup type: Automatic'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Windows Event Log > Startup type: Automatic'
+        }
+
+    # --- Test: Application Control Enforced (LOLBIN Mitigation) ---
+    $applockerEnforced = $false
+    $applockerAudit = $false
+    $applockerRules = 0
+    if (Test-CommandExists "Get-AppLockerPolicy") {
+        try {
+            $appPolicy = Get-AppLockerPolicy -Effective -ErrorAction Stop
+            $collections = @($appPolicy.RuleCollections)
+            $applockerRules = ($collections | ForEach-Object { $_.Rules.Count } | Measure-Object -Sum).Sum
+            $applockerEnforced = ($collections | Where-Object { $_.EnforcementMode -eq "Enforced" -and $_.Rules.Count -gt 0 }).Count -gt 0
+            $applockerAudit = ($collections | Where-Object { $_.EnforcementMode -eq "AuditOnly" -and $_.Rules.Count -gt 0 }).Count -gt 0
+        } catch { }
+    }
+    $wdacPolicyPath = Join-Path $env:windir "System32\CodeIntegrity\CiPolicies\Active"
+    $wdacPolicies = if (Test-Path $wdacPolicyPath) { @(Get-ChildItem -Path $wdacPolicyPath -Filter *.cip -ErrorAction SilentlyContinue) } else { @() }
+    $wdacActive = ($wdacPolicies.Count -gt 0)
+
+    $lolbinStatus = if ($wdacActive -or $applockerEnforced) { "PASS" }
+                    elseif ($applockerAudit) { "WARN" }
+                    else { "FAIL" }
+
+    Add-TestResult `
+        -Id "evade-lolbin-control" `
+        -Category "Defense Evasion Prevention" `
+        -Name "LOLBIN Control (AppLocker/WDAC)" `
+        -Status $lolbinStatus `
+        -Detail $(if ($wdacActive) { "WDAC policy active" } elseif ($applockerEnforced) { "AppLocker enforced" } elseif ($applockerAudit) { "AppLocker audit only" } else { "No application control policy detected" }) `
+        -Evidence @{
+            wdacPolicies      = @($wdacPolicies | ForEach-Object { $_.Name })
+            appLockerRules    = $applockerRules
+            appLockerEnforced = $applockerEnforced
+            appLockerAudit    = $applockerAudit
+        } `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/applocker/applocker-overview" `
+        -MitreId "T1218" `
+        -Remediation @{
+            PowerShell = 'New-AppLockerPolicy -DefaultRule -RuleType Exe, Script, Msi, Appx -User "Everyone" -XMLPolicy ".\\AppLocker.xml"; Set-AppLockerPolicy -XMLPolicy ".\\AppLocker.xml" -Merge'
+            GPO = 'Computer Configuration > Windows Settings > Security Settings > Application Control Policies > AppLocker > Enforce rules'
+            Intune = 'Endpoint security > Application control > Configure AppLocker/WDAC policy'
+            Note = 'Start in audit mode to identify legitimate LOLBIN usage before enforcement.'
+        }
+}
+
+# ============================================================================
+# CATEGORY: PERSISTENCE PREVENTION
+# ============================================================================
+
+function Test-PersistenceCategory {
+    if (-not (Test-CategoryEnabled "Persistence")) { return }
+
+    # --- Test: AutoRun Disabled ---
+    $autoRunValue = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoDriveTypeAutoRun" -DefaultValue 0
+    $autoRunDisabled = ($autoRunValue -eq 0xFF)
+    $autoRunStatus = if ($autoRunDisabled) { "PASS" } elseif ($autoRunValue -ge 0x91) { "WARN" } else { "FAIL" }
+
+    Add-TestResult `
+        -Id "persist-autorun" `
+        -Category "Persistence Prevention" `
+        -Name "AutoRun Disabled" `
+        -Status $autoRunStatus `
+        -Detail $(if ($autoRunDisabled) { "AutoRun is disabled for all drives (NoDriveTypeAutoRun=0xFF)" } else { "AutoRun not fully disabled (NoDriveTypeAutoRun=$autoRunValue)" }) `
+        -Evidence @{ NoDriveTypeAutoRun = $autoRunValue } `
+        -Reference "https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autoplay" `
+        -MitreId "T1547.001" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoDriveTypeAutoRun" -Value 255 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > AutoPlay Policies > Turn off AutoPlay > Enabled (All drives)'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Turn off AutoPlay > Enabled'
+        }
+
+    # --- Test: AutoPlay Disabled ---
+    $autoPlayValue = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableAutoPlay" -DefaultValue 0
+    $autoPlayDisabled = ($autoPlayValue -eq 1)
+
+    Add-TestResult `
+        -Id "persist-autoplay" `
+        -Category "Persistence Prevention" `
+        -Name "AutoPlay Disabled" `
+        -Status $(if ($autoPlayDisabled) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($autoPlayDisabled) { "AutoPlay is disabled by policy" } else { "AutoPlay not disabled by policy" }) `
+        -Evidence @{ DisableAutoPlay = $autoPlayValue } `
+        -Reference "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-experience#experience-disableautoplay" `
+        -MitreId "T1547.001" `
+        -Remediation @{
+            PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableAutoPlay" -Value 1 -Type DWord'
+            GPO = 'Computer Configuration > Administrative Templates > Windows Components > AutoPlay Policies > Turn off AutoPlay > Enabled'
+            Intune = 'Devices > Configuration profiles > Settings catalog > DisableAutoPlay > Enabled'
+        }
+
+    # --- Test: Scheduled Task Operational Log Enabled ---
+    $taskLogEnabled = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-TaskScheduler/Operational" -Name "Enabled" -DefaultValue 0
+    $taskLogStatus = ($taskLogEnabled -eq 1)
+
+    Add-TestResult `
+        -Id "persist-task-logging" `
+        -Category "Persistence Prevention" `
+        -Name "Task Scheduler Operational Logging" `
+        -Status $(if ($taskLogStatus) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($taskLogStatus) { "Task Scheduler Operational log is enabled" } else { "Task Scheduler Operational log is disabled" }) `
+        -Evidence @{ TaskSchedulerOperationalEnabled = $taskLogEnabled } `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page" `
+        -MitreId "T1053.005" `
+        -Remediation @{
+            PowerShell = 'wevtutil sl "Microsoft-Windows-TaskScheduler/Operational" /e:true'
+            GPO = 'Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Object Access > Audit Other Object Access Events > Success'
+            Intune = 'Devices > Configuration profiles > Settings catalog > Audit Other Object Access Events > Success'
+        }
+
+    # --- Test: Startup Folder Items ---
+    $startupPaths = @(
+        Join-Path $env:ProgramData "Microsoft\Windows\Start Menu\Programs\Startup",
+        Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Startup"
+    )
+    $startupItems = @()
+    foreach ($path in $startupPaths) {
+        if (Test-Path $path) {
+            $startupItems += @(Get-ChildItem -Path $path -File -ErrorAction SilentlyContinue | ForEach-Object {
+                [ordered]@{ path = $path; name = $_.Name }
+            })
+        }
+    }
+
+    Add-TestResult `
+        -Id "persist-startup-items" `
+        -Category "Persistence Prevention" `
+        -Name "Startup Folder Items" `
+        -Status $(if ($startupItems.Count -eq 0) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($startupItems.Count -eq 0) { "No startup folder items detected" } else { "$($startupItems.Count) startup item(s) detected" }) `
+        -Evidence @{ items = $startupItems } `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/shell/shell-startup" `
+        -MitreId "T1547.001" `
+        -Remediation @{
+            PowerShell = 'Get-ChildItem "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"'
+            GPO = 'Use AppLocker/WDAC to block unauthorized startup items and regularly audit startup folders'
+            Intune = 'Endpoint security > Attack surface reduction > Use application control and audit startup items'
+        }
+
+    # --- Test: Run/RunOnce Registry Entries ---
+    $runPaths = @(
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run",
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce",
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run",
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
+    )
+    $runEntries = @()
+    foreach ($path in $runPaths) {
+        try {
+            $props = Get-ItemProperty -Path $path -ErrorAction Stop
+            $props.PSObject.Properties | Where-Object { $_.Name -notin @("PSPath","PSParentPath","PSChildName","PSDrive","PSProvider") } | ForEach-Object {
+                $runEntries += [ordered]@{ path = $path; name = $_.Name; value = $_.Value }
+            }
+        } catch { }
+    }
+
+    Add-TestResult `
+        -Id "persist-run-keys" `
+        -Category "Persistence Prevention" `
+        -Name "Run/RunOnce Registry Entries" `
+        -Status $(if ($runEntries.Count -eq 0) { "PASS" } else { "WARN" }) `
+        -Detail $(if ($runEntries.Count -eq 0) { "No Run/RunOnce entries detected" } else { "$($runEntries.Count) Run/RunOnce entry(ies) detected" }) `
+        -Evidence @{ entries = $runEntries } `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-startup-keys" `
+        -MitreId "T1547.001" `
+        -Remediation @{
+            PowerShell = 'Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run"'
+            GPO = 'Use AppLocker/WDAC and review Run/RunOnce entries during security baselines'
+            Intune = 'Endpoint security > Attack surface reduction > Use application control and monitor startup persistence'
+        }
+
+    # --- Test: WMI Permanent Event Subscriptions ---
+    try {
+        $wmiFilters = @(Get-CimInstance -Namespace root\subscription -ClassName __EventFilter -ErrorAction Stop)
+        $wmiBindings = @(Get-CimInstance -Namespace root\subscription -ClassName __FilterToConsumerBinding -ErrorAction SilentlyContinue)
+        $wmiHasSubs = ($wmiFilters.Count -gt 0) -or ($wmiBindings.Count -gt 0)
+
+        Add-TestResult `
+            -Id "persist-wmi-subscriptions" `
+            -Category "Persistence Prevention" `
+            -Name "WMI Event Subscriptions" `
+            -Status $(if (-not $wmiHasSubs) { "PASS" } else { "WARN" }) `
+            -Detail $(if (-not $wmiHasSubs) { "No WMI event subscriptions detected" } else { "$($wmiFilters.Count) WMI event filter(s) detected" }) `
+            -Evidence @{
+                filters  = @($wmiFilters | ForEach-Object { $_.Name })
+                bindings = @($wmiBindings | ForEach-Object { $_.Filter })
+            } `
+            -Reference "https://learn.microsoft.com/en-us/windows/win32/wmisdk/monitoring-and-managing-events" `
+            -MitreId "T1546.003" `
+            -Remediation @{
+                PowerShell = 'Get-CimInstance -Namespace root\subscription -ClassName __EventFilter'
+                GPO = 'Monitor and restrict WMI permanent event subscriptions; use Defender for Endpoint alerts where available'
+                Intune = 'Endpoint security > Attack surface reduction > Monitor WMI persistence signals'
+                Note = 'Review and remove unauthorized subscriptions after investigation.'
+            }
+
+    } catch {
+        Add-TestResult `
+            -Id "persist-wmi-subscriptions" `
+            -Category "Persistence Prevention" `
+            -Name "WMI Event Subscriptions" `
+            -Status "SKIP" `
+            -Detail "Unable to query WMI subscriptions: $($_.Exception.Message)" `
+            -Evidence @{ error = $_.Exception.Message } `
+            -MitreId "T1546.003" `
+            -Remediation @{
+                PowerShell = 'Get-CimInstance -Namespace root\subscription -ClassName __EventFilter'
+                GPO = 'Monitor and restrict WMI permanent event subscriptions; use Defender for Endpoint alerts where available'
+                Intune = 'Endpoint security > Attack surface reduction > Monitor WMI persistence signals'
+                Note = 'Review and remove unauthorized subscriptions after investigation.'
+            }
+    }
 }
 
 # ============================================================================
@@ -1163,6 +2439,11 @@ Initialize-ValidationEnvironment
 Test-AntivirusCategory
 Test-ASRCategory
 Test-CredentialsCategory
+Test-ExecutionControlsCategory
+Test-PrivilegeEscalationCategory
+Test-LateralMovementCategory
+Test-DefenseEvasionCategory
+Test-PersistenceCategory
 Test-NetworkCategory
 Test-EncryptionCategory
 Test-LocalSecurityCategory
