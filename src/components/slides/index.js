@@ -32,6 +32,7 @@ export { default as PowerShellCodeSlide } from './018b-PowerShellCodeSlide';
 export { default as AttackerChecklistSlide } from './019-WhatAttackersCheckFirst';
 export { default as EndpointSandwichSlide } from './020-EndpointValidationSandwich';
 export { default as SafeSweepResultsSlide } from './021-SafeSweepResults';
+export { default as SafeSweepReportDemoSlide } from './021b-SafeSweepReportDemo';
 
 // Part 3: Governance & Trust
 export { default as GovernanceSlide } from './022-AIGovernanceQuestion';

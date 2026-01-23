@@ -51,6 +51,7 @@ import {
   AttackerChecklistSlide,
   EndpointSandwichSlide,
   SafeSweepResultsSlide,
+  SafeSweepReportDemoSlide,
   // NEW: AI Tabletop Exercises
   AITabletopSlide
 } from './components/slides';
@@ -400,6 +401,9 @@ const PresentationApp = () => {
 
       case 'safeSweepResults':
         return <SafeSweepResultsSlide theme={t} />;
+
+      case 'safeSweepReportDemo':
+        return <SafeSweepReportDemoSlide theme={t} />;
 
       case 'aiTabletop':
         return <AITabletopSlide theme={t} />;

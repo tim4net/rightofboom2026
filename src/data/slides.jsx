@@ -498,27 +498,39 @@ export const slides = [
 
 **The F Grade** (20 sec)
 → Point to the left side, the big red F
-"52 out of 100. This is a lab endpoint with intentional gaps."
-"Same gaps you'll find in real client environments. LSASS unprotected, ASR disabled, LLMNR enabled."
+"54 out of 100. This is a lab run across 3 test endpoints."
+"Same gaps you'll find in real client environments. EICAR failed, ASR not enforced, Credential Guard disabled."
 "These aren't hypothetical — these are exploitable attack paths."
 
 **The AI-Generated Findings** (30 sec)
 → Walk through the center cards
 "The AI translates each technical finding into plain English."
-"LSASS Unprotected — means every logged-in password can be stolen in 30 seconds."
-"ASR Rules Disabled — means macros can execute malware without resistance."
-"LLMNR Enabled — means attackers can intercept credentials on the network."
+"EICAR Failed — means AV isn't stopping known threats."
+"ASR Not Enforced — 0 rules in Block mode, attackers have free path."
+"Credential Guard Disabled — memory-resident passwords unprotected."
 → Point to purple box: "And it includes remediation steps. PowerShell commands, GPO paths, Microsoft docs links."
 
-**The A Grade** (15 sec)
-→ Point to the right side
-"After remediation — about 2 hours of work — you're at an A."
-"The point isn't that it failed. The point is now we KNOW."
+**The Stats** (10 sec)
+"3 endpoints. 29 tests passed. 24 failed. Now let me show you the full report..."
 
-**Demo Transition** (10 sec)
-"Want to see this run live? Let's validate these gaps with Atomic Red Team..."
+⏱ ~70 seconds | 👁 "Now we KNOW" is the insight — the F is the beginning, not the end` },         // Slide 22: Safe Sweep Results
 
-⏱ ~85 seconds | 👁 "Now we KNOW" is the insight — the F is the beginning, not the end` },         // Slide 22: Safe Sweep Results
+  { type: 'safeSweepReportDemo', notes: `**Show the Real Report** (60-90 sec)
+"This is the actual output from our lab run. Real data, real findings."
+
+→ Let the audience absorb the report layout
+"Executive Summary — AI-generated, explains the business impact."
+"Critical Findings — prioritized by actual risk, not just alphabetical."
+"Remediation Steps — deterministic, copy-paste commands from validated baselines."
+
+**Key Insight** (15 sec)
+"Notice the separation: AI writes the narrative, but the remediation commands come straight from the script."
+"No hallucinated PowerShell. No made-up GPO paths."
+
+**Transition** (10 sec)
+"This is what your clients receive. Now let's validate these gaps are real with Atomic Red Team..."
+
+⏱ ~90 seconds | 👁 Let them read the actual report — it's real data, not mockup` },         // Slide 23: Report Demo
 
   { type: 'attackPathValidator', notes: `**THIS IS THE MAIN DEMO** (15-20 min interactive)
 
