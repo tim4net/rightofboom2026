@@ -1,11 +1,32 @@
 #Requires -RunAsAdministrator
 <#
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  ██     ██  █████  ██████  ███    ██ ██ ███    ██  ██████                     ║
+║  ██     ██ ██   ██ ██   ██ ████   ██ ██ ████   ██ ██                          ║
+║  ██  █  ██ ███████ ██████  ██ ██  ██ ██ ██ ██  ██ ██   ███                    ║
+║  ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██                    ║
+║   ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████                     ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  THIS SCRIPT MODIFIES SYSTEM SECURITY SETTINGS                               ║
+║                                                                              ║
+║  - Installs Atomic Red Team (attack simulation framework)                    ║
+║  - Downloads Mimikatz (credential dumping tool)                              ║
+║  - Adds Defender exclusions for attack tools                                 ║
+║                                                                              ║
+║  FOR ISOLATED LAB VMs ONLY - NEVER RUN ON PRODUCTION SYSTEMS                 ║
+║                                                                              ║
+║  After demo, run: teardown-lab-vm.ps1                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
 .SYNOPSIS
     Bootstrap script for Right of Boom 2026 Lab VM Setup
 
 .DESCRIPTION
     This stub downloads the full setup scripts from the latest GitHub release
     and configures the VM for the Attack Path Validator demo.
+
+    WARNING: This script installs offensive security tools and modifies
+    Windows Defender settings. Only use on isolated lab VMs.
 
 .NOTES
     Repository: https://github.com/tim4net/rightofboom2026

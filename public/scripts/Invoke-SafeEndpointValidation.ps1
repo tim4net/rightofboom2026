@@ -28,7 +28,7 @@
     License: MIT
 
     For use with Rewst automation workflows.
-    https://github.com/yourusername/rightofboom2026
+    https://github.com/tim4net/rightofboom2026
 #>
 
 [CmdletBinding()]

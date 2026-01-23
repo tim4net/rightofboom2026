@@ -1,5 +1,26 @@
 #Requires -RunAsAdministrator
 <#
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  ██████   █████  ███    ██  ██████  ███████ ██████                            ║
+║  ██   ██ ██   ██ ████   ██ ██       ██      ██   ██                           ║
+║  ██   ██ ███████ ██ ██  ██ ██   ███ █████   ██████                            ║
+║  ██   ██ ██   ██ ██  ██ ██ ██    ██ ██      ██   ██                           ║
+║  ██████  ██   ██ ██   ████  ██████  ███████ ██   ██                           ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  THIS SCRIPT INTENTIONALLY WEAKENS SYSTEM SECURITY                           ║
+║                                                                              ║
+║  Creates these vulnerabilities:                                              ║
+║  - Disables LSASS credential theft protection (ASR rule)                     ║
+║  - Sets obfuscated script blocking to audit-only                             ║
+║  - Adds Defender exclusions (C:\Temp, Downloads\*.ps1)                       ║
+║  - Creates shared local admin account (helpdesk / Summer2024!)               ║
+║  - Disables PowerShell script block logging                                  ║
+║                                                                              ║
+║  FOR ISOLATED LAB VMs ONLY - NEVER RUN ON PRODUCTION SYSTEMS                 ║
+║                                                                              ║
+║  After demo, run: teardown-lab-vm.ps1                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
 .SYNOPSIS
     Creates intentional security gaps for the Attack Path Validator demo
 
@@ -7,6 +28,9 @@
     This script configures a Windows system with specific security misconfigurations
     that will be detected by the endpoint collector and exploited (safely) using
     Atomic Red Team tests.
+
+    WARNING: This script creates real security vulnerabilities. Only use on
+    isolated lab VMs that will be destroyed after the demo.
 
     ONLY RUN ON ISOLATED LAB VMs - NEVER ON PRODUCTION SYSTEMS
 

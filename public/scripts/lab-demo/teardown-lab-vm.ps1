@@ -1,11 +1,30 @@
 #Requires -RunAsAdministrator
 <#
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  TEARDOWN - Restore Security After Demo                                      ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  This script reverses changes made by setup-lab-vm.ps1 and stage-gaps.ps1:   ║
+║                                                                              ║
+║  - Re-enables LSASS credential theft protection                              ║
+║  - Sets obfuscated script blocking to Block mode                             ║
+║  - Removes Defender exclusions                                               ║
+║  - Deletes shared local admin account                                        ║
+║  - Re-enables PowerShell script block logging                                ║
+║  - Cleans up Atomic Red Team artifacts                                       ║
+║  - Removes Mimikatz and other attack payloads                                ║
+║                                                                              ║
+║  ALWAYS RUN THIS AFTER DEMO - Or destroy the VM entirely                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
 .SYNOPSIS
     Removes intentional security gaps created for the Attack Path Validator demo
 
 .DESCRIPTION
     This script reverses the changes made by stage-gaps.ps1, restoring the
-    system to a more secure state.
+    system to a more secure state. Also removes attack tools (Mimikatz, etc.)
+    that were installed for the demo.
+
+    IMPORTANT: Always run this after demo, or better yet, destroy the lab VM.
 
 .NOTES
     Repository: https://github.com/tim4net/rightofboom2026
@@ -184,6 +203,30 @@ try {
 }
 
 # ============================================================================
+# Remove dangerous payloads (Mimikatz, etc.)
+# ============================================================================
+Write-Host ""
+Write-Host "[*] Removing attack payloads (Mimikatz, etc.)..." -ForegroundColor Cyan
+try {
+    $artPath = "$env:USERPROFILE\AtomicRedTeam"
+    $payloadsPath = "$artPath\ExternalPayloads"
+
+    if (Test-Path $payloadsPath) {
+        Remove-Item -Path $payloadsPath -Recurse -Force -ErrorAction Stop
+        Write-Host "[+] Removed ExternalPayloads (Mimikatz, attack tools)" -ForegroundColor Green
+        $gapsRemoved++
+    } else {
+        Write-Host "[+] ExternalPayloads not present (already clean)" -ForegroundColor Green
+    }
+
+    # Also remove ExternalPayloads Defender exclusion if it exists
+    Remove-MpPreference -ExclusionPath $payloadsPath -ErrorAction SilentlyContinue
+} catch {
+    Write-Host "[!] Could not remove payloads: $_" -ForegroundColor Yellow
+    Write-Host "    Manually delete: $payloadsPath" -ForegroundColor Yellow
+}
+
+# ============================================================================
 # Optional: Remove lab scripts directory
 # ============================================================================
 Write-Host ""
@@ -209,7 +252,7 @@ Write-Host @"
 +===================================================================+
 "@ -ForegroundColor Green
 
-Write-Host "Gaps removed: $gapsRemoved / 6" -ForegroundColor Cyan
+Write-Host "Gaps removed: $gapsRemoved / 7" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Security restored:" -ForegroundColor Green
 Write-Host "  [+] LSASS protection enabled" -ForegroundColor White
@@ -218,6 +261,7 @@ Write-Host "  [+] C:\Temp AV exclusion removed" -ForegroundColor White
 Write-Host "  [+] Downloads\*.ps1 exclusion removed" -ForegroundColor White
 Write-Host "  [+] Shared admin account removed" -ForegroundColor White
 Write-Host "  [+] PowerShell logging enabled" -ForegroundColor White
+Write-Host "  [+] Attack payloads removed (Mimikatz, etc.)" -ForegroundColor White
 Write-Host ""
-Write-Host "Recommended: Revert to a clean VM snapshot for future demos." -ForegroundColor Yellow
+Write-Host "Recommended: Destroy this VM and restore from clean snapshot." -ForegroundColor Yellow
 Write-Host ""
