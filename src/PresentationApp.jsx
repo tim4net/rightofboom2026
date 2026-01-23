@@ -453,8 +453,8 @@ const PresentationApp = () => {
       </button>
 
       {/* Main Slide Area */}
-      <main className="flex-1 flex flex-col items-center justify-center p-4 relative z-10 overflow-hidden slide-content">
-        <div className="w-full max-w-[98vw] h-full flex flex-col">
+      <main className="flex-1 flex flex-col p-2 relative z-10 overflow-hidden slide-content">
+        <div className="w-full h-full flex flex-col">
           {renderSlide()}
 
         </div>
