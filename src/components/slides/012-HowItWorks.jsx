@@ -10,9 +10,9 @@ import { CrateBadge } from '../ui/CrateBadge';
  */
 export const M365ConfigDriftDemo = ({ theme: t }) => {
   return (
-    <div className="w-full h-full flex flex-col px-12 py-6">
+    <div className="w-full h-full flex flex-col px-20 py-10">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-8">
         <CrateBadge name="CA Policy Monitor" variant="compact" />
         <h2 className={`text-5xl font-bold ${t.textOnPage}`}>
           How It Works
@@ -20,10 +20,10 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
       </div>
 
       {/* Main Flow - Three distinct sections with arrows */}
-      <div className="flex-1 flex flex-col gap-3">
+      <div className="flex-1 flex flex-col gap-4">
 
         {/* ═══ INPUT GUARDRAIL ═══ */}
-        <div className="relative border-2 border-dashed border-amber-500/60 rounded-2xl px-8 py-6 flex-[3]">
+        <div className="relative border-2 border-dashed border-amber-500/60 rounded-2xl px-10 py-8 flex-[3]">
           <div className="absolute -top-4 left-8 px-4 bg-slate-900">
             <span className="text-lg font-bold text-amber-400 uppercase tracking-wider">Input Guardrail</span>
             <span className="text-lg text-amber-400/50 ml-3 font-medium">deterministic</span>
@@ -85,7 +85,7 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
         </div>
 
         {/* ═══ AI LAYER ═══ */}
-        <div className="relative border-2 border-dashed border-purple-500/60 rounded-2xl px-8 py-5 flex-1">
+        <div className="relative border-2 border-dashed border-purple-500/60 rounded-2xl px-10 py-6 flex-1">
           <div className="absolute -top-4 left-8 px-4 bg-slate-900">
             <span className="text-lg font-bold text-purple-400 uppercase tracking-wider">AI Layer</span>
             <span className="text-lg text-purple-400/50 ml-3 font-medium">probabilistic</span>
@@ -109,7 +109,7 @@ export const M365ConfigDriftDemo = ({ theme: t }) => {
         </div>
 
         {/* ═══ OUTPUT GUARDRAIL ═══ */}
-        <div className="relative border-2 border-dashed border-amber-500/60 rounded-2xl px-8 py-5 flex-1">
+        <div className="relative border-2 border-dashed border-amber-500/60 rounded-2xl px-10 py-6 flex-1">
           <div className="absolute -top-4 left-8 px-4 bg-slate-900">
             <span className="text-lg font-bold text-amber-400 uppercase tracking-wider">Output Guardrail</span>
             <span className="text-lg text-amber-400/50 ml-3 font-medium">deterministic</span>
