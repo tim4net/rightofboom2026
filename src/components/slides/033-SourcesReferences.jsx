@@ -96,7 +96,7 @@ const SourcesSlide = ({ theme: t }) => {
               <div className="text-xl text-slate-500">Agentic AI</div>
             </div>
             <div className="p-3 rounded-lg bg-slate-800/50">
-              <div className={`font-bold ${t.accentColor}`}>ATT&CK</div>
+              <div className="font-bold" style={{ color: '#FA4443' }}>ATT&CK</div>
               <div className="text-xl text-slate-500">Threat Mapping</div>
             </div>
           </div>
