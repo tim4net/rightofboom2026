@@ -15,6 +15,7 @@ import {
   Zap
 } from 'lucide-react';
 import { ShellTerminal } from '../ShellTerminal';
+import MitreLink from '../MitreLink';
 
 /**
  * AttackPathValidatorDemo - Real AI-powered attack path validation
@@ -365,7 +366,7 @@ export const AttackPathValidatorDemo = ({ theme: t }) => {
                     <div className="font-bold text-white text-xl">{attack.name}</div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-slate-400 font-mono text-base">{attack.technique}</span>
+                    <MitreLink technique={attack.technique} className="text-slate-400 font-mono text-base" />
                     <span className={`px-3 py-1 rounded text-sm font-bold uppercase ${getSeverityColor(attack.severity)}`}>
                       {attack.severity}
                     </span>
@@ -436,7 +437,7 @@ export const AttackPathValidatorDemo = ({ theme: t }) => {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl font-black text-slate-500">#{attack.step}</span>
-                    <div className="font-mono text-orange-400 text-lg">{attack.technique}</div>
+                    <MitreLink technique={attack.technique} className="font-mono text-orange-400 text-lg" />
                     <div className="font-bold text-white text-xl">{attack.name}</div>
                   </div>
                   <span className={`px-3 py-1 rounded text-sm font-bold uppercase ${getSeverityColor(attack.severity)}`}>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Zap, Mail, Key, Clock, Shield, AlertTriangle, Search, Globe, User, Server, FileText, Target, Loader2, Brain } from 'lucide-react';
+import MitreLink from './components/MitreLink';
 
 // NOTE: AttackLabDemo has been moved to slides as 004-AttackLabSlide.jsx
 
@@ -2807,7 +2808,7 @@ export const EndpointValidationDemo = ({ theme }) => {
                   <span className="text-3xl">{currentTest.icon}</span>
                   <div>
                     <div className="font-bold text-xl text-white">{currentTest.name}</div>
-                    <div className="text-sm opacity-70">{currentTest.technique} • {currentTest.category}</div>
+                    <div className="text-sm opacity-70"><MitreLink technique={currentTest.technique} /> • {currentTest.category}</div>
                   </div>
                 </div>
                 <span className="text-orange-400 font-mono">Testing...</span>
@@ -2872,7 +2873,7 @@ export const EndpointValidationDemo = ({ theme }) => {
                         <span className="text-2xl">{v.icon}</span>
                         <div>
                           <div className="font-bold text-white">{v.name}</div>
-                          <div className="text-xs text-slate-400">{v.technique} • {v.category}</div>
+                          <div className="text-xs text-slate-400"><MitreLink technique={v.technique} /> • {v.category}</div>
                         </div>
                       </div>
                       <span className="text-red-500 font-mono text-sm">{v.cisControl}</span>
@@ -2913,7 +2914,7 @@ export const EndpointValidationDemo = ({ theme }) => {
                           : <span className="text-green-500 font-bold">PASS</span>
                         }
                       </td>
-                      <td className="py-2 font-mono text-orange-400">{r.technique}</td>
+                      <td className="py-2 font-mono text-orange-400"><MitreLink technique={r.technique} /></td>
                       <td className="py-2">{r.name}</td>
                       <td className="py-2">
                         <span className={`px-2 py-1 rounded text-xs ${getCategoryColor(r.category)}`}>
@@ -3578,7 +3579,7 @@ export const LiveAttackDemo = ({ theme }) => {
                     {' '}[{event.status.toUpperCase()}]
                   </span>
                 )}
-                {event.technique && <span className="text-slate-500 text-xs ml-2">({event.technique})</span>}
+                {event.technique && <span className="text-slate-500 text-xs ml-2">(<MitreLink technique={event.technique} />)</span>}
                 {event.raw && <span className="text-slate-400">{event.raw}</span>}
                 {event.error && <span className="text-red-400">Error: {event.error}</span>}
               </div>
