@@ -124,7 +124,7 @@
         <div class="remediation-item">
           <div class="remediation-header">
             {{ result.name }}
-            {% if result.mitreAttackId %}<a href="https://attack.mitre.org/techniques/{{ result.mitreAttackId | replace('.', '/') }}/" class="remediation-mitre" target="_blank">({{ result.mitreAttackId }})</a>{% endif %}
+            {% if result.mitreAttackId %}{% if result.mitreAttackId.startswith('T') %}<a href="https://attack.mitre.org/techniques/{{ result.mitreAttackId | replace('.', '/') }}/" class="remediation-mitre" target="_blank">({{ result.mitreAttackId }})</a>{% else %}<span class="remediation-mitre">({{ result.mitreAttackId }})</span>{% endif %}{% endif %}
           </div>
           <div class="remediation-detail">{{ result.detail }}</div>
 
