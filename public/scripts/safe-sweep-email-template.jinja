@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <!--
   Safe Sweep Email Template
-  Version: 1.0.0
+  Version: 1.2.0
+
+  Rewst Brand Palette (from Visual Guidelines PDF):
+  - Bot Teal (Primary 50%): #1EAFAF, light #78CFCF, dark #005655
+  - Ops Indigo (Backgrounds 15%): #504384, dark #282242, darkest #141121
+  - Trigger Amber (Highlights 10%): #F9A100, light #FBC766
+  - Alert Coral (Warnings 5%): #F15B5B, dark #792E2E
+  - Cloud Gray (Neutral 20%): #E6E6E6, dark #666666
 
   Usage in Rewst:
   - Copy this entire template into your "Send Email" action's HTML body
@@ -18,51 +25,51 @@
 <head>
   <meta charset="utf-8">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1e293b; max-width: 700px; margin: 0 auto; padding: 20px; }
-    .header { text-align: center; padding: 30px 0; border-bottom: 2px solid #e2e8f0; }
-    .header h1 { margin: 0; font-size: 28px; color: #0f172a; }
-    .header p { color: #64748b; margin: 8px 0 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #141121; max-width: 700px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; padding: 30px 0; border-bottom: 2px solid #E6E6E6; }
+    .header h1 { margin: 0; font-size: 28px; color: #141121; }
+    .header p { color: #666666; margin: 8px 0 0; }
 
     .score-badge { display: inline-block; padding: 20px 40px; border-radius: 12px; font-size: 48px; font-weight: bold; margin: 20px 0; }
     .score-label { display: block; font-size: 18px; font-weight: normal; margin-top: 5px; }
-    .grade-A { background: #10b981; color: white; }
-    .grade-B { background: #3b82f6; color: white; }
-    .grade-C { background: #f59e0b; color: white; }
-    .grade-D { background: #f97316; color: white; }
-    .grade-F { background: #ef4444; color: white; }
+    .grade-A { background: #1EAFAF; color: white; }
+    .grade-B { background: #78CFCF; color: #005655; }
+    .grade-C { background: #F9A100; color: white; }
+    .grade-D { background: #F15B5B; color: white; }
+    .grade-F { background: #792E2E; color: white; }
 
     .stats-bar { display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap; }
-    .stat { text-align: center; padding: 15px 25px; background: #f1f5f9; border-radius: 8px; min-width: 120px; }
-    .stat-value { font-size: 28px; font-weight: bold; color: #0f172a; }
-    .stat-label { color: #64748b; font-size: 14px; }
-    .stat-pass .stat-value { color: #10b981; }
-    .stat-fail .stat-value { color: #ef4444; }
+    .stat { text-align: center; padding: 15px 25px; background: #F5F5F5; border-radius: 8px; min-width: 120px; }
+    .stat-value { font-size: 28px; font-weight: bold; color: #141121; }
+    .stat-label { color: #666666; font-size: 14px; }
+    .stat-pass .stat-value { color: #1EAFAF; }
+    .stat-fail .stat-value { color: #F15B5B; }
 
     .section { margin: 30px 0; }
-    .section h2 { font-size: 20px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+    .section h2 { font-size: 20px; color: #141121; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px; }
 
-    .summary { background: #f8fafc; padding: 20px; border-radius: 8px; font-size: 16px; }
+    .summary { background: #F5F5F5; padding: 20px; border-radius: 8px; font-size: 16px; }
 
-    .finding { padding: 15px; margin: 12px 0; border-left: 4px solid; border-radius: 0 8px 8px 0; background: #fafafa; }
-    .finding-fail { border-color: #ef4444; background: #fef2f2; }
-    .finding-warn { border-color: #f59e0b; background: #fffbeb; }
-    .finding-name { font-weight: 600; color: #0f172a; margin-bottom: 5px; }
-    .finding-detail { color: #475569; font-size: 14px; }
+    .finding { padding: 15px; margin: 12px 0; border-left: 4px solid; border-radius: 0 8px 8px 0; background: #FAFAFA; }
+    .finding-fail { border-color: #F15B5B; background: #FEF0F0; }
+    .finding-warn { border-color: #F9A100; background: #FFF8E6; }
+    .finding-name { font-weight: 600; color: #141121; margin-bottom: 5px; }
+    .finding-detail { color: #666666; font-size: 14px; }
 
-    .remediation-item { padding: 15px; margin: 12px 0; border-left: 4px solid #dc2626; border-radius: 0 8px 8px 0; background: #fef2f2; }
-    .remediation-header { font-weight: 600; color: #991b1b; margin-bottom: 8px; }
-    .remediation-mitre { font-size: 12px; color: #64748b; font-weight: normal; }
-    .remediation-detail { color: #475569; font-size: 14px; margin-bottom: 10px; }
+    .remediation-item { padding: 15px; margin: 12px 0; border-left: 4px solid #F15B5B; border-radius: 0 8px 8px 0; background: #FEF0F0; }
+    .remediation-header { font-weight: 600; color: #792E2E; margin-bottom: 8px; }
+    .remediation-mitre { font-size: 12px; color: #666666; font-weight: normal; }
+    .remediation-detail { color: #666666; font-size: 14px; margin-bottom: 10px; }
     .remediation-method { margin: 8px 0; }
-    .remediation-label { font-weight: 600; color: #1e3a5f; font-size: 13px; }
-    .remediation-code { display: block; background: #1e293b; color: #22d3ee; padding: 8px 10px; margin-top: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
-    .remediation-path { color: #374151; font-size: 13px; }
-    .remediation-link { color: #3b82f6; font-size: 12px; margin-top: 8px; display: inline-block; }
+    .remediation-label { font-weight: 600; color: #141121; font-size: 13px; }
+    .remediation-code { display: block; background: #141121; color: #1EAFAF; padding: 8px 10px; margin-top: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+    .remediation-path { color: #504384; font-size: 13px; }
+    .remediation-link { color: #1EAFAF; font-size: 12px; margin-top: 8px; display: inline-block; }
 
-    .section-note { color: #64748b; font-style: italic; font-size: 14px; margin-bottom: 15px; }
+    .section-note { color: #666666; font-style: italic; font-size: 14px; margin-bottom: 15px; }
 
-    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b; font-size: 13px; }
-    .footer a { color: #3b82f6; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #E6E6E6; text-align: center; color: #666666; font-size: 13px; }
+    .footer a { color: #1EAFAF; }
   </style>
 </head>
 <body>
