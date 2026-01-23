@@ -89,7 +89,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
             <div key={cat.name} className="bg-slate-800/50 border border-slate-600/30 rounded-xl p-4 text-center">
               <div className={`text-3xl font-bold ${cat.color}`}>{cat.count}</div>
               <div className="text-lg text-slate-300 font-medium mt-1">{cat.name}</div>
-              <div className="text-sm mt-1 font-mono" style={{ color: '#FA4443' }}>{cat.techniques}</div>
+              <div className={`text-sm mt-1 font-mono ${cat.color}`}>{cat.techniques}</div>
             </div>
           ))}
         </div>
