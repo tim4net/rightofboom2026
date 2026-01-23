@@ -39,10 +39,14 @@ jobs:
       - name: Generate PDF
         run: npm run pdf
 
-      - name: Upload PDF to release
+      - name: Upload release assets
         uses: softprops/action-gh-release@v1
         with:
-          files: presentation.pdf
+          files: |
+            presentation.pdf
+            public/scripts/Invoke-SafeEndpointValidation.ps1
+            public/scripts/Invoke-SafeEndpointValidation-Wrapper.ps1
+            public/scripts/rewst-oneliner.ps1
           tag_name: ${{ github.event.inputs.tag || github.event.release.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
