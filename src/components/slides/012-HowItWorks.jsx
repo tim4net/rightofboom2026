@@ -7,7 +7,7 @@ import { CrateBadge } from '../ui/CrateBadge';
  */
 export const M365ConfigDriftDemo = ({ theme: t }) => {
   return (
-    <div className="w-full h-full flex flex-col p-3">
+    <div className="w-full flex-1 flex flex-col p-3">
       {/* Header */}
       <div className="flex items-center justify-between">
         <CrateBadge name="Notify on CA Policy Changes" variant="compact" />
