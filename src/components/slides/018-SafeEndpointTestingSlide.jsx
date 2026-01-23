@@ -8,12 +8,12 @@ import React from 'react';
  */
 const WorkstationMitigationsSlide = ({ theme: t }) => {
   const categories = [
-    { name: 'Credential Protection', count: '8-10', color: 'text-purple-400', impact: 'Stops credential dumping & theft' },
-    { name: 'Execution Controls', count: '10-15', color: 'text-red-400', impact: 'Blocks malicious scripts & payloads' },
-    { name: 'Privilege Escalation', count: '4-6', color: 'text-amber-400', impact: 'Prevents unauthorized elevation' },
-    { name: 'Lateral Movement', count: '6-8', color: 'text-cyan-400', impact: 'Limits spread across network' },
-    { name: 'Defense Evasion', count: '4-6', color: 'text-emerald-400', impact: 'Maintains security visibility' },
-    { name: 'Persistence Prevention', count: '5-8', color: 'text-pink-400', impact: 'Blocks attacker footholds' },
+    { name: 'Credential Protection', count: '8-10', color: 'text-purple-400', risk: 'Without: passwords stolen from memory' },
+    { name: 'Execution Controls', count: '10-15', color: 'text-red-400', risk: 'Without: malware runs freely' },
+    { name: 'Privilege Escalation', count: '4-6', color: 'text-amber-400', risk: 'Without: attackers gain admin' },
+    { name: 'Lateral Movement', count: '6-8', color: 'text-cyan-400', risk: 'Without: one breach spreads everywhere' },
+    { name: 'Defense Evasion', count: '4-6', color: 'text-emerald-400', risk: 'Without: attacks go undetected' },
+    { name: 'Persistence Prevention', count: '5-8', color: 'text-pink-400', risk: 'Without: attackers survive reboots' },
   ];
 
   return (
@@ -93,7 +93,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
               <div className={`text-3xl font-bold ${cat.color}`}>{cat.count}</div>
               <div className="text-xs text-slate-500 uppercase tracking-wide">settings</div>
               <div className="text-lg text-slate-300 font-medium mt-2">{cat.name}</div>
-              <div className="text-sm mt-1 text-slate-400">{cat.impact}</div>
+              <div className="text-sm mt-1 text-red-400/80">{cat.risk}</div>
             </div>
           ))}
         </div>
