@@ -14,21 +14,24 @@ import {
  * Key message: "Know your gaps before attackers do"
  */
 const SafeSweepResultsSlide = ({ theme: t }) => {
+  // Real data from lab run: 3 endpoints, January 23, 2026
   const grade = "F";
-  const score = 52;
+  const score = 54;
+  const stats = { endpoints: 3, passed: 29, failed: 24 };
 
+  // Top 3 critical findings from actual AI-generated report
   const topFindings = [
     {
-      finding: "LSASS Unprotected",
-      explanation: "Every logged-in password can be stolen in 30 seconds"
+      finding: "EICAR Detection Failed",
+      explanation: "All 3 systems failed to block test malware — AV isn't stopping known threats"
     },
     {
-      finding: "ASR Rules Disabled",
-      explanation: "Macros can execute malware without resistance"
+      finding: "ASR Rules Not Enforced",
+      explanation: "0 rules in Block mode — attackers have free path to run payloads"
     },
     {
-      finding: "LLMNR Enabled",
-      explanation: "Attackers can intercept credentials on the network"
+      finding: "Credential Guard Disabled",
+      explanation: "Memory-resident passwords unprotected — single compromise = lateral movement"
     }
   ];
 
@@ -47,14 +50,29 @@ const SafeSweepResultsSlide = ({ theme: t }) => {
       {/* Main Content - Grade + Findings + Transformation */}
       <div className="flex-1 flex items-center justify-center gap-10">
 
-        {/* Left: F Grade */}
+        {/* Left: F Grade + Stats */}
         <div className="flex flex-col items-center">
-          <div className="text-xl text-slate-500 uppercase tracking-wide mb-3">Before</div>
+          <div className="text-xl text-slate-500 uppercase tracking-wide mb-3">Lab Results</div>
           <div className="bg-red-500 w-44 h-44 rounded-3xl flex flex-col items-center justify-center shadow-2xl shadow-red-500/30">
             <span className="text-[7rem] font-black text-white leading-none">{grade}</span>
           </div>
           <div className="text-3xl font-bold text-slate-300 mt-3">
             {score} / 100
+          </div>
+          {/* Stats from actual run */}
+          <div className="flex gap-4 mt-4 text-lg">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-slate-300">{stats.endpoints}</div>
+              <div className="text-slate-500">endpoints</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-emerald-400">{stats.passed}</div>
+              <div className="text-slate-500">passed</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-red-400">{stats.failed}</div>
+              <div className="text-slate-500">failed</div>
+            </div>
           </div>
         </div>
 

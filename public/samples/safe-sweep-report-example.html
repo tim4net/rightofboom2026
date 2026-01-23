@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--
+  Safe Sweep Email Template
+  Version: 1.2.0
+
+  Usage in Rewst:
+  - Copy this entire template into your "Send Email" action's HTML body
+  - Or reference via URL if your email action supports external templates
+
+  Expected context variables:
+  - CTX.org_name: Organization name
+  - CTX.review_results: Array of endpoint results from PowerShell script
+  - CTX.ai_response: JSON from OpenAI with executive_summary, critical_findings, etc.
+  - ORG.VARIABLES.msp_name: Your MSP name
+  - ORG.VARIABLES.msp_email: Your support email
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #141121; max-width: 700px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; padding: 30px 0; border-bottom: 2px solid #E6E6E6; }
+    .header h1 { margin: 0; font-size: 28px; color: #141121; }
+    .header p { color: #666666; margin: 8px 0 0; }
+
+    .score-badge { display: inline-block; padding: 20px 40px; border-radius: 12px; font-size: 48px; font-weight: bold; margin: 20px 0; }
+    .score-label { display: block; font-size: 18px; font-weight: normal; margin-top: 5px; }
+    .grade-A { background: #1EAFAF; color: white; }
+    .grade-B { background: #78CFCF; color: #005655; }
+    .grade-C { background: #F9A100; color: white; }
+    .grade-D { background: #F15B5B; color: white; }
+    .grade-F { background: #792E2E; color: white; }
+
+    .stats-bar { display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap; }
+    .stat { text-align: center; padding: 15px 25px; background: #F5F5F5; border-radius: 8px; min-width: 120px; }
+    .stat-value { font-size: 28px; font-weight: bold; color: #141121; }
+    .stat-label { color: #666666; font-size: 14px; }
+    .stat-pass .stat-value { color: #1EAFAF; }
+    .stat-fail .stat-value { color: #F15B5B; }
+
+    .section { margin: 30px 0; }
+    .section h2 { font-size: 20px; color: #141121; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px; }
+
+    .summary { background: #F5F5F5; padding: 20px; border-radius: 8px; font-size: 16px; }
+
+    .finding { padding: 15px; margin: 12px 0; border-left: 4px solid; border-radius: 0 8px 8px 0; background: #FAFAFA; }
+    .finding-fail { border-color: #F15B5B; background: #FEF0F0; }
+    .finding-warn { border-color: #F9A100; background: #FFF8E6; }
+    .finding-name { font-weight: 600; color: #141121; margin-bottom: 5px; }
+    .finding-detail { color: #666666; font-size: 14px; }
+
+    .remediation-item { padding: 15px; margin: 12px 0; border-left: 4px solid #F15B5B; border-radius: 0 8px 8px 0; background: #FEF0F0; }
+    .remediation-header { font-weight: 600; color: #792E2E; margin-bottom: 8px; }
+    .remediation-mitre { font-size: 12px; color: #666666; font-weight: normal; }
+    .remediation-detail { color: #666666; font-size: 14px; margin-bottom: 10px; }
+    .remediation-method { margin: 8px 0; }
+    .remediation-label { font-weight: 600; color: #141121; font-size: 13px; }
+    .remediation-code { display: block; background: #141121; color: #1EAFAF; padding: 8px 10px; margin-top: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+    .remediation-path { color: #504384; font-size: 13px; }
+    .remediation-link { color: #1EAFAF; font-size: 12px; margin-top: 8px; display: inline-block; }
+
+    .section-note { color: #666666; font-style: italic; font-size: 14px; margin-bottom: 15px; }
+
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #E6E6E6; text-align: center; color: #666666; font-size: 13px; }
+    .footer a { color: #1EAFAF; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Security Posture Report</h1>
+    <p>Right of Boom 2026 &bull; January 23, 2026</p>
+  </div>
+
+  <div style="text-align: center;">
+    <div class="score-badge grade-F">
+      F
+      <span class="score-label">54/100</span>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Endpoints Scanned</div>
+    </div>
+    <div class="stat stat-pass">
+      <div class="stat-value">29</div>
+      <div class="stat-label">Tests Passed</div>
+    </div>
+    <div class="stat stat-fail">
+      <div class="stat-value">24</div>
+      <div class="stat-label">Tests Failed</div>
+    </div>
+  </div>
+
+  <!-- AI SECTION: Executive Summary -->
+  <div class="section">
+    <h2>Executive Summary</h2>
+    <div class="summary">
+      <p>Across three tested endpoints, baseline protections are present (Defender real-time protection, firewall enabled, LAPS configured), but several high-impact controls are missing or not enforcing, resulting in failing grades and elevated risk of ransomware, credential theft, and undetected attacker activity. The most urgent gaps are that malware testing (EICAR) was not blocked on any endpoint, Attack Surface Reduction (ASR) rules are largely not configured, and key credential and logging protections are disabled.</p>
+    </div>
+  </div>
+
+  <!-- AI SECTION: Critical Findings (prioritized by AI) -->
+  <div class="section">
+    <h2>Critical Findings</h2>
+    <div class="finding finding-fail">
+      <div class="finding-name">EICAR Malware Detection (all endpoints)</div>
+      <div class="finding-detail">All three systems failed to block the EICAR test file, which strongly indicates the endpoint antivirus stack is not effectively preventing known-bad content at the point of execution or write. In real attacks, this can translate into commodity malware, droppers, and ransomware being able to land and run, leading to business disruption, data loss, and incident response costs.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">ASR Rules Enforcement (all endpoints)</div>
+      <div class="finding-detail">Attack Surface Reduction rules are a primary control for blocking common initial access and execution paths (malicious Office child processes, script abuse, LSASS credential theft, ransomware behaviors, WMI persistence). With 0 rules in Block on all endpoints (and most rules not configured), attackers have a much easier path to execute payloads, establish persistence, and escalate impact—especially via phishing and living-off-the-land techniques.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">Credential Guard not enabled (all endpoints)</div>
+      <div class="finding-detail">Credential Guard helps protect derived credentials in memory. Without it, attackers who gain local admin or SYSTEM can more easily extract or reuse credentials/tokens to move laterally, access file shares, and compromise additional systems. This increases the likelihood that a single endpoint compromise becomes a broader environment compromise.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">BitLocker Drive Encryption not enabled (all endpoints)</div>
+      <div class="finding-detail">BitLocker protection is reported as Off on all endpoints, meaning data-at-rest protections are not in effect. If a laptop/desktop is lost, stolen, or accessed offline (e.g., removed drive), sensitive data may be exposed, increasing regulatory, contractual, and reputational risk.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">LLMNR Enabled (all endpoints)</div>
+      <div class="finding-detail">With LLMNR enabled, attackers on the same network can poison name resolution (Responder/Inveigh-style attacks) to capture NTLM hashes or relay authentication to other services. This can lead to rapid credential compromise and lateral movement, particularly in flat networks or where users connect to untrusted networks.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">PowerShell Script Block Logging not enabled (all endpoints)</div>
+      <div class="finding-detail">PowerShell is a common attacker tool for reconnaissance, payload staging, and lateral movement. Without script block logging, many attacker actions become difficult to detect and investigate, increasing dwell time and the cost/impact of incidents due to reduced visibility and weaker forensic evidence.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">Process Command Line Logging not enabled (all endpoints)</div>
+      <div class="finding-detail">Many attacks are only distinguishable by command-line arguments (e.g., encoded PowerShell, suspicious rundll32 usage, credential dumping flags). Without command-line logging, security teams lose critical detection and investigation context, making it easier for attackers to blend in and harder to prove what happened.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">SMB Signing NOT required (WIN10-ROB)</div>
+      <div class="finding-detail">When SMB signing is not required, NTLM relay attacks become more feasible, allowing an attacker to intercept/relay authentication to access resources without cracking passwords. This can enable lateral movement to file shares and other systems, increasing the blast radius of a single compromised host.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">Defender Signature Currency (WIN11-FRESH-INS)</div>
+      <div class="finding-detail">Antivirus signatures are 128 days old on WIN11-FRESH-INS, which reduces detection of newer threats and increases the chance that commodity malware bypasses defenses. This is especially risky during active campaigns where signatures and cloud intelligence updates are critical for blocking emerging variants.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">LSASS Protected Process NOT enabled (WIN10-ROB)</div>
+      <div class="finding-detail">Without LSASS running as a protected process, credential dumping tools (e.g., Mimikatz) have a higher chance of extracting password hashes and secrets from memory after privilege escalation. This increases the likelihood of domain/account compromise and rapid lateral movement.</div>
+    </div>
+    <div class="finding finding-warn">
+      <div class="finding-name">Risky AV Exclusion: C:\Temp (WIN11-ROB, WIN10-ROB)</div>
+      <div class="finding-detail">Broad directory exclusions create a safe haven for malware to write and execute without being scanned. Temporary directories are commonly used by attackers and malware droppers; excluding C:\Temp increases the chance of undetected payload staging and execution.</div>
+    </div>
+    <div class="finding finding-warn">
+      <div class="finding-name">NetBIOS over TCP/IP enabled (all endpoints)</div>
+      <div class="finding-detail">NetBIOS can increase exposure to legacy name resolution attacks and network enumeration. While not always immediately exploitable alone, it contributes to credential interception and discovery opportunities in combination with LLMNR/NTLM usage and weak network segmentation.</div>
+    </div>
+    <div class="finding finding-warn">
+      <div class="finding-name">Local Administrator Sprawl (WIN11-ROB, WIN10-ROB)</div>
+      <div class="finding-detail">More local admin members increases the number of accounts that can be phished, reused, or abused for privilege escalation. If any local admin credential is compromised, attackers can disable tools, dump credentials, and persist more easily, increasing incident impact.</div>
+    </div>
+    <div class="finding finding-warn">
+      <div class="finding-name">PowerShell Module Logging not enabled (all endpoints)</div>
+      <div class="finding-detail">Without module logging, visibility into which PowerShell modules were loaded and used is reduced. This limits detection and investigation of attacker tradecraft that relies on common modules and frameworks, increasing dwell time and uncertainty during incident response.</div>
+    </div>
+  </div>
+
+  <!-- DETERMINISTIC SECTION: Remediation Steps (directly from script JSON) -->
+  <div class="section">
+    <h2>Remediation Steps</h2>
+    <p class="section-note">Fix commands provided from validated security baselines — copy and run directly.</p>
+
+        <div class="remediation-item">
+          <div class="remediation-header">
+            ASR Rules Enforcement
+<span class="remediation-mitre">(Multiple)</span>          </div>
+          <div class="remediation-detail">0 rules in Block, 0 in Audit, 15 disabled/not configured</div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">PowerShell:</span>
+            <code class="remediation-code">Set-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2,56a863a9-875e-4185-98a7-b882c64b5ce5,d4f940ab-401b-4efc-aadc-ad5f3c50688a -AttackSurfaceReductionRules_Actions Enabled,Enabled,Enabled</code>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Group Policy:</span>
+            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Microsoft Defender Exploit Guard > Attack Surface Reduction > Configure Attack Surface Reduction rules</span>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Intune:</span>
+            <span class="remediation-path">Endpoint security > Attack surface reduction > Attack Surface Reduction Rules > Set each rule to Block</span>
+          </div>
+
+          <a href="https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference" class="remediation-link">Microsoft Documentation →</a>
+        </div>
+        <div class="remediation-item">
+          <div class="remediation-header">
+            Credential Guard
+<span class="remediation-mitre">(T1003)</span>          </div>
+          <div class="remediation-detail">Credential Guard is not enabled</div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">PowerShell:</span>
+            <code class="remediation-code">Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 1 -Type DWord; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LsaCfgFlags" -Value 1 -Type DWord</code>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Group Policy:</span>
+            <span class="remediation-path">Computer Configuration > Administrative Templates > System > Device Guard > Turn On Virtualization Based Security > Credential Guard Configuration: Enabled with UEFI lock</span>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Intune:</span>
+            <span class="remediation-path">Endpoint security > Account protection > Credential Guard > Enable with UEFI lock</span>
+          </div>
+
+          <a href="https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/configure" class="remediation-link">Microsoft Documentation →</a>
+        </div>
+        <div class="remediation-item">
+          <div class="remediation-header">
+            LLMNR Disabled
+<span class="remediation-mitre">(T1557.001)</span>          </div>
+          <div class="remediation-detail">LLMNR is ENABLED - vulnerable to name poisoning attacks (Responder/Inveigh)</div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">PowerShell:</span>
+            <code class="remediation-code">New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -Value 0 -PropertyType DWord -Force</code>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Group Policy:</span>
+            <span class="remediation-path">Computer Configuration > Administrative Templates > Network > DNS Client > Turn off multicast name resolution > Enabled</span>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Intune:</span>
+            <span class="remediation-path">Devices > Configuration profiles > Create > Settings catalog > Search "LLMNR" > Turn Off Multicast Name Resolution > Enabled</span>
+          </div>
+
+          <a href="https://www.blackhillsinfosec.com/how-to-disable-llmnr-why-you-want-to/" class="remediation-link">Microsoft Documentation →</a>
+        </div>
+        <div class="remediation-item">
+          <div class="remediation-header">
+            BitLocker Drive Encryption
+          </div>
+          <div class="remediation-detail">BitLocker is NOT enabled - data at rest is unencrypted</div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">PowerShell:</span>
+            <code class="remediation-code">Enable-BitLocker -MountPoint "C:" -EncryptionMethod XtsAes256 -RecoveryPasswordProtector; Add-BitLockerKeyProtector -MountPoint "C:" -TpmProtector</code>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Group Policy:</span>
+            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > BitLocker Drive Encryption > Operating System Drives > Require additional authentication at startup</span>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Intune:</span>
+            <span class="remediation-path">Endpoint security > Disk encryption > BitLocker > OS Drive Settings > Encrypt = Required</span>
+          </div>
+
+          <a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/" class="remediation-link">Microsoft Documentation →</a>
+        </div>
+        <div class="remediation-item">
+          <div class="remediation-header">
+            PowerShell Script Block Logging
+<span class="remediation-mitre">(T1059.001)</span>          </div>
+          <div class="remediation-detail">Script block logging NOT enabled - attacker PowerShell commands won't be logged</div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">PowerShell:</span>
+            <code class="remediation-code">@{Path="HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"; Name="EnableScriptBlockLogging"; Value=1} | ForEach-Object { New-Item -Path $_.Path -Force | Out-Null; Set-ItemProperty @_ -Type DWord }</code>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Group Policy:</span>
+            <span class="remediation-path">Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on PowerShell Script Block Logging > Enabled</span>
+          </div>
+
+          <div class="remediation-method">
+            <span class="remediation-label">Intune:</span>
+            <span class="remediation-path">Devices > Configuration profiles > Settings catalog > PowerShell Script Block Logging > Enabled</span>
+          </div>
+
+          <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" class="remediation-link">Microsoft Documentation →</a>
+        </div>
+  </div>
+
+</body>
+</html>
