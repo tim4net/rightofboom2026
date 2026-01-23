@@ -75,7 +75,7 @@
   <div style="text-align: center;">
     <div class="score-badge grade-{{ CTX.ai_response.overall_grade|default('F') }}">
       {{ CTX.ai_response.overall_grade|default('—') }}
-      <span class="score-label">{{ CTX.ai_response.average_score|default('—') }}/100</span>
+      <span class="score-label">{{ CTX.ai_response.average_score|default('—')|round(2) }}/100</span>
     </div>
   </div>
 
