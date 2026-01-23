@@ -46,7 +46,7 @@ param(
 
 #Requires -Version 5.1
 
-$ScriptVersion = "1.1.0"
+$ScriptVersion = "1.2.0"
 $script:tests = @()
 $script:isAdmin = $false
 $script:warnings = @()
@@ -97,7 +97,8 @@ function Add-TestResult {
 
         [hashtable]$Evidence = @{},
         [string]$Reference = "",
-        [string]$MitreId = ""
+        [string]$MitreId = "",
+        [hashtable]$Remediation = @{}
     )
 
     $result = [ordered]@{
@@ -115,6 +116,9 @@ function Add-TestResult {
     }
     if (-not [string]::IsNullOrWhiteSpace($MitreId)) {
         $result["mitreAttackId"] = $MitreId
+    }
+    if ($Remediation.Count -gt 0) {
+        $result["remediation"] = $Remediation
     }
 
     $script:tests += $result
@@ -549,7 +553,13 @@ function Test-ASRCategory {
                 rules           = $ruleDetails
             } `
             -Reference "https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference" `
-            -MitreId "Multiple"
+            -MitreId "Multiple" `
+            -Remediation @{
+                PowerShell = 'Set-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2,56a863a9-875e-4185-98a7-b882c64b5ce5,d4f940ab-401b-4efc-aadc-ad5f3c50688a -AttackSurfaceReductionRules_Actions Enabled,Enabled,Enabled'
+                GPO = 'Computer Configuration → Administrative Templates → Windows Components → Microsoft Defender Antivirus → Microsoft Defender Exploit Guard → Attack Surface Reduction → Configure Attack Surface Reduction rules'
+                Intune = 'Endpoint security → Attack surface reduction → Attack Surface Reduction Rules → Set each rule to Block'
+                Note = 'Start with Audit mode for 7 days to identify false positives, then switch to Block. Critical rules: LSASS credential stealing, Office child processes, script obfuscation.'
+            }
 
     } catch {
         Add-TestResult `
@@ -592,7 +602,13 @@ function Test-CredentialsCategory {
                 virtualizationBasedSecurityStatus = $dgInfo.VirtualizationBasedSecurityStatus
             } `
             -Reference "https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/configure" `
-            -MitreId "T1003"
+            -MitreId "T1003" `
+            -Remediation @{
+                PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 1 -Type DWord; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LsaCfgFlags" -Value 1 -Type DWord'
+                GPO = 'Computer Configuration → Administrative Templates → System → Device Guard → Turn On Virtualization Based Security → Credential Guard Configuration: Enabled with UEFI lock'
+                Intune = 'Endpoint security → Account protection → Credential Guard → Enable with UEFI lock'
+                Note = 'Requires UEFI, Secure Boot, TPM 2.0, and virtualization extensions. Test on pilot machines first. Reboot required.'
+            }
 
     } catch {
         Add-TestResult `
@@ -619,7 +635,13 @@ function Test-CredentialsCategory {
         }) `
         -Evidence @{ RunAsPPL = $lsaPPL } `
         -Reference "https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection" `
-        -MitreId "T1003.001"
+        -MitreId "T1003.001" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RunAsPPL" -Value 1 -Type DWord; Restart-Computer'
+            GPO = 'Computer Configuration → Administrative Templates → System → Local Security Authority → Configure LSASS to run as a protected process → Enabled with UEFI Lock'
+            Intune = 'Endpoint security → Account protection → Local Security Authority → LSASS → Enabled with UEFI Lock'
+            Note = 'Requires reboot. Test thoroughly - some older security software may be incompatible with PPL.'
+        }
 
     # --- Test: WDigest Credential Caching ---
     $useLogonCred = Get-RegistryValueSafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" -Name "UseLogonCredential" -DefaultValue $null
@@ -642,7 +664,13 @@ function Test-CredentialsCategory {
             keyExists          = ($null -ne $useLogonCred)
         } `
         -Reference "https://blog.stealthbits.com/wdigest-clear-text-passwords-stealing-more-than-a-hash/" `
-        -MitreId "T1003.001"
+        -MitreId "T1003.001" `
+        -Remediation @{
+            PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" -Name "UseLogonCredential" -Value 0 -Type DWord'
+            GPO = 'Computer Configuration → Administrative Templates → MS Security Guide → WDigest Authentication → Disabled (requires Security Baseline ADMX)'
+            Intune = 'Devices → Configuration profiles → Settings catalog → Search "WDigest" → Use Logon Credential → Disabled'
+            Note = 'Default disabled on Windows 8.1+ but verify explicitly. No reboot required.'
+        }
 }
 
 # ============================================================================
@@ -742,7 +770,12 @@ function Test-NetworkCategory {
         }) `
         -Evidence @{ EnableMulticast = $llmnrValue } `
         -Reference "https://www.blackhillsinfosec.com/how-to-disable-llmnr-why-you-want-to/" `
-        -MitreId "T1557.001"
+        -MitreId "T1557.001" `
+        -Remediation @{
+            PowerShell = 'New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -Value 0 -PropertyType DWord -Force'
+            GPO = 'Computer Configuration → Administrative Templates → Network → DNS Client → Turn off multicast name resolution → Enabled'
+            Intune = 'Devices → Configuration profiles → Create → Settings catalog → Search "LLMNR" → Turn Off Multicast Name Resolution → Enabled'
+        }
 
     # --- Test: NetBIOS over TCP/IP ---
     try {
@@ -870,7 +903,13 @@ function Test-EncryptionCategory {
                 encryptionPercentage = $bitlocker.EncryptionPercentage
                 keyProtectorTypes    = @($bitlocker.KeyProtector | ForEach-Object { $_.KeyProtectorType.ToString() })
             } `
-            -Reference "https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/"
+            -Reference "https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/" `
+            -Remediation @{
+                PowerShell = 'Enable-BitLocker -MountPoint "C:" -EncryptionMethod XtsAes256 -RecoveryPasswordProtector; Add-BitLockerKeyProtector -MountPoint "C:" -TpmProtector'
+                GPO = 'Computer Configuration → Administrative Templates → Windows Components → BitLocker Drive Encryption → Operating System Drives → Require additional authentication at startup'
+                Intune = 'Endpoint security → Disk encryption → BitLocker → OS Drive Settings → Encrypt = Required'
+                Note = 'Ensure TPM 2.0 is present and enabled in BIOS. Escrow recovery keys to Azure AD or MBAM before enabling.'
+            }
 
     } catch {
         Add-TestResult `
@@ -1041,7 +1080,12 @@ function Test-LoggingCategory {
             EnableScriptBlockLogging = $psEnabled
         } `
         -Reference "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows" `
-        -MitreId "T1059.001"
+        -MitreId "T1059.001" `
+        -Remediation @{
+            PowerShell = '@{Path="HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"; Name="EnableScriptBlockLogging"; Value=1} | ForEach-Object { New-Item -Path $_.Path -Force | Out-Null; Set-ItemProperty @_ -Type DWord }'
+            GPO = 'Computer Configuration → Administrative Templates → Windows Components → Windows PowerShell → Turn on PowerShell Script Block Logging → Enabled'
+            Intune = 'Devices → Configuration profiles → Settings catalog → PowerShell Script Block Logging → Enabled'
+        }
 
     # --- Test: PowerShell Module Logging ---
     $moduleLogging = Get-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Name "EnableModuleLogging" -DefaultValue 0

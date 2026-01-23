@@ -458,6 +458,33 @@ export const slides = [
 
 ⏱ ~75 seconds | 👁 "AI is not the sensor" is the quotable line — reinforce it` },           // Slide 21
 
+  { type: 'safeSweepResults', notes: `**Sample Report Walkthrough** (60-90 sec)
+"Here's what stakeholders actually receive. Let's look at real output from lab endpoints."
+
+**The Grade** (15 sec)
+→ Point to the giant F
+"F. 52.5 out of 100. Two endpoints, 16 failures."
+"This isn't abstract — these are your lab machines with intentional gaps."
+
+**Critical Findings** (30 sec)
+→ Walk through the red cards
+"EICAR not blocked — AV says it's active, but the test file persisted. Why?"
+"ASR rules disabled — zero rules in Block mode. 14 not even configured."
+"Credential Guard off, LSASS unprotected, LLMNR enabled, BitLocker issues."
+"Each of these is a specific attack path an attacker would use."
+
+**The AI Recommendations** (20 sec)
+→ Point to purple box
+"The AI doesn't just list problems — it prioritizes."
+"Priority 0: Fix the EICAR issue. Enable ASR rules."
+"It includes remediation steps and links to Microsoft docs."
+
+**The Value** (10 sec)
+"This generates automatically. Weekly, after config changes, on demand."
+"No analyst time spent writing reports. They spend time fixing issues instead."
+
+⏱ ~75 seconds | 👁 The F grade is memorable — let it land before explaining why` },         // Slide 22: Safe Sweep Results
+
   { type: 'attackPathValidator', notes: `**THIS IS THE MAIN DEMO** (15-20 min interactive)
 
 **Setup** (before presentation)

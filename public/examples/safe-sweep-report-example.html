@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1e293b; max-width: 700px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; padding: 30px 0; border-bottom: 2px solid #e2e8f0; }
+    .header h1 { margin: 0; font-size: 28px; color: #0f172a; }
+    .header p { color: #64748b; margin: 8px 0 0; }
+
+    .score-badge { display: inline-block; padding: 20px 40px; border-radius: 12px; font-size: 48px; font-weight: bold; margin: 20px 0; }
+    .score-label { display: block; font-size: 18px; font-weight: normal; margin-top: 5px; }
+    .grade-A { background: #10b981; color: white; }
+    .grade-B { background: #3b82f6; color: white; }
+    .grade-C { background: #f59e0b; color: white; }
+    .grade-D { background: #f97316; color: white; }
+    .grade-F { background: #ef4444; color: white; }
+
+    .stats-bar { display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap; }
+    .stat { text-align: center; padding: 15px 25px; background: #f1f5f9; border-radius: 8px; min-width: 120px; }
+    .stat-value { font-size: 28px; font-weight: bold; color: #0f172a; }
+    .stat-label { color: #64748b; font-size: 14px; }
+    .stat-pass .stat-value { color: #10b981; }
+    .stat-fail .stat-value { color: #ef4444; }
+
+    .section { margin: 30px 0; }
+    .section h2 { font-size: 20px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+
+    .summary { background: #f8fafc; padding: 20px; border-radius: 8px; font-size: 16px; }
+
+    .finding { padding: 15px; margin: 12px 0; border-left: 4px solid; border-radius: 0 8px 8px 0; background: #fafafa; }
+    .finding-fail { border-color: #ef4444; background: #fef2f2; }
+    .finding-warn { border-color: #f59e0b; background: #fffbeb; }
+    .finding-name { font-weight: 600; color: #0f172a; margin-bottom: 5px; }
+    .finding-detail { color: #475569; font-size: 14px; }
+
+    .recommendations { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 8px; }
+    .recommendations ul { margin: 10px 0; padding-left: 20px; }
+    .recommendations li { margin: 8px 0; }
+
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b; font-size: 13px; }
+    .footer a { color: #3b82f6; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Security Posture Report</h1>
+    <p>Right of Boom 2026 &bull; January 23, 2026</p>
+  </div>
+
+  <div style="text-align: center;">
+    <div class="score-badge grade-F">
+      F
+      <span class="score-label">52.5/100</span>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-value">2</div>
+      <div class="stat-label">Endpoints Scanned</div>
+    </div>
+    <div class="stat stat-pass">
+      <div class="stat-value">18</div>
+      <div class="stat-label">Tests Passed</div>
+    </div>
+    <div class="stat stat-fail">
+      <div class="stat-value">16</div>
+      <div class="stat-label">Tests Failed</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Executive Summary</h2>
+    <div class="summary">
+      <p>Across two Right of Boom 2026 endpoints, baseline protections like Defender real-time protection, current signatures, firewall, LAPS, and disabled RDP are in place, but both systems still scored failing due to major prevention and visibility gaps.</p><p>The most significant issues are that the EICAR test was not blocked on either endpoint, Attack Surface Reduction (ASR) rules are largely not enforced, and key credential/network hardening and logging controls are missing—creating high risk for malware execution, credential theft, and undetected attacker activity.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Critical Findings</h2>
+    <div class="finding finding-fail">
+      <div class="finding-name">EICAR malware test not blocked on both endpoints</div>
+      <div class="finding-detail">Both WIN10-ROB and WIN11-ROB failed to block the EICAR test file, which strongly suggests the endpoint is not effectively preventing known-bad content at execution/write time (or the test method is bypassing expected controls). If real malware behaves similarly, initial infection becomes significantly more likely despite Defender appearing enabled and up to date.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">ASR rules not enforced (0 in Block; most disabled/not configured)</div>
+      <div class="finding-detail">Both endpoints have essentially no ASR prevention in place (0 rules in Block, 1 in Audit, 14 disabled/not configured), leaving common ransomware, script, and Office-based attack paths largely unmitigated. This materially increases the chance that phishing, macro abuse, LOLBins, and script-based payloads will execute successfully.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">Credential Guard not enabled on either endpoint</div>
+      <div class="finding-detail">Credential Guard is not configured or running on both systems, increasing exposure to credential theft techniques and post-compromise lateral movement. This is especially impactful in environments where endpoints access privileged resources or share credentials across systems.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">LSASS protection missing on WIN10-ROB</div>
+      <div class="finding-detail">WIN10-ROB does not run LSASS as a protected process (RunAsPPL=0), making it more susceptible to credential dumping tools such as Mimikatz. This can accelerate domain/tenant compromise if any privileged credentials are present on the device.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">LLMNR enabled on both endpoints (name poisoning risk)</div>
+      <div class="finding-detail">LLMNR is enabled on both endpoints, enabling common on-network interception/poisoning attacks (e.g., Responder/Inveigh) that can capture hashes and facilitate relay or credential theft. This is a frequent and preventable lateral movement enabler on flat networks and shared Wi-Fi/VLANs.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">SMB signing not required on WIN10-ROB</div>
+      <div class="finding-detail">WIN10-ROB does not require SMB signing, increasing susceptibility to NTLM relay-style attacks in certain network conditions. Combined with LLMNR/NetBIOS exposure, this can materially increase the likelihood of credential relay and lateral movement.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">BitLocker protection not enabled (WIN10-ROB unencrypted; WIN11-ROB encrypted but protection off)</div>
+      <div class="finding-detail">WIN10-ROB reports fully decrypted storage, and WIN11-ROB shows encryption present but protection status Off with no key protectors. In both cases, data-at-rest protections are not reliably enforced, increasing risk from device loss/theft and offline attack scenarios.</div>
+    </div>
+    <div class="finding finding-fail">
+      <div class="finding-name">Insufficient endpoint visibility: PowerShell script block logging and process command line logging disabled</div>
+      <div class="finding-detail">Both endpoints have PowerShell Script Block Logging and Process Command Line Logging disabled, reducing the ability to detect and investigate common attacker tradecraft (PowerShell-based execution, LOLBins, suspicious command arguments). This increases dwell time and reduces incident response effectiveness.</div>
+    </div>
+    <div class="finding finding-warn">
+      <div class="finding-name">Risky Defender exclusion: broad path exclusion for C:\Temp on both endpoints</div>
+      <div class="finding-detail">A broad exclusion for C:\Temp creates an attacker-friendly staging location where malware can be dropped and executed with reduced scanning coverage. This is a common misconfiguration that can undermine otherwise healthy antivirus settings.</div>
+    </div>
+    <div class="finding finding-warn">
+      <div class="finding-name">Local administrator sprawl (3 local admins on each endpoint)</div>
+      <div class="finding-detail">Multiple local Administrators increase the chance of privilege misuse, credential exposure, and persistence. If any of these accounts are shared or reused, compromise of one endpoint can more easily translate into broader access.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Recommendations</h2>
+    <div class="recommendations">
+      <h3>Priority 0</h3><ol><li><strong>Resolve the EICAR non-blocking condition immediately</strong><ul><li>Validate Defender is the active AV provider and not in passive/disabled mode due to another security product or policy.</li><li>Review Defender cloud-delivered protection, sample submission, and policy enforcement; confirm no exclusions or policies are preventing scanning of the test path.</li><li>Re-run the EICAR test after remediation and document expected block/quarantine behavior.</li></ul></li><li><strong>Enable and enforce Microsoft Defender ASR rules (move from Audit/Not Configured to Block)</strong><ul><li>Start with the listed critical rules (e.g., credential stealing from LSASS, ransomware protection, Office child process and injection blocks, script obfuscation blocks).</li><li>Pilot in Audit for a short window only if needed, then transition to Block with documented exceptions.</li></ul></li><li><strong>Harden credential theft protections</strong><ul><li>Enable <strong>Credential Guard</strong> on both endpoints (requires VBS/virtualization-based security prerequisites).</li><li>Enable <strong>LSASS PPL</strong> on WIN10-ROB to match WIN11-ROB's stronger posture.</li></ul></li><li><strong>Disable LLMNR (and reduce related name-resolution attack surface)</strong><ul><li>Disable LLMNR via Group Policy/MDM.</li><li>Also disable NetBIOS over TCP/IP where feasible to reduce poisoning/relay opportunities.</li></ul></li><li><strong>Fix BitLocker so protection is actually enforced</strong><ul><li>WIN10-ROB: enable BitLocker with TPM (and recovery key escrow) for OS volume.</li><li>WIN11-ROB: investigate why the volume is encrypted but <strong>ProtectionStatus=Off</strong> and no key protectors exist; add appropriate protectors and turn protection on.</li></ul></li></ol><h3>Priority 1</h3><ol><li><strong>Improve detection and investigation telemetry</strong><ul><li>Enable <strong>PowerShell Script Block Logging</strong> and <strong>Module Logging</strong> (where appropriate).</li><li>Enable <strong>Process Command Line Logging</strong> for process creation events.</li><li>Consider deploying <strong>Sysmon</strong> with a vetted configuration (or ensure equivalent EDR telemetry is present) and forward logs to your SIEM.</li></ul></li><li><strong>Remove or tightly scope the C:\Temp Defender exclusion</strong><ul><li>Eliminate broad directory exclusions; if an exclusion is required for a business app, scope it to a specific file/process and document the justification.</li><li>Monitor TEMP directories for executable creation and suspicious child processes.</li></ul></li><li><strong>Require SMB signing consistently</strong><ul><li>WIN10-ROB: configure SMB client/server signing requirements as appropriate for your environment to reduce NTLM relay risk.</li></ul></li><li><strong>Reduce local administrator sprawl</strong><ul><li>Remove standard user accounts from the local Administrators group.</li><li>Use LAPS-managed local admin accounts for break-glass only; prefer just-in-time elevation and separate admin accounts.</li></ul></li></ol><h3>Priority 2</h3><ol><li><strong>Validate firewall policy quality (not just enabled state)</strong><ul><li>Confirm inbound rules are minimized, logging is enabled, and profiles are correctly applied.</li><li>Ensure remote management ports are restricted to management subnets/VPN only.</li></ul></li><li><strong>Operationalize continuous validation</strong><ul><li>Schedule recurring endpoint security validation runs and track score trends.</li><li>Map failures to control owners (GPO/Intune/SCCM/EDR) and enforce remediation SLAs.</li></ul></li></ol>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Generated by <strong>Safe Sweep</strong> endpoint validation</p>
+    <p>Your MSP &bull; <a href="mailto:support@example.com">support@example.com</a></p>
+  </div>
+</body>
+</html>

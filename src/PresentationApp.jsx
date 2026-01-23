@@ -49,6 +49,7 @@ import {
   SafeEndpointTestingSlide,
   AttackerChecklistSlide,
   EndpointSandwichSlide,
+  SafeSweepResultsSlide,
   // NEW: AI Tabletop Exercises
   AITabletopSlide
 } from './components/slides';
@@ -393,6 +394,9 @@ const PresentationApp = () => {
       case 'endpointSandwich':
         return <EndpointSandwichSlide theme={t} />;
 
+      case 'safeSweepResults':
+        return <SafeSweepResultsSlide theme={t} />;
+
       case 'aiTabletop':
         return <AITabletopSlide theme={t} />;
 
@@ -469,6 +473,8 @@ const PresentationApp = () => {
       {showNotes && (
         <PresenterNotes
           slide={slide}
+          slideIndex={currentSlide}
+          totalSlides={slides.length}
           theme={t}
           onClose={() => setShowNotes(false)}
         />

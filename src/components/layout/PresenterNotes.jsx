@@ -29,13 +29,15 @@ const formatNotes = (notes) => {
   });
 };
 
-const PresenterNotes = ({ slide, theme: t, onClose }) => {
+const PresenterNotes = ({ slide, slideIndex, totalSlides, theme: t, onClose }) => {
   return (
     <div className="presenter-notes fixed bottom-20 right-4 w-[500px] max-h-[400px] bg-black/95 border border-white/20 rounded-xl p-4 z-50 shadow-2xl backdrop-blur-md">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <StickyNote className={`w-4 h-4 ${t.accentColor}`} />
-          <span className={`text-xs font-bold ${t.accentColor} uppercase tracking-wide`}>Presenter Notes</span>
+          <span className={`text-xs font-bold ${t.accentColor} uppercase tracking-wide`}>
+            Slide {slideIndex + 1}/{totalSlides} — Presenter Notes
+          </span>
         </div>
         <button
           onClick={onClose}
