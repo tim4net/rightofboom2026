@@ -66,8 +66,8 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
                 make the attack harder or impossible.
               </p>
               <p>
-                These aren't exotic tools. They're <span className="text-amber-400 font-semibold">registry keys, group policies,
-                and built-in security features</span> that are often left at insecure defaults.
+                The mitigations are <span className="text-amber-400 font-semibold">registry keys, group policies,
+                and built-in security features</span>. Many are disabled by default.
               </p>
               <p>
                 The question: <span className="text-white font-semibold">are your endpoints actually configured this way?</span>

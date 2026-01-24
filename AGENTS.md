@@ -111,8 +111,12 @@ const MySlide = ({ slide, theme: t }) => {
   - ✅ Write like a human, vary your structure.
 
 - **Em-dashes (—):** Never use them. Use periods, colons, or rewrite the sentence.
-  - ❌ `These aren't exotic tools — they're registry keys`
-  - ✅ `These aren't exotic tools. They're registry keys`
+
+- **"Not X, they're Y" corrective framing:** Persuasive pattern that preemptively overcomes objections. Just state facts.
+  - ❌ `These aren't exotic tools. They're registry keys, group policies...`
+  - ❌ `This isn't rocket science. It's just configuration settings.`
+  - ✅ `MITRE recommends specific Windows settings: registry keys, group policies, security features.`
+  - ✅ Just say what it IS. Don't say what it ISN'T first.
 
 When in doubt: Read it out loud. If it sounds like a LinkedIn post or a SaaS landing page, rewrite it.
 
