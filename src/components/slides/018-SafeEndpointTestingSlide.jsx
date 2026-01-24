@@ -56,19 +56,48 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
           </div>
         </div>
 
-        {/* Right: What to Check */}
+        {/* Right: Workflow */}
         <div className="flex-1">
           <div className="bg-slate-800/50 border border-slate-600/50 rounded-2xl p-8 h-full flex flex-col">
-            <h3 className="text-3xl font-bold text-slate-200 mb-6">What MITRE Recommends</h3>
-            <div className="space-y-4 flex-1 text-2xl text-slate-300 leading-relaxed">
-              <p>
-                For each attack technique, MITRE lists <span className="text-amber-400 font-semibold">specific Windows settings</span> that
-                make the attack harder or impossible.
-              </p>
-              <p>
-                The mitigations are <span className="text-amber-400 font-semibold">registry keys, group policies,
-                and built-in security features</span>. Many are disabled by default.
-              </p>
+            <h3 className="text-3xl font-bold text-slate-200 mb-6">How It Works</h3>
+            <div className="flex-1 flex flex-col justify-center space-y-3">
+              {/* Flow steps */}
+              <div className="flex items-center gap-4">
+                <div className="bg-cyan-500/20 border border-cyan-500/50 rounded-lg px-4 py-3 text-xl text-cyan-300">
+                  RMM
+                </div>
+                <div className="text-slate-500 text-2xl">→</div>
+                <div className="bg-slate-700 rounded-lg px-4 py-3 text-xl text-slate-200 flex-1">
+                  Push script to endpoints
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-amber-500/20 border border-amber-500/50 rounded-lg px-4 py-3 text-xl text-amber-300">
+                  PowerShell
+                </div>
+                <div className="text-slate-500 text-2xl">→</div>
+                <div className="bg-slate-700 rounded-lg px-4 py-3 text-xl text-slate-200 flex-1">
+                  Check 60+ settings, return JSON
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-purple-500/20 border border-purple-500/50 rounded-lg px-4 py-3 text-xl text-purple-300">
+                  Rewst
+                </div>
+                <div className="text-slate-500 text-2xl">→</div>
+                <div className="bg-slate-700 rounded-lg px-4 py-3 text-xl text-slate-200 flex-1">
+                  Aggregate results, call AI
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-emerald-500/20 border border-emerald-500/50 rounded-lg px-4 py-3 text-xl text-emerald-300">
+                  Email
+                </div>
+                <div className="text-slate-500 text-2xl">→</div>
+                <div className="bg-slate-700 rounded-lg px-4 py-3 text-xl text-slate-200 flex-1">
+                  Report with remediation steps
+                </div>
+              </div>
             </div>
           </div>
         </div>
