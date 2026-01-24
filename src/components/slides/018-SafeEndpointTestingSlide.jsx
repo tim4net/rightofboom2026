@@ -58,37 +58,24 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
 
         {/* Right: Workflow */}
         <div className="flex-1">
-          <div className="bg-slate-800/50 border border-slate-600/50 rounded-2xl p-8 h-full flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
-              <img src="/images/rewst-logo.png" alt="Rewst" className="h-8 w-auto" />
-              <span className="text-3xl font-bold text-slate-200">Workflow</span>
+          <div className="bg-ops-indigo-400/20 border border-ops-indigo-400/40 rounded-2xl p-8 h-full flex flex-col">
+            <div className="mb-6">
+              <img src="/images/rewst-logo.png" alt="Rewst" className="h-10 w-auto" />
             </div>
-            <div className="flex-1 flex flex-col justify-center space-y-2">
-              {/* Flow steps */}
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-purple-500/30 border border-purple-500/50 flex items-center justify-center text-purple-300 text-lg font-bold">1</div>
-                <div className="bg-slate-700 rounded-lg px-4 py-2 text-xl text-slate-200 flex-1">
-                  Call RMM API to run script on endpoints
+            <div className="flex-1 flex flex-col justify-center space-y-4">
+              {[
+                'Call RMM to run script on endpoints',
+                'Collect JSON results',
+                'Send to AI for analysis',
+                'Email report with remediation',
+              ].map((step, i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-bot-teal-400 flex items-center justify-center text-white text-xl font-bold shrink-0">
+                    {i + 1}
+                  </div>
+                  <div className="text-2xl text-slate-200">{step}</div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-purple-500/30 border border-purple-500/50 flex items-center justify-center text-purple-300 text-lg font-bold">2</div>
-                <div className="bg-slate-700 rounded-lg px-4 py-2 text-xl text-slate-200 flex-1">
-                  Collect JSON results from each endpoint
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-purple-500/30 border border-purple-500/50 flex items-center justify-center text-purple-300 text-lg font-bold">3</div>
-                <div className="bg-slate-700 rounded-lg px-4 py-2 text-xl text-slate-200 flex-1">
-                  Aggregate and send to AI for analysis
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-purple-500/30 border border-purple-500/50 flex items-center justify-center text-purple-300 text-lg font-bold">4</div>
-                <div className="bg-slate-700 rounded-lg px-4 py-2 text-xl text-slate-200 flex-1">
-                  Email report with findings and remediation
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
