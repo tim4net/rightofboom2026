@@ -118,6 +118,12 @@ const MySlide = ({ slide, theme: t }) => {
   - ✅ `MITRE recommends specific Windows settings: registry keys, group policies, security features.`
   - ✅ Just say what it IS. Don't say what it ISN'T first.
 
+- **"The question:" setup phrases:** Tells the audience what to think. Sounds like a TED talk.
+  - ❌ `The question: are your endpoints configured this way?`
+  - ❌ `The real question is...`
+  - ❌ `So the question becomes...`
+  - ✅ Just present information. Let the audience form their own questions.
+
 When in doubt: Read it out loud. If it sounds like a LinkedIn post or a SaaS landing page, rewrite it.
 
 ### Educational vs Sales Tone
