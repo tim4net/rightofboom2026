@@ -59,43 +59,31 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
         {/* Right: Workflow */}
         <div className="flex-1">
           <div className="bg-slate-800/50 border border-slate-600/50 rounded-2xl p-8 h-full flex flex-col">
-            <h3 className="text-3xl font-bold text-slate-200 mb-6">How It Works</h3>
-            <div className="flex-1 flex flex-col justify-center space-y-3">
+            <h3 className="text-3xl font-bold text-slate-200 mb-4">Rewst Workflow</h3>
+            <div className="flex-1 flex flex-col justify-center space-y-2">
               {/* Flow steps */}
-              <div className="flex items-center gap-4">
-                <div className="bg-cyan-500/20 border border-cyan-500/50 rounded-lg px-4 py-3 text-xl text-cyan-300">
-                  RMM
-                </div>
-                <div className="text-slate-500 text-2xl">→</div>
-                <div className="bg-slate-700 rounded-lg px-4 py-3 text-xl text-slate-200 flex-1">
-                  Push script to endpoints
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-purple-500/30 border border-purple-500/50 flex items-center justify-center text-purple-300 text-lg font-bold">1</div>
+                <div className="bg-slate-700 rounded-lg px-4 py-2 text-xl text-slate-200 flex-1">
+                  Call RMM API to run script on endpoints
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-amber-500/20 border border-amber-500/50 rounded-lg px-4 py-3 text-xl text-amber-300">
-                  PowerShell
-                </div>
-                <div className="text-slate-500 text-2xl">→</div>
-                <div className="bg-slate-700 rounded-lg px-4 py-3 text-xl text-slate-200 flex-1">
-                  Check 60+ settings, return JSON
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-purple-500/30 border border-purple-500/50 flex items-center justify-center text-purple-300 text-lg font-bold">2</div>
+                <div className="bg-slate-700 rounded-lg px-4 py-2 text-xl text-slate-200 flex-1">
+                  Collect JSON results from each endpoint
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-purple-500/20 border border-purple-500/50 rounded-lg px-4 py-3 text-xl text-purple-300">
-                  Rewst
-                </div>
-                <div className="text-slate-500 text-2xl">→</div>
-                <div className="bg-slate-700 rounded-lg px-4 py-3 text-xl text-slate-200 flex-1">
-                  Aggregate results, call AI
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-purple-500/30 border border-purple-500/50 flex items-center justify-center text-purple-300 text-lg font-bold">3</div>
+                <div className="bg-slate-700 rounded-lg px-4 py-2 text-xl text-slate-200 flex-1">
+                  Aggregate and send to AI for analysis
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-emerald-500/20 border border-emerald-500/50 rounded-lg px-4 py-3 text-xl text-emerald-300">
-                  Email
-                </div>
-                <div className="text-slate-500 text-2xl">→</div>
-                <div className="bg-slate-700 rounded-lg px-4 py-3 text-xl text-slate-200 flex-1">
-                  Report with remediation steps
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-purple-500/30 border border-purple-500/50 flex items-center justify-center text-purple-300 text-lg font-bold">4</div>
+                <div className="bg-slate-700 rounded-lg px-4 py-2 text-xl text-slate-200 flex-1">
+                  Email report with findings and remediation
                 </div>
               </div>
             </div>
