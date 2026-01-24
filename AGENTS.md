@@ -110,7 +110,31 @@ const MySlide = ({ slide, theme: t }) => {
   - ❌ `Simple to use. Easy to deploy. Ready to scale.`
   - ✅ Write like a human, vary your structure.
 
+- **Em-dashes (—):** Never use them. Use periods, colons, or rewrite the sentence.
+  - ❌ `These aren't exotic tools — they're registry keys`
+  - ✅ `These aren't exotic tools. They're registry keys`
+
 When in doubt: Read it out loud. If it sounds like a LinkedIn post or a SaaS landing page, rewrite it.
+
+### Educational vs Sales Tone
+
+**This is a conference talk, not a product pitch.** Slides should educate and inform, not sell.
+
+**Sales slide red flags:**
+- ❌ Checkmark bullets listing benefits ("✓ Runs automatically", "✓ No interaction required")
+- ❌ "60+" or "95+" style marketing numbers (just say the real number)
+- ❌ Product-style headers ("The Automation", "Our Solution", "The Platform")
+- ❌ Benefit-focused copy ("results in minutes", "no hassle")
+- ❌ Feature lists disguised as content
+
+**Educational slide patterns:**
+- ✅ Explain *what* something is and *why* it matters
+- ✅ Ask questions the audience should be thinking ("Are your endpoints configured this way?")
+- ✅ Describe concepts, not products
+- ✅ Use real numbers, not inflated marketing numbers
+- ✅ Let the audience draw their own conclusions about value
+
+**The test:** Would this slide feel at home in a vendor booth, or in a classroom? Aim for classroom.
 
 ### Design Principles
 

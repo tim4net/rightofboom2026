@@ -47,7 +47,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
             <p className="text-2xl text-slate-300 leading-relaxed mb-6 flex-1">
               The ATT&CK framework documents <span className="text-cyan-400 font-semibold">what attackers do</span> and
               <span className="text-emerald-400 font-semibold"> how to stop them</span>.
-              Each technique includes specific configuration mitigations —
+              Each technique includes specific configuration mitigations:
               registry keys, group policies, and security settings that make attacks harder.
             </p>
             <div className="text-xl text-cyan-400">
@@ -56,26 +56,22 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
           </div>
         </div>
 
-        {/* Right: Our Approach */}
+        {/* Right: What to Check */}
         <div className="flex-1">
-          <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-8 h-full flex flex-col">
-            <h3 className="text-3xl font-bold text-emerald-400 mb-6">The Automation</h3>
-            <div className="space-y-4 flex-1">
-              <div className="flex items-start gap-3">
-                <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Checks <span className="text-white font-semibold">60+ MITRE-recommended</span> settings</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Runs <span className="text-white font-semibold">via RMM/Rewst</span> across all endpoints</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Emails a gap report with <span className="text-white font-semibold">remediation steps</span></span>
-              </div>
-            </div>
-            <div className="text-xl text-slate-400 mt-4">
-              No agent interaction required — results in minutes.
+          <div className="bg-slate-800/50 border border-slate-600/50 rounded-2xl p-8 h-full flex flex-col">
+            <h3 className="text-3xl font-bold text-slate-200 mb-6">What MITRE Recommends</h3>
+            <div className="space-y-4 flex-1 text-2xl text-slate-300 leading-relaxed">
+              <p>
+                For each attack technique, MITRE lists <span className="text-amber-400 font-semibold">specific Windows settings</span> that
+                make the attack harder or impossible.
+              </p>
+              <p>
+                These aren't exotic tools. They're <span className="text-amber-400 font-semibold">registry keys, group policies,
+                and built-in security features</span> that are often left at insecure defaults.
+              </p>
+              <p>
+                The question: <span className="text-white font-semibold">are your endpoints actually configured this way?</span>
+              </p>
             </div>
           </div>
         </div>
@@ -84,7 +80,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
       {/* Coverage categories */}
       <div className="w-full max-w-7xl">
         <div className="text-center mb-4">
-          <span className="text-slate-400 text-xl">Coverage areas mapped to MITRE ATT&CK mitigations</span>
+          <span className="text-slate-400 text-xl">ATT&CK mitigation categories relevant to workstations</span>
         </div>
         <div className="flex flex-wrap justify-center gap-3">
           {categories.map((cat) => (
