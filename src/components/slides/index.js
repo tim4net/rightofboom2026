@@ -28,8 +28,7 @@ export { default as BreakSlide } from './017-BreakSlide';
 
 // Endpoint Protection Testing Section
 export { default as SafeEndpointTestingSlide } from './018-SafeEndpointTestingSlide';
-export { default as RewstWorkflowEmbed } from './018b-RewstWorkflowEmbed';
-export { default as PowerShellCodeSlide } from './018c-PowerShellCodeSlide';
+export { default as PowerShellCodeSlide } from './018b-PowerShellCodeSlide';
 export { default as AttackerChecklistSlide } from './019-WhatAttackersCheckFirst';
 export { default as EndpointSandwichSlide } from './020-EndpointValidationSandwich';
 export { default as SafeSweepResultsSlide } from './021-SafeSweepResults';
