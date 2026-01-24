@@ -59,9 +59,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
         {/* Right: Workflow */}
         <div className="flex-1">
           <div className="bg-ops-indigo-400/20 border border-ops-indigo-400/40 rounded-2xl p-8 h-full flex flex-col">
-            <div className="mb-6">
-              <img src="/images/rewst-logo.png" alt="Rewst" className="h-10 w-auto" />
-            </div>
+            <h3 className={`text-4xl font-black mb-2 ${t.textOnPage}`}>Workflow</h3>
             <div className="flex-1 flex flex-col justify-center space-y-4">
               {[
                 'Call RMM to run script on endpoints',
