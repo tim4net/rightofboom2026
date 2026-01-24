@@ -390,29 +390,32 @@ export const slides = [
   // ============================================
 
   { type: 'safeEndpointTesting', notes: `**Tension-Building Opener** (15 sec)
-"Welcome back. Let me ask you a question:"
-→ Pause, make eye contact
-"How do you KNOW your endpoint defenses actually work?"
-"You deployed Defender. You enabled ASR. You checked the boxes."
-"But did you TEST it? Most MSPs have never validated whether their hardening actually stops attacks."
+"Welcome back from break."
+→ Read the subtitle aloud, let it sink in
+"9 categories. 66 settings. Hundreds of endpoints. How do you validate them all?"
+→ Pause. This is the problem statement.
 
-**Introduce Atomic Red Team** (30 sec)
-→ Walk through the three columns
-"Atomic Red Team is how you validate. Real attack simulations, safely executed."
-"Mapped to MITRE ATT&CK — every test corresponds to a documented technique."
-"Self-contained with built-in cleanup. No persistent modifications, no mess."
+**MITRE ATT&CK Context** (20 sec)
+→ Gesture to left card
+"MITRE documents what attackers do AND how to stop them."
+"Each technique has specific mitigations: registry keys, GPOs, security settings."
+"This is the industry standard."
 
-**The STAR Moment** (15 sec)
-→ Tap the value proposition box
-"This is $50K worth of red team testing — free, open source."
-"The same techniques Fortune 500 companies pay consultants to run."
-"You can run these Monday morning."
+**Workflow Walkthrough** (30 sec)
+→ Walk through the 4 steps on the right
+"Step 1: Rewst calls your RMM to run a PowerShell script on endpoints."
+"Step 2: Script collects JSON with all the security settings."
+"Step 3: AI analyzes the results against MITRE recommendations."
+"Step 4: Your technician gets prioritized fixes. Not a wall of raw data."
 
-**The Hook** (10 sec)
-"We automated the critical checks into about 1,200 lines of PowerShell."
-"Let me show you the actual code..."
+**The Memorable Number** (10 sec)
+→ Point to bottom: "66 MITRE-mapped settings validated per endpoint"
+"66 settings. Every one mapped to a MITRE mitigation. Automated."
 
-⏱ ~70 seconds | 👁 "How do you KNOW?" is the tension builder. "$50K, free" is the STAR moment.` },  // 018
+**Transition** (5 sec)
+"Let's look at the actual script..."
+
+⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "66 settings" is the retellable number.` },  // 018
 
   { type: 'powershellCode', notes: `**Show the Real Code** (60-90 sec)
 "Let me show you what's actually running. No black box. No magic."
