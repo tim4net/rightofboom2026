@@ -59,7 +59,10 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
         {/* Right: Workflow */}
         <div className="flex-1">
           <div className="bg-slate-800/50 border border-slate-600/50 rounded-2xl p-8 h-full flex flex-col">
-            <h3 className="text-3xl font-bold text-slate-200 mb-4">Rewst Workflow</h3>
+            <div className="flex items-center gap-3 mb-4">
+              <img src="/images/rewst-logo.png" alt="Rewst" className="h-8 w-auto" />
+              <span className="text-3xl font-bold text-slate-200">Workflow</span>
+            </div>
             <div className="flex-1 flex flex-col justify-center space-y-2">
               {/* Flow steps */}
               <div className="flex items-center gap-3">
