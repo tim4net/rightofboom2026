@@ -46,6 +46,7 @@ import {
   TakeawaysSlide,
   // NEW: Endpoint Protection Testing Section
   SafeEndpointTestingSlide,
+  RewstWorkflowEmbed,
   PowerShellCodeSlide,
   AttackerChecklistSlide,
   EndpointSandwichSlide,
@@ -381,6 +382,9 @@ const PresentationApp = () => {
       // Endpoint Protection Testing Section (after Break)
       case 'safeEndpointTesting':
         return <SafeEndpointTestingSlide theme={t} />;
+
+      case 'rewstWorkflowEmbed':
+        return <RewstWorkflowEmbed theme={t} />;
 
       case 'powershellCode':
         return <PowerShellCodeSlide theme={t} />;

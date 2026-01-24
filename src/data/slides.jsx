@@ -414,6 +414,8 @@ export const slides = [
 
 ⏱ ~70 seconds | 👁 "How do you KNOW?" is the tension builder. "$50K, free" is the STAR moment.` },  // 018
 
+  { type: 'rewstWorkflowEmbed' },  // 018b - Live workflow demo
+
   { type: 'powershellCode', notes: `**Show the Real Code** (60-90 sec)
 "Let me show you what's actually running. No black box. No magic."
 → The full script loads with syntax highlighting — scroll through it
