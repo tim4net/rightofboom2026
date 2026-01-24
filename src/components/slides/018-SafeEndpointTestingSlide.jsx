@@ -21,13 +21,14 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center px-20 py-12">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className={`text-6xl font-black mb-4 ${t.textOnPage}`}>
+      {/* Header with tension */}
+      <div className="text-center mb-6">
+        <h2 className={`text-6xl font-black mb-3 ${t.textOnPage}`}>
           Endpoint Posture Check
         </h2>
-        <p className={`text-3xl ${t.accentColor} font-medium`}>
- 
+        <p className="text-2xl text-slate-400">
+          9 categories. 66 settings. Hundreds of endpoints.
+          <span className="text-cyan-400 font-semibold"> How do you validate them all?</span>
         </p>
       </div>
 
@@ -65,7 +66,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
                 'Call RMM to run script on endpoints',
                 'Collect JSON results',
                 'Send to AI for analysis',
-                'Email report with remediation',
+                'Technician gets prioritized fixes, not raw data',
               ].map((step, i) => (
                 <div key={i} className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-bot-teal-400 flex items-center justify-center text-white text-xl font-bold shrink-0">
@@ -87,17 +88,19 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
         </div>
       </div>
 
-      {/* Coverage categories */}
+      {/* Coverage categories with quantified impact */}
       <div className="w-full max-w-7xl">
-        <div className="text-center mb-4">
-          <span className="text-slate-400 text-xl">ATT&CK mitigation categories relevant to workstations</span>
-        </div>
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3 mb-4">
           {categories.map((cat) => (
             <div key={cat} className="bg-slate-700/50 border border-slate-500/30 rounded-full px-5 py-2">
               <span className="text-lg text-slate-200">{cat}</span>
             </div>
           ))}
+        </div>
+        <div className="text-center">
+          <span className="text-2xl text-emerald-400 font-semibold">66 MITRE-mapped settings validated per endpoint</span>
+          <span className="text-slate-500 mx-3">·</span>
+          <span className="text-xl text-slate-400">Let's look at the script →</span>
         </div>
       </div>
     </div>
