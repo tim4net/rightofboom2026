@@ -60,11 +60,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
             <div className="space-y-4 flex-1">
               <div className="flex items-start gap-3">
                 <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Extracts <span className="text-white font-semibold">workstation configs</span> MITRE recommends</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Builds <span className="text-white font-semibold">PowerShell checks</span> for each setting</span>
+                <span className="text-2xl text-slate-300">Checks <span className="text-white font-semibold">95 MITRE-recommended</span> settings</span>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-emerald-400 text-2xl">✓</span>
@@ -76,7 +72,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
               </div>
             </div>
             <div className="text-xl text-slate-400 mt-4">
-              The script validates 95 settings and runs through your RMM without interaction.
+              No agent interaction required — results in minutes.
             </div>
           </div>
         </div>
