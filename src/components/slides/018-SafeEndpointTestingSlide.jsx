@@ -8,12 +8,15 @@ import React from 'react';
  */
 const WorkstationMitigationsSlide = ({ theme: t }) => {
   const categories = [
-    { name: 'Credential Protection', count: '8-10', color: 'text-purple-400' },
-    { name: 'Execution Controls', count: '10-15', color: 'text-red-400' },
-    { name: 'Privilege Escalation', count: '4-6', color: 'text-amber-400' },
-    { name: 'Lateral Movement', count: '6-8', color: 'text-cyan-400' },
-    { name: 'Defense Evasion', count: '4-6', color: 'text-emerald-400' },
-    { name: 'Persistence Prevention', count: '5-8', color: 'text-pink-400' },
+    'Credential Protection',
+    'Execution Controls',
+    'Privilege Escalation',
+    'Lateral Movement',
+    'Defense Evasion',
+    'Persistence Prevention',
+    'Antivirus & ASR',
+    'Network Security',
+    'Logging & Monitoring',
   ];
 
   return (
@@ -60,7 +63,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
             <div className="space-y-4 flex-1">
               <div className="flex items-start gap-3">
                 <span className="text-emerald-400 text-2xl">✓</span>
-                <span className="text-2xl text-slate-300">Checks <span className="text-white font-semibold">95 MITRE-recommended</span> settings</span>
+                <span className="text-2xl text-slate-300">Checks <span className="text-white font-semibold">60+ MITRE-recommended</span> settings</span>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-emerald-400 text-2xl">✓</span>
@@ -80,15 +83,13 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
 
       {/* Coverage categories */}
       <div className="w-full max-w-7xl">
-        <div className="text-center mb-3">
-          <span className="text-slate-400 text-lg">95 settings across 6 categories — mapped to MITRE ATT&CK mitigations</span>
+        <div className="text-center mb-4">
+          <span className="text-slate-400 text-xl">Coverage areas mapped to MITRE ATT&CK mitigations</span>
         </div>
-        <div className="grid grid-cols-6 gap-4">
+        <div className="flex flex-wrap justify-center gap-3">
           {categories.map((cat) => (
-            <div key={cat.name} className="bg-slate-800/50 border border-slate-600/30 rounded-xl p-4 text-center">
-              <div className={`text-3xl font-bold ${cat.color}`}>{cat.count}</div>
-              <div className="text-xs text-slate-500 uppercase tracking-wide">settings</div>
-              <div className="text-lg text-slate-300 font-medium mt-2">{cat.name}</div>
+            <div key={cat} className="bg-slate-700/50 border border-slate-500/30 rounded-full px-5 py-2">
+              <span className="text-lg text-slate-200">{cat}</span>
             </div>
           ))}
         </div>
