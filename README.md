@@ -4,6 +4,19 @@ Interactive security conference presentation for the "Think Like an Attacker" CP
 
 ## Quick Start
 
+### Windows (PowerShell)
+
+```powershell
+# Install Node.js if needed
+winget install OpenJS.NodeJS.LTS
+
+# Then run
+npm install
+npm run dev
+```
+
+### macOS / Linux
+
 ```bash
 npm install
 npm run dev
