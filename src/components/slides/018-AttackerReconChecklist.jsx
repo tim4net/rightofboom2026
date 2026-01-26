@@ -129,14 +129,14 @@ const ScriptChecksSlide = ({ theme: t }) => {
   return (
     <div className="w-full h-full flex flex-col px-4 py-1">
       {/* Header */}
-      <div className="text-center">
+      <div className="text-center mb-0.5">
         <h2 className={`text-xl font-black ${t.textOnPage}`}>
           PowerShell Checks
         </h2>
       </div>
 
       {/* All Checks */}
-      <div className="flex-1 flex flex-col justify-between py-1">
+      <div className="flex-1 flex flex-col gap-[3px]">
         {checkGroups.map((group, i) => (
           <div key={i} className="flex items-start">
             {/* Layer Label */}
@@ -145,7 +145,7 @@ const ScriptChecksSlide = ({ theme: t }) => {
             </div>
 
             {/* Divider */}
-            <div className="w-px bg-slate-500/50 self-stretch ml-8 mr-1.5 shrink-0" />
+            <div className="w-px bg-slate-500/50 self-stretch ml-6 mr-1.5 shrink-0" />
 
             {/* Pills */}
             <div className="flex flex-wrap gap-1 justify-start flex-1">
