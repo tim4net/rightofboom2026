@@ -74,6 +74,7 @@ const PresentationApp = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [theme, setTheme] = useState('corporate');
   const [showNotes, setShowNotes] = useState(false);
+  const [showBreak, setShowBreak] = useState(false);
   const [timerRunning, setTimerRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [demoMode, setDemoMode] = useState(true);
@@ -125,6 +126,20 @@ const PresentationApp = () => {
       const currentSlideType = slides[currentSlide]?.type;
       const isSelfNavigating = selfNavigatingSlides.includes(currentSlideType);
 
+      // Break overlay: 'b' toggles from anywhere, Escape dismisses
+      if (showBreak) {
+        if (e.key === 'Escape' || e.key === 'b' || e.key === 'B') {
+          setShowBreak(false);
+        }
+        return; // Don't process other keys while break is showing
+      }
+
+      // 'b' key shows break overlay (works from any slide, including demos)
+      if (e.key === 'b' || e.key === 'B') {
+        setShowBreak(true);
+        return;
+      }
+
       // PageDown always advances (used by PDF generation to skip demo internals)
       if (e.key === 'PageDown') {
         nextSlide();
@@ -152,7 +167,7 @@ const PresentationApp = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlide]);
+  }, [currentSlide, showBreak]);
 
   const slide = slides[currentSlide];
   const themeClass = theme === 'terminal' ? 'theme-terminal' : theme === 'dramatic' ? 'theme-dramatic' : '';
@@ -198,9 +213,6 @@ const PresentationApp = () => {
 
       case 'evolution':
         return <EvolutionSlide slide={slide} theme={t} />;
-
-      case 'break':
-        return <BreakSlide theme={t} />;
 
       case 'closing':
         return <ClosingSlide theme={t} />;
@@ -459,6 +471,20 @@ const PresentationApp = () => {
           theme={t}
           onClose={() => setShowNotes(false)}
         />
+      )}
+
+      {/* Break Overlay - triggered by 'b' key from anywhere */}
+      {showBreak && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className={`absolute inset-0 ${t.bg}`} />
+          <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient}`} />
+          <div className="relative z-10 w-full h-full flex items-center justify-center">
+            <BreakSlide theme={t} />
+          </div>
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-slate-500 text-sm">
+            Press <kbd className="px-2 py-1 bg-slate-800 rounded">B</kbd> or <kbd className="px-2 py-1 bg-slate-800 rounded">Esc</kbd> to return
+          </div>
+        </div>
       )}
 
       {/* Progress Bar */}

@@ -383,14 +383,9 @@ export const slides = [
 - "Doesn't this slow things down?" → "Auto-execute tier handles volume. Human tiers handle judgment. You're not slowing down the 90% — you're adding quality to the 10%."` },  // 015
 
   // ============================================
-  // BREAK (15 min)
-  // ============================================
-
-  { type: 'break' },                    // 016
-
-  // ============================================
-  // PART 2.5: ENDPOINT PROTECTION TESTING (new)
+  // PART 2.5: ENDPOINT PROTECTION TESTING
   // "Safely test endpoint detection"
+  // Note: Break slide removed from sequence - press 'B' anytime to show break
   // ============================================
 
   { type: 'safeEndpointTesting', notes: `**Tension-Building Opener** (15 sec)
@@ -419,7 +414,7 @@ export const slides = [
 **Transition** (5 sec)
 "What would an attacker check first?"
 
-⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "60 checks" is the retellable number.` },  // 017
+⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "60 checks" is the retellable number.` },  // 016
 
   { type: 'mirrorDesign', notes: `**The Complete Picture** (10 sec)
 "Here's everything the script checks — 75 individual security controls, organized by attack chain."
@@ -451,7 +446,7 @@ export const slides = [
 "This IS the attacker's recon checklist. Same questions they ask when they land."
 "We just ask them first — and fix the gaps before they find them."
 
-⏱ ~120 seconds | 👁 Let them scan the pills while you talk — the visual density makes the point` },  // 018
+⏱ ~120 seconds | 👁 Let them scan the pills while you talk — the visual density makes the point` },  // 017
 
   { type: 'powershellCode', notes: `**OPTIONAL DEPTH** — Skip if short on time or low technical interest
 
@@ -469,7 +464,7 @@ export const slides = [
 "Every check is auditable. You can read it, fork it, customize it."
 "MIT licensed, no magic, pure PowerShell."
 
-⏱ ~60-90 seconds | 👁 This is proof/credibility — move through quickly unless asked` },  // 019
+⏱ ~60-90 seconds | 👁 This is proof/credibility — move through quickly unless asked` },  // 018
 
   { type: 'endpointSandwich', notes: `**Connect to the Architecture** (10 sec)
 "Remember the guardrail sandwich from earlier? This is how Safe Sweep implements it."
@@ -491,7 +486,7 @@ export const slides = [
 "The AI can hallucinate an explanation — that's fixable. It CAN'T hallucinate a detection."
 "The detections are deterministic. That's your ground truth."
 
-⏱ ~80 seconds | 👁 "PowerShell detects. AI explains. Human acts." is the tagline they should remember` },  // 020
+⏱ ~80 seconds | 👁 "PowerShell detects. AI explains. Human acts." is the tagline they should remember` },  // 019
 
   { type: 'safeSweepReportDemo', notes: `**Show the Real Report** (60-90 sec)
 "This is the actual output from our lab run. Real data, real findings."
@@ -508,17 +503,17 @@ export const slides = [
 **Transition** (10 sec)
 "This is what your clients receive. Now let's validate these gaps are real with Atomic Red Team..."
 
-⏱ ~90 seconds | 👁 Let them read the actual report — it's real data, not mockup` },  // 021
+⏱ ~90 seconds | 👁 Let them read the actual report — it's real data, not mockup` },  // 020
 
   // ============================================
   // PART 3: GOVERNANCE & TRUST (35 min)
   // "How to do this without getting fired"
   // ============================================
 
-  { type: 'governance' },               // 022
-  { type: 'shadowAI' },                 // 023
-  { type: 'aiCreatesLiability' },       // 024
-  { type: 'aiEnablesAttacks' },         // 025
+  { type: 'governance' },               // 021
+  { type: 'shadowAI' },                 // 022
+  { type: 'aiCreatesLiability' },       // 023
+  { type: 'aiEnablesAttacks' },         // 024
 
   { type: 'aiTabletop', notes: `**Transition from Failure Modes** (10 sec)
 "We've talked about how AI can fail. Now let's talk about preparing your team for it."
@@ -543,18 +538,18 @@ export const slides = [
 "Traditional IR assumes reproducibility. LLMs don't comply."
 "You can't re-run the prompt and get the same bad output. Your team needs to practice responding to incidents they can't fully explain."
 
-⏱ ~75 seconds | 👁 "LLMs don't comply" is the memorable punchline` },  // 026
+⏱ ~75 seconds | 👁 "LLMs don't comply" is the memorable punchline` },  // 025
 
   // ============================================
   // PART 4: MONDAY MORNING (30 min)
   // "What you actually do next"
   // ============================================
 
-  { type: 'operationalization' },       // 027
-  { type: 'tail' },                     // 028
-  { type: 'insurance' },                // 029
-  { type: 'sources' },                  // 030
-  { type: 'closing' }                   // 031
+  { type: 'operationalization' },       // 026
+  { type: 'tail' },                     // 027
+  { type: 'insurance' },                // 028
+  { type: 'sources' },                  // 029
+  { type: 'closing' }                   // 030
 ];
 
 // Re-export themes from centralized config

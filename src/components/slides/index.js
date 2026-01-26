@@ -23,23 +23,25 @@ export { default as M365DriftSlide, M365ConfigDriftDemo } from './012-HowItWorks
 export { default as PatternApplicationsSlide } from './013-SamePatternEverywhere';
 export { default as AlertTriageSlide } from './014-AlertTriagePattern';
 export { default as TieredResponseSlide } from './015-TieredResponse';
+
+// BreakSlide: Not in sequence - press 'B' anytime to show break overlay
 export { default as BreakSlide } from './016-BreakSlide';
 
-// Part 2b: Endpoint Protection Testing (017-021)
+// Part 2b: Endpoint Protection Testing (016-020)
 export { default as SafeEndpointTestingSlide } from './017-EndpointPostureCheck';
 export { default as MirrorSlide } from './018-AttackerReconChecklist';
 export { default as PowerShellCodeSlide } from './019-PowerShellCode';
 export { default as EndpointSandwichSlide } from './020-EndpointValidationFlow';
 export { default as SafeSweepReportDemoSlide } from './021-SafeSweepReportDemo';
 
-// Part 3: Governance & Trust (022-026)
+// Part 3: Governance & Trust (021-025)
 export { default as GovernanceSlide } from './022-AIGovernanceQuestion';
 export { default as ShadowAISlide } from './023-ShadowAIGovernance';
 export { default as AICreatesLiabilitySlide } from './024-WhenAICreatesLiability';
 export { default as AIEnablesAttacksSlide } from './025-WhenAIEnablesAttacks';
 export { default as AITabletopSlide } from './026-TabletopReadyForAI';
 
-// Part 4: Monday Morning (027-031)
+// Part 4: Monday Morning (026-030)
 export { default as OperationalizationSlide } from './027-NinetyDayRoadmap';
 export { default as TAILSlide } from './029-TAILMethod';
 export { default as InsuranceSlide } from './030-WhatInsurerWants';
