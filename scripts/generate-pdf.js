@@ -4,9 +4,11 @@ import puppeteer from 'puppeteer';
 import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
 
-const SLIDE_COUNT = 26; // Total slides (0-25)
+// ⚠️  KEEP IN SYNC with src/data/slides.jsx
+// Count slides: grep -c "type:" src/data/slides.jsx
+const SLIDE_COUNT = 31; // Total slides (0-30)
 const SKIP_SLIDES = []; // No slides skipped - mockups shown for demos
-const DEMO_SLIDES = [3]; // Slides with internal navigation - use PageDown to exit
+const DEMO_SLIDES = [4]; // AttackLab (index 4) has internal navigation - use PageDown to exit
 const OUTPUT_FILE = 'presentation.pdf';
 const BASE_URL = process.env.URL || 'http://localhost:2026';
 const URL = `${BASE_URL}?pdf=true`; // PDF mode shows static mockups for demos
@@ -37,13 +39,14 @@ async function generatePDF() {
   await page.waitForSelector('[class*="h-screen"]', { timeout: 10000 });
   await new Promise(r => setTimeout(r, 1000));
 
-  // Hide navigation UI (footer buttons, theme switcher, progress bar)
+  // Hide navigation UI, presenter notes, and overlays
   await page.addStyleTag({
     content: `
       footer { display: none !important; }
       button[title^="Theme"] { display: none !important; }
       .fixed.bottom-3.left-3 { display: none !important; }
       .fixed.bottom-0.left-0.right-0.h-1 { display: none !important; }
+      .presenter-notes { display: none !important; }
     `
   });
 
