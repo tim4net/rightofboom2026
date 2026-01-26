@@ -35,11 +35,21 @@ const SafeSweepReportDemoSlide = ({ theme: t }) => {
         />
       </div>
 
-      {/* Footer note */}
-      <div className="mt-2 text-center">
+      {/* Footer */}
+      <div className="mt-2 flex items-center justify-between">
         <p className="text-lg text-slate-400">
           Real output from lab run: WIN10-ROB, WIN11-ROB, WIN11-FRESH-INS
         </p>
+        <a
+          href="https://app.rewst.io/organizations/5b3f70a7-566b-4f4f-9232-0ac2ec41e4e6/workflows/019be802-43d7-7ed5-894e-440f1149e4dd"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity"
+          title="Open workflow in Rewst"
+        >
+          <span className="text-sm text-slate-400">Open in</span>
+          <img src="/images/rewst-logo.png" alt="Rewst" className="h-6" />
+        </a>
       </div>
     </div>
   );
