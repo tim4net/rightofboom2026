@@ -136,7 +136,7 @@ const ScriptChecksSlide = ({ theme: t }) => {
       </div>
 
       {/* All Checks */}
-      <div className="flex-1 flex flex-col justify-center space-y-1">
+      <div className="flex-1 flex flex-col justify-between py-2">
         {checkGroups.map((group, i) => (
           <div key={i} className="flex items-start">
             {/* Layer Label */}
@@ -145,14 +145,14 @@ const ScriptChecksSlide = ({ theme: t }) => {
             </div>
 
             {/* Divider */}
-            <div className="w-px bg-slate-500/50 self-stretch mx-4 shrink-0" />
+            <div className="w-px bg-slate-500/50 self-stretch ml-12 mr-2 shrink-0" />
 
             {/* Pills */}
             <div className="flex flex-wrap gap-1.5 justify-start flex-1">
               {group.checks.map((check, j) => (
                 <div
                   key={j}
-                  className={`${colors[group.color]} border rounded-full px-2 py-0 text-xs`}
+                  className={`${colors[group.color]} border rounded-full px-2.5 py-0 text-xs`}
                 >
                   {check}
                 </div>

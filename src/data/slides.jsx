@@ -317,7 +317,7 @@ export const slides = [
 "Same four steps every time: Baseline, Compare, Explain, Alert."
 "You're not learning one tool. You're learning a pattern you can apply to anything."
 
-⏱ ~55 seconds | 👁 Drives home the reusability of the architecture` },  // 014
+⏱ ~55 seconds | 👁 Drives home the reusability of the architecture` },  // 013
 
   { type: 'alertTriage', notes: `**The Pattern** (15 sec)
 "We've seen config drift detection. Now let's apply the same pattern to real-time security alerts."
@@ -338,7 +338,7 @@ export const slides = [
 "You could build this in Rewst. Alert trigger, context-gathering workflow, AI synthesis, approval form."
 "Same sandwich, different filling."
 
-⏱ ~80 seconds | 👁 "Facts gathered, AI synthesizes, human decides" is the quotable line` },  // 015
+⏱ ~80 seconds | 👁 "Facts gathered, AI synthesizes, human decides" is the quotable line` },  // 014
 
   { type: 'tieredResponse', notes: `**Transition from Alert Triage** (10 sec)
 "So we have alerts coming in, context gathered, AI synthesizing. But here's the question everyone asks: When does the AI just ACT versus when do I need to approve?"
@@ -380,13 +380,13 @@ export const slides = [
 **Q&A Prep:**
 - "Who decides the thresholds?" → "You do. Start conservative — 95% for auto-execute. Lower it as you build trust in specific detections."
 - "What about after-hours?" → "Great question. Some orgs auto-execute more aggressively off-hours when human response is slow. Others get more conservative. Depends on your risk tolerance."
-- "Doesn't this slow things down?" → "Auto-execute tier handles volume. Human tiers handle judgment. You're not slowing down the 90% — you're adding quality to the 10%."` },  // 016
+- "Doesn't this slow things down?" → "Auto-execute tier handles volume. Human tiers handle judgment. You're not slowing down the 90% — you're adding quality to the 10%."` },  // 015
 
   // ============================================
   // BREAK (15 min)
   // ============================================
 
-  { type: 'break' },                    // 017
+  { type: 'break' },                    // 016
 
   // ============================================
   // PART 2.5: ENDPOINT PROTECTION TESTING (new)
@@ -419,7 +419,7 @@ export const slides = [
 **Transition** (5 sec)
 "What would an attacker check first?"
 
-⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "60 checks" is the retellable number.` },  // 018
+⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "60 checks" is the retellable number.` },  // 017
 
   { type: 'mirrorDesign', notes: `**The Complete Picture** (10 sec)
 "Here's everything the script checks — 75 individual security controls, organized by attack chain."
@@ -451,7 +451,7 @@ export const slides = [
 "This IS the attacker's recon checklist. Same questions they ask when they land."
 "We just ask them first — and fix the gaps before they find them."
 
-⏱ ~120 seconds | 👁 Let them scan the pills while you talk — the visual density makes the point` },  // 019a - The Mirror
+⏱ ~120 seconds | 👁 Let them scan the pills while you talk — the visual density makes the point` },  // 018
 
   { type: 'powershellCode', notes: `**OPTIONAL DEPTH** — Skip if short on time or low technical interest
 
@@ -469,7 +469,7 @@ export const slides = [
 "Every check is auditable. You can read it, fork it, customize it."
 "MIT licensed, no magic, pure PowerShell."
 
-⏱ ~60-90 seconds | 👁 This is proof/credibility — move through quickly unless asked` },  // 019b
+⏱ ~60-90 seconds | 👁 This is proof/credibility — move through quickly unless asked` },  // 019
 
   { type: 'endpointSandwich', notes: `**Connect to the Architecture** (10 sec)
 "Remember the guardrail sandwich from earlier? This is how Safe Sweep implements it."
@@ -508,7 +508,7 @@ export const slides = [
 **Transition** (10 sec)
 "This is what your clients receive. Now let's validate these gaps are real with Atomic Red Team..."
 
-⏱ ~90 seconds | 👁 Let them read the actual report — it's real data, not mockup` },  // 021b
+⏱ ~90 seconds | 👁 Let them read the actual report — it's real data, not mockup` },  // 021
 
   // ============================================
   // PART 3: GOVERNANCE & TRUST (35 min)
@@ -517,17 +517,8 @@ export const slides = [
 
   { type: 'governance' },               // 022
   { type: 'shadowAI' },                 // 023
-  // === FINAL AI FAILURE SLIDES (2-slide sequence) ===
-  { type: 'aiCreatesLiability' },       // 024a: Legal/liability cases
-  { type: 'aiEnablesAttacks' },         // 024b: Security/attack cases
-  // === CANDIDATE SLIDES FOR COMPARISON (remove after selecting) ===
-  { type: 'whenAIGoesWrong' },          // Combined version
-  { type: 'aiLiabilityTrifecta' },      // C1
-  { type: 'attackSurfaceExpansion' },   // C2
-  { type: 'dataTrustBetrayed' },        // C3
-  { type: 'the25MVideoCall' },          // C4
-  { type: 'aiFailureModes' },           // C5
-  // === END CANDIDATES ===
+  { type: 'aiCreatesLiability' },       // 024
+  { type: 'aiEnablesAttacks' },         // 025
 
   { type: 'aiTabletop', notes: `**Transition from Failure Modes** (10 sec)
 "We've talked about how AI can fail. Now let's talk about preparing your team for it."
@@ -552,19 +543,19 @@ export const slides = [
 "Traditional IR assumes reproducibility. LLMs don't comply."
 "You can't re-run the prompt and get the same bad output. Your team needs to practice responding to incidents they can't fully explain."
 
-⏱ ~75 seconds | 👁 "LLMs don't comply" is the memorable punchline` },  // 025
+⏱ ~75 seconds | 👁 "LLMs don't comply" is the memorable punchline` },  // 026
 
   // ============================================
   // PART 4: MONDAY MORNING (30 min)
   // "What you actually do next"
   // ============================================
 
-  { type: 'operationalization' },       // 026
-  { type: 'budget' },                   // 027
-  { type: 'tail' },                     // 030
-  { type: 'insurance' },                // 031
-  { type: 'sources' },                  // 033
-  { type: 'closing' }                   // 034
+  { type: 'operationalization' },       // 027
+  { type: 'budget' },                   // 028
+  { type: 'tail' },                     // 029
+  { type: 'insurance' },                // 030
+  { type: 'sources' },                  // 031
+  { type: 'closing' }                   // 032
 ];
 
 // Re-export themes from centralized config

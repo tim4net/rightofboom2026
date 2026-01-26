@@ -51,14 +51,7 @@ import {
   AITabletopSlide,
   // AI Failure Slides (final 2-slide sequence)
   AICreatesLiabilitySlide,
-  AIEnablesAttacksSlide,
-  // AI Failure Slide Candidates
-  WhenAIGoesWrongSlide,
-  AILiabilityTrifectaSlide,
-  AttackSurfaceExpansionSlide,
-  DataTrustBetrayedSlide,
-  The25MVideoCallSlide,
-  AIFailureModesSlide
+  AIEnablesAttacksSlide
 } from './components/slides';
 
 // Demo components (interactive demos, not slides)
@@ -354,25 +347,6 @@ const PresentationApp = () => {
 
       case 'aiEnablesAttacks':
         return <AIEnablesAttacksSlide theme={t} />;
-
-      // AI Failure Slide Candidates - preview all, pick the best
-      case 'whenAIGoesWrong':
-        return <WhenAIGoesWrongSlide theme={t} />;
-
-      case 'aiLiabilityTrifecta':
-        return <AILiabilityTrifectaSlide theme={t} />;
-
-      case 'attackSurfaceExpansion':
-        return <AttackSurfaceExpansionSlide theme={t} />;
-
-      case 'dataTrustBetrayed':
-        return <DataTrustBetrayedSlide theme={t} />;
-
-      case 'the25MVideoCall':
-        return <The25MVideoCallSlide theme={t} />;
-
-      case 'aiFailureModes':
-        return <AIFailureModesSlide theme={t} />;
 
       case 'shadowAI':
         return <ShadowAISlide theme={t} />;

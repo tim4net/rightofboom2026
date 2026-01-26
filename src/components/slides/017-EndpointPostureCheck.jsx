@@ -32,8 +32,8 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
           Endpoint Posture Check
         </h2>
         <p className="text-xl text-slate-400">
-          13 categories. 60+ checks. Hundreds of endpoints.
-          <span className="text-cyan-400 font-semibold"> How do you validate them all?</span>
+          
+          <span className="text-cyan-400 font-semibold">A ready-to-use automation</span>
         </p>
       </div>
 
