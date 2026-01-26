@@ -19,6 +19,10 @@ import {
 // NOTE: All text content is now self-contained
 // in the individual slide components.
 // This file contains ONLY metadata (slide type & order).
+//
+// ⚠️  WHEN ADDING/REMOVING SLIDES: Update scripts/generate-pdf.js
+//     - SLIDE_COUNT must match total slides
+//     - DEMO_SLIDES must list indices of interactive demos (e.g., attackLab)
 // ============================================
 
 export const slides = [
