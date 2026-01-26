@@ -134,6 +134,20 @@ const SafeSweepHowItWorksSlide = ({ theme: t }) => {
             </div>
           </div>
         </div>
+
+        {/* Rewst workflow link */}
+        <div className="flex justify-center mt-4">
+          <a
+            href="https://app.rewst.io/organizations/5b3f70a7-566b-4f4f-9232-0ac2ec41e4e6/workflows/019be802-43d7-7ed5-894e-440f1149e4dd"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity"
+            title="Open workflow in Rewst"
+          >
+            <span className="text-lg text-slate-400">Open workflow in</span>
+            <img src="/images/rewst-logo.png" alt="Rewst" className="h-7" />
+          </a>
+        </div>
       </div>
     </div>
   );
