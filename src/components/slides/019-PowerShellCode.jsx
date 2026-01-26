@@ -183,25 +183,22 @@ const PowerShellCodeSlide = ({ theme: t }) => {
   const lineNumWidth = String(lineCount).length;
 
   return (
-    <div className="w-full h-full flex flex-col px-8 py-4">
+    <div className="w-full h-full flex flex-col px-6 py-3">
       {/* Compact Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <Terminal className="w-8 h-8 text-amber-400" />
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <Terminal className="w-6 h-6 text-amber-400" />
           <div>
-            <h2 className={`text-4xl font-black ${t.textOnPage}`}>
+            <h2 className={`text-3xl font-black ${t.textOnPage}`}>
               The PowerShell Behind It
             </h2>
-            <p className="text-xl text-slate-400">
-              
-            </p>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-md text-amber-400 font-mono">
+          <div className="text-sm text-amber-400 font-mono">
             /scripts/Invoke-SafeEndpointValidation.ps1
           </div>
-          <div className="text-md text-slate-500">
+          <div className="text-sm text-slate-500">
             {lineCount > 0 ? `${lineCount.toLocaleString()} lines` : ''} • MIT Licensed
           </div>
         </div>
@@ -211,16 +208,16 @@ const PowerShellCodeSlide = ({ theme: t }) => {
       <div className={`flex-1 ${t.cardBg} rounded-xl border border-amber-500/30 overflow-hidden min-h-0`}>
         {loading ? (
           <div className="h-full flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
-            <span className="ml-3 text-xl text-slate-400">Loading script...</span>
+            <Loader2 className="w-6 h-6 text-amber-400 animate-spin" />
+            <span className="ml-2 text-lg text-slate-400">Loading script...</span>
           </div>
         ) : error ? (
           <div className="h-full flex items-center justify-center">
-            <span className="text-xl text-red-400">Failed to load: {error}</span>
+            <span className="text-lg text-red-400">Failed to load: {error}</span>
           </div>
         ) : (
           <div ref={scrollRef} className="h-full overflow-auto">
-            <pre className="font-mono text-sm leading-snug p-3">
+            <pre className="font-mono text-xs leading-snug p-2">
               {highlightedLines.map(({ lineNum, tokens }) => (
                 <div
                   key={lineNum}
@@ -242,7 +239,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
       </div>
 
       {/* Jump Navigation */}
-      <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+      <div className="flex items-center gap-1 mt-1.5 flex-wrap">
         {jumpPoints.map((point) => {
           const colorClasses = {
             emerald: 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border-emerald-500/40',
@@ -260,7 +257,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
             <button
               key={point.label}
               onClick={() => jumpToLine(point.line)}
-              className={`px-2 py-1 rounded-lg text-sm font-medium border transition-colors ${colorClasses[point.color]}`}
+              className={`px-1.5 py-0.5 rounded text-xs font-medium border transition-colors ${colorClasses[point.color]}`}
             >
               {point.label}
             </button>
