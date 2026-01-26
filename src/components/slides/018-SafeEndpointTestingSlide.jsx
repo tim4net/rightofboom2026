@@ -9,7 +9,7 @@ import React from 'react';
 const WorkstationMitigationsSlide = ({ theme: t }) => {
   // 13 script categories grouped for display
   const categories = [
-    'Antivirus & ASR',
+    'Antivirus & Attack Surface Reduction',
     'Credential Protection',
     'Execution Controls',
     'Privilege Escalation',

@@ -422,7 +422,37 @@ export const slides = [
 ⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "60 checks" is the retellable number.` },  // 018
 
   { type: 'attackerChecklist' },  // 019 - Original
-  { type: 'mirrorDesign' },       // 019a - The Mirror
+  { type: 'mirrorDesign', notes: `**The Complete Picture** (10 sec)
+"Here's everything the script checks — 75 individual security controls, organized by attack chain."
+
+**Walk the Attack Chain** (90 sec)
+→ Point to each row, explain attacker motivation
+
+"Execution — First thing attackers check: Can I run code? If PowerShell v2 is enabled, they bypass all modern logging. If AMSI is broken, their scripts run undetected. If macros aren't blocked, one phishing email gets them in."
+
+"Attack Surface Reduction — Microsoft's 15 behavioral rules that block things legitimate software never does. Office spawning PowerShell? Blocked. Scripts downloading executables? Blocked. Attackers check these first because ONE disabled rule is a free path in."
+
+"Evasion — Can they blind you? If tamper protection is off, they disable Defender in seconds. If event logging is broken, there's no forensic trail. They're not just attacking — they're covering tracks."
+
+"Credentials — The crown jewels. If LSASS isn't protected, they dump every password in memory with Mimikatz. If WDigest is enabled, passwords are stored in cleartext. One compromised workstation becomes keys to the kingdom."
+
+"Privilege — Can they become admin? If UAC is misconfigured, they escalate silently. If AlwaysInstallElevated is on, any MSI runs as SYSTEM. Game over."
+
+"Lateral — Can they spread? If SMB signing is off, they relay credentials across the network. If LLMNR is enabled, they poison name resolution and intercept auth. One machine becomes every machine."
+
+"Persistence — Can they survive a reboot? AutoRun, startup folders, scheduled tasks, WMI subscriptions — attackers plant backdoors everywhere. Miss one, they're back tomorrow."
+
+"Antivirus — Does detection actually work? EICAR is the bare minimum — if AV can't catch that, it catches nothing. Exclusions are goldmines — attackers drop payloads in excluded paths."
+
+"Network — Can they talk out? Firewall holes, disabled DNS filtering, open NetBIOS — all ways to exfiltrate or establish C2."
+
+"Data — Final defenses. No BitLocker means stolen laptops leak everything. No LAPS means one local admin password works everywhere. No Sysmon means you're blind to what happened."
+
+**The Insight** (10 sec)
+"This IS the attacker's recon checklist. Same questions they ask when they land."
+"We just ask them first — and fix the gaps before they find them."
+
+⏱ ~120 seconds | 👁 Let them scan the pills while you talk — the visual density makes the point` },  // 019a - The Mirror
   { type: 'interrogationDesign' }, // 019b - The Interrogation
   { type: 'scorecardDesign' },    // 019c - Security Scorecard
   { type: 'countdownDesign' },    // 019d - 60-Second Audit
