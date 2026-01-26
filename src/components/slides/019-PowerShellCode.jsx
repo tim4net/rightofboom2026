@@ -257,7 +257,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
             <button
               key={point.label}
               onClick={() => jumpToLine(point.line)}
-              className={`px-1.5 py-0.5 rounded text-xs font-medium border transition-colors ${colorClasses[point.color]}`}
+              className={`px-1 py-0 rounded text-[18px] font-medium border transition-colors ${colorClasses[point.color]}`}
             >
               {point.label}
             </button>

@@ -145,7 +145,7 @@ const SafeSweepHowItWorksSlide = ({ theme: t }) => {
             title="Open workflow in Rewst"
           >
             <span className="text-lg text-slate-400">Open workflow in</span>
-            <img src="/images/rewst-logo.png" alt="Rewst" className="h-7" />
+            <img src="/images/rewst-logo.png" alt="Rewst" className="h-16" />
           </a>
         </div>
       </div>

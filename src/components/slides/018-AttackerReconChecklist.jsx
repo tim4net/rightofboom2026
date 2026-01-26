@@ -152,7 +152,7 @@ const ScriptChecksSlide = ({ theme: t }) => {
               {group.checks.map((check, j) => (
                 <div
                   key={j}
-                  className={`${colors[group.color]} border rounded-full px-2.5 py-0 text-xs`}
+                  className={`${colors[group.color]} border rounded-full px-2 py-0 text-[16px] font-mono`}
                 >
                   {check}
                 </div>
