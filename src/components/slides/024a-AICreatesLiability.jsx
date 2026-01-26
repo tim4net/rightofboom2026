@@ -60,49 +60,49 @@ const AICreatesLiabilitySlide = ({ theme: t }) => {
 
   return (
     <div className="animate-in fade-in duration-500">
-      <div className="text-center mb-6">
-        <h2 className={`text-5xl md:text-6xl font-black mb-3 ${t.textOnPage}`}>
+      <div className="text-center mb-3">
+        <h2 className={`text-4xl font-black mb-1 ${t.textOnPage}`}>
           When AI Creates Liability
         </h2>
-        <p className={`text-2xl ${t.accentColor} font-medium`}>
+        <p className={`text-lg ${t.accentColor} font-medium`}>
           Real cases, real consequences, real precedents
         </p>
       </div>
 
       <div className="max-w-6xl mx-auto">
         {/* Incident Cards */}
-        <div className="space-y-3 mb-6">
+        <div className="space-y-1.5 mb-3">
           {incidents.map((incident, i) => {
             const colors = colorMap[incident.color];
             const Icon = incident.icon;
             return (
-              <div key={i} className={`${t.cardBg} rounded-xl border ${t.cardBorder} overflow-hidden`}>
-                <div className="grid grid-cols-[180px_1fr_1fr_1fr] items-center">
+              <div key={i} className={`${t.cardBg} rounded-lg border ${t.cardBorder} overflow-hidden`}>
+                <div className="grid grid-cols-[140px_1fr_1fr_1fr] items-center">
                   {/* Incident Name */}
-                  <div className={`${colors.bg} p-4 h-full flex flex-col justify-center border-r ${colors.border}`}>
-                    <Icon className={`w-5 h-5 ${colors.text} mb-2`} />
-                    <div className={`font-black text-xl ${colors.text}`}>{incident.name}</div>
-                    <div className="text-slate-500 text-lg">{incident.date}</div>
+                  <div className={`${colors.bg} p-2 h-full flex flex-col justify-center border-r ${colors.border}`}>
+                    <Icon className={`w-4 h-4 ${colors.text} mb-0.5`} />
+                    <div className={`font-black text-base ${colors.text}`}>{incident.name}</div>
+                    <div className="text-slate-500 text-sm">{incident.date}</div>
                   </div>
 
                   {/* What Happened */}
-                  <div className="p-4">
-                    <div className="text-lg text-slate-500 uppercase tracking-wide mb-1">What Happened</div>
-                    <div className="text-slate-300 text-lg">{incident.what}</div>
+                  <div className="p-2">
+                    <div className="text-xs text-slate-500 uppercase tracking-wide">What Happened</div>
+                    <div className="text-slate-300 text-sm">{incident.what}</div>
                   </div>
 
                   {/* Consequence */}
-                  <div className="p-4">
-                    <div className="text-lg text-slate-500 uppercase tracking-wide mb-1">Consequence</div>
-                    <div className={`${colors.text} text-lg font-bold`}>{incident.consequence}</div>
+                  <div className="p-2">
+                    <div className="text-xs text-slate-500 uppercase tracking-wide">Consequence</div>
+                    <div className={`${colors.text} text-sm font-bold`}>{incident.consequence}</div>
                   </div>
 
                   {/* Fix */}
-                  <div className="p-4">
-                    <div className="text-lg text-slate-500 uppercase tracking-wide mb-1">Guardrail Fix</div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                      <span className="text-emerald-400 text-lg">{incident.fix}</span>
+                  <div className="p-2">
+                    <div className="text-xs text-slate-500 uppercase tracking-wide">Guardrail Fix</div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                      <span className="text-emerald-400 text-sm">{incident.fix}</span>
                     </div>
                   </div>
                 </div>
@@ -112,9 +112,9 @@ const AICreatesLiabilitySlide = ({ theme: t }) => {
         </div>
 
         {/* Legal Precedent Callout */}
-        <div className={`text-center p-4 rounded-xl border-2 border-red-500/50 ${t.cardBg}`}>
-          <Scale className="w-7 h-7 text-red-400 mx-auto mb-2" />
-          <p className="text-xl text-slate-200">
+        <div className={`text-center p-2 rounded-lg border-2 border-red-500/50 ${t.cardBg}`}>
+          <Scale className="w-5 h-5 text-red-400 mx-auto mb-0.5" />
+          <p className="text-base text-slate-200">
             "You <span className="text-red-400 font-bold">cannot disclaim</span> liability for your AI.
             <span className={`${t.accentColor} font-bold`}> Courts have spoken.</span>"
           </p>

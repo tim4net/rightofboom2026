@@ -3,7 +3,7 @@ import { Search, FileText, RefreshCw, Eye, AlertTriangle, CheckCircle } from 'lu
 
 const ShadowAISlide = ({ theme: t }) => {
   const title = "Shadow AI Governance";
-  const subtitle = "Find it, policy it, replace it";
+  const subtitle = "Managing unauthorized AI tools";
 
   const stats = [
     { value: "73.8%", label: "Workplace ChatGPT accounts are non-corporate" },

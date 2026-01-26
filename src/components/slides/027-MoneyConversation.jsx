@@ -76,7 +76,7 @@ const BudgetSlide = ({ theme: t }) => {
             <div>
               <div className="text-3xl font-bold text-slate-200">Headcount Reality</div>
               <div className="text-2xl text-slate-400 mt-2">
-                Don't hire — free existing staff for higher-value work
+                Don't hire. Free existing staff for higher-value work
               </div>
             </div>
           </div>

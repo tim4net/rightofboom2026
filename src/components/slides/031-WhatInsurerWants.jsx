@@ -8,17 +8,17 @@ const InsuranceSlide = ({ theme: t }) => {
   const denialReasons = [
     {
       reason: "Incomplete logs",
-      example: "EDR logs only 30 days, not 90 — denied",
+      example: "EDR logs only 30 days, not 90. Denied.",
       icon: XCircle
     },
     {
       reason: "Can't prove compliance",
-      example: "MFA not enforced + incomplete patch logs — denied",
+      example: "MFA not enforced, incomplete patch logs. Denied.",
       icon: XCircle
     },
     {
       reason: 'AI "black box"',
-      example: "No audit trail for AI-involved breach — disputed",
+      example: "No audit trail for AI-involved breach. Disputed.",
       icon: XCircle
     }
   ];
@@ -100,7 +100,7 @@ const InsuranceSlide = ({ theme: t }) => {
           <div className={`${t.cardBg} p-4 rounded-xl border ${t.cardBorder}`}>
             <div className="text-xl font-bold text-slate-200 mb-2">NAIC AI Model Bulletin</div>
             <div className="text-xl text-slate-400 mb-2">
-              23 states + DC adopted by late 2025
+              24 states adopted as of 2025
             </div>
             <div className={`text-xl ${t.accentColor}`}>
               Regulators can request AI documentation during investigation
@@ -112,7 +112,7 @@ const InsuranceSlide = ({ theme: t }) => {
               "If you can't explain how a model works or prove it's fair and secure,
               <span className="text-amber-400 font-bold"> coverage could be denied.</span>"
             </p>
-            <p className="text-xl text-slate-500 mt-2">— ISACA, 2025</p>
+            <p className="text-xl text-slate-500 mt-2">ISACA, 2025</p>
           </div>
         </div>
       </div>

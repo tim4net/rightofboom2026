@@ -127,32 +127,32 @@ const ScriptChecksSlide = ({ theme: t }) => {
   const totalChecks = checkGroups.reduce((sum, g) => sum + g.checks.length, 0);
 
   return (
-    <div className="w-full h-full flex flex-col px-6 py-4">
+    <div className="w-full h-full flex flex-col px-6 py-2">
       {/* Header */}
-      <div className="text-center mb-3">
-        <h2 className={`text-4xl font-black ${t.textOnPage}`}>
+      <div className="text-center mb-1">
+        <h2 className={`text-2xl font-black ${t.textOnPage}`}>
           PowerShell Checks
         </h2>
       </div>
 
       {/* All Checks */}
-      <div className="flex-1 flex flex-col justify-center space-y-8">
+      <div className="flex-1 flex flex-col justify-center space-y-1">
         {checkGroups.map((group, i) => (
           <div key={i} className="flex items-start">
             {/* Layer Label */}
-            <div className={`w-36 text-right text-base font-semibold ${labelColors[group.color]} pt-1 shrink-0`}>
+            <div className={`w-28 text-right text-sm font-semibold ${labelColors[group.color]} pt-0.5 shrink-0`}>
               {group.layer}
             </div>
 
             {/* Divider */}
-            <div className="w-px bg-slate-500/50 self-stretch mx-8 shrink-0" />
+            <div className="w-px bg-slate-500/50 self-stretch mx-4 shrink-0" />
 
             {/* Pills */}
-            <div className="flex flex-wrap gap-2.5 justify-start flex-1">
+            <div className="flex flex-wrap gap-1.5 justify-start flex-1">
               {group.checks.map((check, j) => (
                 <div
                   key={j}
-                  className={`${colors[group.color]} border rounded-full px-3 py-0.5 text-sm`}
+                  className={`${colors[group.color]} border rounded-full px-2 py-0 text-xs`}
                 >
                   {check}
                 </div>

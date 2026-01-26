@@ -21,10 +21,7 @@ import {
   OperationalizationSlide,
   LiveDemoSlide,
   IntroSlide,
-  MultiTenantSlide,
   BudgetSlide,
-  LearningPathSlide,
-  FailureModesSlide,
   ShadowAISlide,
   TAILSlide,
   InsuranceSlide,
@@ -43,14 +40,12 @@ import {
   PatternApplicationsSlide,
   AlertTriageSlide,
   TieredResponseSlide,
-  TakeawaysSlide,
   // NEW: Endpoint Protection Testing Section
   SafeEndpointTestingSlide,
   PowerShellCodeSlide,
   // Design variants for slide 019
   MirrorSlide,
   EndpointSandwichSlide,
-  SafeSweepResultsSlide,
   SafeSweepReportDemoSlide,
   // NEW: AI Tabletop Exercises
   AITabletopSlide,
@@ -233,8 +228,6 @@ const PresentationApp = () => {
       case 'liveDemo':
         return <LiveDemoSlide slide={slide} theme={t} />;
 
-      case 'takeaways':
-        return <TakeawaysSlide theme={t} />;
 
       // Demo components
       case 'aiRecon':
@@ -333,13 +326,6 @@ const PresentationApp = () => {
           </div>
         );
 
-      case 'attackPathValidator':
-        return (
-          <div className="animate-in fade-in duration-500 w-full h-full">
-            <AttackPathValidatorDemo theme={t} />
-          </div>
-        );
-
       case 'evolutionRace':
         return (
           <div className="animate-in fade-in duration-500">
@@ -359,17 +345,8 @@ const PresentationApp = () => {
         );
 
       // New slide types for 2026 content
-      case 'multiTenant':
-        return <MultiTenantSlide theme={t} />;
-
       case 'budget':
         return <BudgetSlide theme={t} />;
-
-      case 'learningPath':
-        return <LearningPathSlide theme={t} />;
-
-      case 'failureModes':
-        return <FailureModesSlide theme={t} />;
 
       // AI Failure Slides (final 2-slide sequence)
       case 'aiCreatesLiability':
@@ -428,9 +405,6 @@ const PresentationApp = () => {
 
       case 'endpointSandwich':
         return <EndpointSandwichSlide theme={t} />;
-
-      case 'safeSweepResults':
-        return <SafeSweepResultsSlide theme={t} />;
 
       case 'safeSweepReportDemo':
         return <SafeSweepReportDemoSlide theme={t} />;

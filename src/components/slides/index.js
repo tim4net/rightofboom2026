@@ -32,13 +32,11 @@ export { default as PowerShellCodeSlide } from './018b-PowerShellCodeSlide';
 // Design variants for slide 019
 export { default as MirrorSlide } from './019a-MirrorSlide';
 export { default as EndpointSandwichSlide } from './020-EndpointValidationSandwich';
-export { default as SafeSweepResultsSlide } from './021-SafeSweepResults';
 export { default as SafeSweepReportDemoSlide } from './021b-SafeSweepReportDemo';
 
 // Part 3: Governance & Trust
 export { default as GovernanceSlide } from './022-AIGovernanceQuestion';
 export { default as ShadowAISlide } from './023-ShadowAIGovernance';
-export { default as FailureModesSlide } from './024-WhenAutomationGoesWrong';
 // Final AI failure slides (2-slide sequence)
 export { default as AICreatesLiabilitySlide } from './024a-AICreatesLiability';
 export { default as AIEnablesAttacksSlide } from './024b-AIEnablesAttacks';
@@ -54,11 +52,8 @@ export { default as AITabletopSlide } from './025-TabletopReadyForAI';
 // Part 4: Monday Morning
 export { default as OperationalizationSlide } from './026-NinetyDayRoadmap';
 export { default as BudgetSlide } from './027-MoneyConversation';
-export { default as LearningPathSlide } from './028-AILearningPath';
-export { default as MultiTenantSlide } from './029-MultiTenantArchitecture';
 export { default as TAILSlide } from './030-TAILMethod';
 export { default as InsuranceSlide } from './031-WhatInsurerWants';
-export { TakeawaysSlide } from './032-AttendeeTakeaways';
 export { default as SourcesSlide } from './033-SourcesReferences';
 export { default as ClosingSlide } from './034-QuestionsDiscussion';
 

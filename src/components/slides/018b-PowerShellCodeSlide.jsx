@@ -198,10 +198,10 @@ const PowerShellCodeSlide = ({ theme: t }) => {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-lg text-amber-400 font-mono">
+          <div className="text-md text-amber-400 font-mono">
             /scripts/Invoke-SafeEndpointValidation.ps1
           </div>
-          <div className="text-lg text-slate-500">
+          <div className="text-md text-slate-500">
             {lineCount > 0 ? `${lineCount.toLocaleString()} lines` : ''} • MIT Licensed
           </div>
         </div>
@@ -220,7 +220,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
           </div>
         ) : (
           <div ref={scrollRef} className="h-full overflow-auto">
-            <pre className="font-mono text-base leading-relaxed p-4">
+            <pre className="font-mono text-sm leading-snug p-3">
               {highlightedLines.map(({ lineNum, tokens }) => (
                 <div
                   key={lineNum}
@@ -242,7 +242,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
       </div>
 
       {/* Jump Navigation */}
-      <div className="flex items-center gap-2 mt-3 flex-wrap">
+      <div className="flex items-center gap-1.5 mt-2 flex-wrap">
         {jumpPoints.map((point) => {
           const colorClasses = {
             emerald: 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border-emerald-500/40',
@@ -260,7 +260,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
             <button
               key={point.label}
               onClick={() => jumpToLine(point.line)}
-              className={`px-3 py-1.5 rounded-lg text-base font-medium border transition-colors ${colorClasses[point.color]}`}
+              className={`px-2 py-1 rounded-lg text-sm font-medium border transition-colors ${colorClasses[point.color]}`}
             >
               {point.label}
             </button>
