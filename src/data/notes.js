@@ -145,40 +145,42 @@ export const notes = {
 - Route tickets: ConnectWise Sidekick, SuperOps.ai, Freshservice
 - Auto-patch: Datto RMM, NinjaOne, Intune`,
 
-  sandwich: `**Quick callback** (5 sec)
-"This is the architecture that makes everything we just discussed manageable."
+  sandwich: `**The Problem We Just Created** (10 sec)
+"We just showed you AI that takes real actions. Fully automatic. No human approval."
+→ Pause, let that sink in
+"So how do we let AI act fast enough to matter... without letting it break things?"
+"This is the architecture."
 
-**The intern analogy** (20 sec)
-"Think of it like a smart new employee. You wouldn't let them execute any action they think of."
-"Clear boundaries on what they CAN request — input validation."
-"Freedom to think and reason — the AI layer."
-"Approval gates before anything happens — output validation."
-→ Land it: "You don't train the intern to approve their own expense reports. You have a policy."
+**Why It's Called a Sandwich** (15 sec)
+→ Point to the visual: amber-red-amber stack
+"Deterministic on the outside. Probabilistic in the middle."
+"The bread is code you wrote — same input, same output, every time. Auditable. Predictable."
+"The filling is AI — pattern matching, judgment calls, probabilistic reasoning."
+"You get the flexibility of AI wrapped in the accountability of code."
 
-**Walk the layers** (25 sec)
-→ Point to each layer
-"INPUT: Who is this request from? Is it well-formed? Is this something we even handle?"
-"AI LAYER: Pattern recognition, contextual judgment, figuring out intent."
-"OUTPUT: Is this action approved? Does it need human sign-off? Log everything."
+**Walk the Layers** (25 sec)
+→ Point to INPUT
+"Input guards: Is this request from an authorized source? Is it well-formed? Does it match the schema we expect?"
+→ Point to AI REASONING
+"AI layer: Analyze the situation. What's the intent? What action fits? How confident are we?"
+→ Point to OUTPUT
+"Output guards: Is this action on our allowlist? Does the confidence clear our threshold? Does a human need to approve?"
 
-**The Tuesday afternoon insight** (15 sec)
+**The Key Insight** (15 sec)
 "Here's what most people miss: the guardrails aren't just for attackers."
-"They're for Tuesday afternoon when the AI misinterprets a legitimate request."
-"Hallucinations only matter if they escape the sandwich — output validation stops them regardless of cause."
+"They're for Tuesday afternoon when the AI misinterprets a legitimate ticket."
+"Hallucinations only matter if they escape the sandwich. Output validation stops bad actions regardless of cause."
 
-**Why output validation is the real hero** (10 sec)
-"Remember the ticket injection from the last slide? Input validation said 'valid ticket.' The payload was in the content."
-"Output validation catches it anyway — 'add to admins' isn't on the allowlist. Doesn't matter HOW the AI got tricked."
+**Why Output Guards Are the Hero** (10 sec)
+"Prompt injection tricks the AI? Doesn't matter — the action still has to pass the allowlist."
+"AI hallucinates a remediation step? Doesn't matter — it's not on the approved actions list."
+"The sandwich catches failures you didn't anticipate."
 
-**OWASP mapping** (5 sec)
-"This maps to OWASP Agentic AI Top 10: ASI01 Goal Hijack, ASI02 Tool Misuse, ASI06 Memory Poisoning."
+⏱ ~75 seconds | 👁 "Tuesday afternoon" reframes this as operational resilience, not just security — resonates with ops people
 
-**Common mistakes** (optional — use if audience seems technical)
-- "Validation at build time, tools added later"
-- "Check the action but not the arguments"
-- "Thresholds so high human gates never fire"
-
-⏱ ~80 seconds | 👁 "Tuesday afternoon" reframes security as operational resilience — lands well with ops folks`,
+**Q&A Reference:**
+- Maps to OWASP Agentic AI Top 10: ASI01 Goal Hijack, ASI02 Tool Misuse, ASI06 Memory Poisoning
+- Common mistakes: validation at build time but tools added later; checking action but not arguments; thresholds so high human gates never fire`,
 
   sandwichExample: `**Transition** (5 sec)
 "That's the architecture. Now let's see it work — all three layers, two different outcomes."
