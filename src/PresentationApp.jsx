@@ -48,6 +48,12 @@ import {
   SafeEndpointTestingSlide,
   PowerShellCodeSlide,
   AttackerChecklistSlide,
+  // Design variants for slide 019
+  MirrorSlide,
+  InterrogationSlide,
+  ScorecardSlide,
+  CountdownSlide,
+  PlaybookTheftSlide,
   EndpointSandwichSlide,
   SafeSweepResultsSlide,
   SafeSweepReportDemoSlide,
@@ -387,6 +393,22 @@ const PresentationApp = () => {
 
       case 'attackerChecklist':
         return <AttackerChecklistSlide theme={t} />;
+
+      // Design variants for slide 019
+      case 'mirrorDesign':
+        return <MirrorSlide theme={t} />;
+
+      case 'interrogationDesign':
+        return <InterrogationSlide theme={t} />;
+
+      case 'scorecardDesign':
+        return <ScorecardSlide theme={t} />;
+
+      case 'countdownDesign':
+        return <CountdownSlide theme={t} />;
+
+      case 'playbookTheftDesign':
+        return <PlaybookTheftSlide theme={t} />;
 
       case 'endpointSandwich':
         return <EndpointSandwichSlide theme={t} />;

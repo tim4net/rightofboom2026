@@ -11,7 +11,7 @@ import {
  * Now shows how Safe Sweep implements the guardrail sandwich architecture from slide 008.
  *
  * 3-layer horizontal stack matching the visual language of slide 008:
- * INPUT: PowerShell → 23 checks → JSON
+ * INPUT: PowerShell → 60+ checks → JSON
  * AI: Claude/GPT → correlate, prioritize → graded report
  * OUTPUT: Human → review, approve → action
  *
@@ -54,7 +54,7 @@ const GuardrailSandwichInActionSlide = ({ theme: t }) => {
               </div>
             </div>
             <div className="text-right">
-              <div className="text-xl text-slate-500">23 checks → JSON output</div>
+              <div className="text-xl text-slate-500">60+ checks → JSON output</div>
               <div className="text-xl text-amber-400 font-semibold">Every endpoint, every time</div>
             </div>
           </div>

@@ -30,6 +30,12 @@ export { default as BreakSlide } from './017-BreakSlide';
 export { default as SafeEndpointTestingSlide } from './018-SafeEndpointTestingSlide';
 export { default as PowerShellCodeSlide } from './018b-PowerShellCodeSlide';
 export { default as AttackerChecklistSlide } from './019-WhatAttackersCheckFirst';
+// Design variants for slide 019
+export { default as MirrorSlide } from './019a-MirrorSlide';
+export { default as InterrogationSlide } from './019b-InterrogationSlide';
+export { default as ScorecardSlide } from './019c-ScorecardSlide';
+export { default as CountdownSlide } from './019d-CountdownSlide';
+export { default as PlaybookTheftSlide } from './019e-PlaybookTheftSlide';
 export { default as EndpointSandwichSlide } from './020-EndpointValidationSandwich';
 export { default as SafeSweepResultsSlide } from './021-SafeSweepResults';
 export { default as SafeSweepReportDemoSlide } from './021b-SafeSweepReportDemo';

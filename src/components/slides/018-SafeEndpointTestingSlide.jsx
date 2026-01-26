@@ -7,16 +7,20 @@ import React from 'react';
  * that MITRE identifies as a mitigation against attack techniques.
  */
 const WorkstationMitigationsSlide = ({ theme: t }) => {
+  // 13 script categories grouped for display
   const categories = [
+    'Antivirus & ASR',
     'Credential Protection',
     'Execution Controls',
     'Privilege Escalation',
     'Lateral Movement',
     'Defense Evasion',
-    'Persistence Prevention',
-    'Antivirus & ASR',
-    'Network Security',
-    'Logging & Monitoring',
+    'Persistence',
+    'Network & Firewall',
+    'Encryption',
+    'Local Security',
+    'Remote Access',
+    'Logging & Visibility',
   ];
 
   return (
@@ -27,7 +31,7 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
           Endpoint Posture Check
         </h2>
         <p className="text-2xl text-slate-400">
-          9 categories. 66 settings. Hundreds of endpoints.
+          12 categories. 60+ checks. Hundreds of endpoints.
           <span className="text-cyan-400 font-semibold"> How do you validate them all?</span>
         </p>
       </div>
@@ -98,9 +102,9 @@ const WorkstationMitigationsSlide = ({ theme: t }) => {
           ))}
         </div>
         <div className="text-center">
-          <span className="text-2xl text-emerald-400 font-semibold">66 MITRE-mapped settings validated per endpoint</span>
+          <span className="text-2xl text-emerald-400 font-semibold">60+ MITRE-mapped checks validated per endpoint</span>
           <span className="text-slate-500 mx-3">·</span>
-          <span className="text-xl text-slate-400">Let's look at the script →</span>
+          <span className="text-xl text-slate-400">What would an attacker check first? →</span>
         </div>
       </div>
     </div>

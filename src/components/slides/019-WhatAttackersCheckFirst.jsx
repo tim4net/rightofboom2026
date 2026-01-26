@@ -1,104 +1,137 @@
 import React from 'react';
 import {
-  Eye, Key, Network, Lock,
-  Terminal, Clock
+  Eye, Key, Network, Zap,
+  Terminal, ArrowRight, CheckCircle2
 } from 'lucide-react';
 
 /**
- * The 23 PowerShell Checks Slide
+ * What Attackers Check First
  *
- * RESTRUCTURED: Previously "What Attackers Check First" (4 attack phases).
- * Now organized by the same 4 attacker goals but with the FULL 23 checks shown.
+ * STAR MOMENT: Visual showing attacker recon = our validation checks
+ * "Same checklist. We just run it first."
  *
- * 4-column grid showing exactly what PowerShell validates:
- * Stay Hidden | Steal Creds | Spread | Hold Hostage
- *
- * Key message: "23 checks. 60 seconds. Zero AI guessing."
+ * Clean design: Colored banner headers + simple bullet lists
  */
-const PowerShellChecksSlide = ({ theme: t }) => {
+const AttackerChecklistSlide = ({ theme: t }) => {
   const checkCategories = [
     {
-      goal: "Stay Hidden",
+      goal: "Evade Detection",
+      attackerThinks: "Can I hide?",
       icon: Eye,
       color: "red",
       checks: [
-        "Real-time AV status",
-        "Defender exclusions",
-        "ASR rules enabled",
-        "Script block logging",
-        "PowerShell logging",
-        "Audit policies"
+        "Defender real-time",
+        "Tamper protection",
+        "ASR rules",
+        "AV exclusions",
+        "Event logging",
+        "LOLBIN controls",
       ]
     },
     {
-      goal: "Steal Creds",
+      goal: "Steal Credentials",
+      attackerThinks: "Can I harvest?",
       icon: Key,
-      color: "red",
+      color: "amber",
       checks: [
-        "LSASS protection",
         "Credential Guard",
+        "LSASS protection",
         "WDigest disabled",
-        "Cached logon limit",
-        "DPAPI settings"
+        "LM hash storage",
+        "Cached logons",
+        "Remote SAM",
       ]
     },
     {
-      goal: "Spread",
+      goal: "Move Laterally",
+      attackerThinks: "Can I spread?",
       icon: Network,
-      color: "amber",
+      color: "purple",
       checks: [
-        "LLMNR disabled",
-        "NetBIOS disabled",
         "SMB signing",
-        "Admin shares",
-        "RDP security",
-        "Firewall status"
+        "SMBv1 disabled",
+        "RDP NLA required",
+        "LLMNR/NetBIOS",
+        "WinRM restricted",
+        "Token filtering",
       ]
     },
     {
-      goal: "Hold Hostage",
-      icon: Lock,
-      color: "amber",
+      goal: "Execute & Persist",
+      attackerThinks: "Can I stay?",
+      icon: Zap,
+      color: "cyan",
       checks: [
-        "BitLocker status",
-        "Backup config",
-        "VSS protection",
-        "Recovery settings",
-        "Secure Boot",
-        "UAC level"
+        "PowerShell v2",
+        "AMSI providers",
+        "UAC enforced",
+        "Office macros",
+        "AutoRun disabled",
+        "Script logging",
       ]
     }
   ];
 
   const getColorClasses = (color) => {
-    if (color === 'red') {
-      return {
+    const colors = {
+      red: {
         text: 'text-red-400',
-        bg: 'bg-red-500/15',
-        border: 'border-red-500/40',
-        bullet: 'bg-red-500'
-      };
-    }
-    return {
-      text: 'text-amber-400',
-      bg: 'bg-amber-500/15',
-      border: 'border-amber-500/40',
-      bullet: 'bg-amber-500'
+        bg: 'bg-red-500/20',
+        bgStrong: 'bg-red-500/30',
+        border: 'border-red-500/50',
+        bullet: 'bg-red-400',
+      },
+      amber: {
+        text: 'text-amber-400',
+        bg: 'bg-amber-500/20',
+        bgStrong: 'bg-amber-500/30',
+        border: 'border-amber-500/50',
+        bullet: 'bg-amber-400',
+      },
+      purple: {
+        text: 'text-purple-400',
+        bg: 'bg-purple-500/20',
+        bgStrong: 'bg-purple-500/30',
+        border: 'border-purple-500/50',
+        bullet: 'bg-purple-400',
+      },
+      cyan: {
+        text: 'text-cyan-400',
+        bg: 'bg-cyan-500/20',
+        bgStrong: 'bg-cyan-500/30',
+        border: 'border-cyan-500/50',
+        bullet: 'bg-cyan-400',
+      }
     };
+    return colors[color] || colors.red;
   };
 
   return (
-    <div className="w-full h-full flex flex-col px-16 py-8">
+    <div className="w-full h-full flex flex-col px-12 py-6">
       {/* Header */}
-      <div className="text-center mb-6">
-        <div className="flex items-center justify-center gap-4 mb-3">
-          <Terminal className="w-10 h-10 text-amber-400" />
-          <h2 className={`text-5xl font-black ${t.textOnPage}`}>
-            What Attackers Check First
-          </h2>
+      <div className="text-center mb-4">
+        <h2 className={`text-5xl font-black ${t.textOnPage}`}>
+          What Attackers Check First
+        </h2>
+
+        {/* Equation visual */}
+        <div className="flex items-center justify-center gap-4 mt-3">
+          <div className="flex items-center gap-2 bg-red-500/20 border border-red-500/40 rounded-lg px-4 py-2">
+            <Terminal className="w-5 h-5 text-red-400" />
+            <span className="text-xl text-red-400 font-mono">attacker_recon.ps1</span>
+          </div>
+          <div className="flex items-center gap-2 text-slate-500">
+            <ArrowRight className="w-6 h-6" />
+            <span className="text-2xl font-bold">=</span>
+            <ArrowRight className="w-6 h-6 rotate-180" />
+          </div>
+          <div className="flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/40 rounded-lg px-4 py-2">
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+            <span className="text-xl text-emerald-400 font-mono">SafeEndpointValidation.ps1</span>
+          </div>
         </div>
-        <p className={`text-3xl ${t.accentColor} font-medium`}>
-          23 checks. 60 seconds. We check faster.
+        <p className={`text-2xl ${t.accentColor} font-semibold mt-2`}>
+          Same checklist. We just run it first.
         </p>
       </div>
 
@@ -109,63 +142,60 @@ const PowerShellChecksSlide = ({ theme: t }) => {
           const IconComponent = cat.icon;
 
           return (
-            <div
-              key={i}
-              className={`${t.cardBg} rounded-xl border-2 ${colors.border} p-4 flex flex-col`}
-            >
-              {/* Category Header */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`${colors.bg} p-2 rounded-lg`}>
-                  <IconComponent className={`w-7 h-7 ${colors.text}`} />
+            <div key={i} className="flex flex-col">
+              {/* Colored Banner Header */}
+              <div className={`${colors.bg} border ${colors.border} rounded-t-xl px-4 py-3`}>
+                <div className="flex items-center gap-3">
+                  <div className={`${colors.bgStrong} p-2 rounded-lg`}>
+                    <IconComponent className={`w-6 h-6 ${colors.text}`} />
+                  </div>
+                  <div>
+                    <h3 className={`text-xl font-bold ${colors.text}`}>{cat.goal}</h3>
+                    <p className="text-lg text-slate-500 italic">"{cat.attackerThinks}"</p>
+                  </div>
                 </div>
-                <h3 className={`text-2xl font-bold ${colors.text}`}>
-                  {cat.goal}
-                </h3>
               </div>
 
-              {/* Checks List */}
-              <div className="space-y-2 flex-1">
-                {cat.checks.map((check, j) => (
-                  <div key={j} className="flex items-center gap-2">
-                    <div className={`w-2 h-2 ${colors.bullet} rounded-full flex-shrink-0`} />
-                    <span className="text-xl text-slate-300">{check}</span>
-                  </div>
-                ))}
+              {/* Check Items - simple bullets */}
+              <div className={`flex-1 ${t.cardBg} border-x border-b ${colors.border} rounded-b-xl p-4`}>
+                <div className="space-y-3">
+                  {cat.checks.map((check, j) => (
+                    <div key={j} className="flex items-center gap-3">
+                      <div className={`w-2 h-2 ${colors.bullet} rounded-full flex-shrink-0`} />
+                      <span className="text-xl text-slate-300">{check}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Count Badge */}
-      <div className="flex justify-center mt-4 mb-2">
-        <div className={`${t.cardBg} px-6 py-3 rounded-xl border border-emerald-500/30 flex items-center gap-4`}>
+      {/* Footer */}
+      <div className="mt-4 flex items-center justify-between max-w-7xl mx-auto w-full">
+        <div className={`${t.cardBg} px-6 py-2 rounded-xl border border-emerald-500/30 flex items-center gap-6`}>
           <div className="flex items-center gap-2">
-            <Clock className="w-6 h-6 text-emerald-400" />
-            <span className="text-2xl text-emerald-400 font-bold">60 seconds</span>
+            <span className="text-2xl text-emerald-400 font-bold">60+</span>
+            <span className="text-lg text-slate-400">checks</span>
           </div>
-          <span className="text-slate-600">|</span>
-          <span className="text-2xl text-slate-300">
-            <span className="text-emerald-400 font-bold">23</span> security checks
-          </span>
-          <span className="text-slate-600">|</span>
-          <span className="text-2xl text-slate-300">
-            Pure <span className="text-amber-400 font-bold">PowerShell</span>
-          </span>
+          <div className="w-px h-6 bg-slate-600" />
+          <div className="flex items-center gap-2">
+            <span className="text-2xl text-amber-400 font-bold">12</span>
+            <span className="text-lg text-slate-400">categories</span>
+          </div>
+          <div className="w-px h-6 bg-slate-600" />
+          <div className="flex items-center gap-2">
+            <span className="text-2xl text-cyan-400 font-bold">60s</span>
+            <span className="text-lg text-slate-400">per endpoint</span>
+          </div>
         </div>
-      </div>
-
-      {/* Transition Hook */}
-      <div className="text-center mt-2">
-        <p className="text-2xl text-slate-400">
-          Raw data isn't actionable...
-        </p>
-        <p className="text-3xl text-amber-400 font-semibold">
-          Here's how we turn 23 checks into a graded report →
+        <p className="text-xl text-slate-400">
+          Raw JSON isn't actionable → AI turns it into a graded report
         </p>
       </div>
     </div>
   );
 };
 
-export default PowerShellChecksSlide;
+export default AttackerChecklistSlide;

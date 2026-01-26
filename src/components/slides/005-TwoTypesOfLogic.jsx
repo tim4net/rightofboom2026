@@ -10,7 +10,7 @@ const AIVocabSlide = ({ theme: t }) => {
     <div className="w-full h-full flex flex-col px-20 py-12">
       {/* Header - more breathing room */}
       <div className="mb-32">
-        <h2 className={`text-7xl font-black ${t.textOnPage}`}>Two Types of Logic</h2>
+        <h2 className={`text-7xl font-black ${t.textOnPage}`}>Logic vs Reasoning</h2>
       </div>
 
   
@@ -26,7 +26,7 @@ const AIVocabSlide = ({ theme: t }) => {
 
           {/* Code example - stronger visual treatment */}
           <div className="bg-slate-800 rounded-2xl p-8 border-l-8 border-amber-500">
-            <div className="text-2xl text-slate-200 mb-4">Traditional code. Firewall rules. If-then logic.</div>
+            <div className="text-2xl text-slate-200 mb-4">Traditional code // Firewall rules // If-then logic.</div>
             <code className="text-2xl text-amber-300 font-mono block">
               if (IP in blocklist) → block
             </code>
@@ -35,7 +35,7 @@ const AIVocabSlide = ({ theme: t }) => {
           {/* Outcome - better label contrast */}
           <div className="mt-auto pt-8">
             <div className="text-2xl text-slate-400 uppercase tracking-widest mb-3 font-semibold">You get</div>
-            <div className="text-3xl text-white font-medium">Predictability. Auditability. Compliance.</div>
+            <div className="text-3xl text-white font-medium">Predictability, auditability, and compliance.</div>
           </div>
         </div>
 
@@ -48,7 +48,7 @@ const AIVocabSlide = ({ theme: t }) => {
 
           {/* Code example - stronger visual treatment */}
           <div className="bg-slate-800 rounded-2xl p-8 border-l-8 border-purple-500">
-            <div className="text-2xl text-slate-200 mb-4">Machine learning. Statistical inference. Patterns.</div>
+            <div className="text-2xl text-slate-200 mb-4">Machine learning // Statistical inference // Patterns.</div>
             <code className="text-2xl text-purple-300 font-mono block">
               phishing_score: 0.94
             </code>
@@ -57,7 +57,7 @@ const AIVocabSlide = ({ theme: t }) => {
           {/* Outcome - better label contrast */}
           <div className="mt-auto pt-8">
             <div className="text-2xl text-slate-400 uppercase tracking-widest mb-3 font-semibold">You get</div>
-            <div className="text-3xl text-white font-medium">Flexibility. Novel threat detection. Scale.</div>
+            <div className="text-3xl text-white font-medium">Flexibility, novel threat detection, and scale.</div>
           </div>
         </div>
 

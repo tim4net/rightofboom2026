@@ -193,7 +193,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
               The PowerShell Behind It
             </h2>
             <p className="text-xl text-slate-400">
-              Real code. No magic. 100% auditable.
+              
             </p>
           </div>
         </div>
@@ -243,7 +243,6 @@ const PowerShellCodeSlide = ({ theme: t }) => {
 
       {/* Jump Navigation */}
       <div className="flex items-center gap-2 mt-3 flex-wrap">
-        <span className="text-lg text-slate-500 mr-2">Jump to:</span>
         {jumpPoints.map((point) => {
           const colorClasses = {
             emerald: 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border-emerald-500/40',
