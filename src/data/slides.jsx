@@ -478,7 +478,7 @@ export const slides = [
 "OUTPUT: Human reviews the graded report. Approves remediation. Takes action."
 
 **The Trust Callout** (15 sec)
-→ Point to the green box at the bottom
+→ Point to the warning inside the AI layer
 "This is the key insight: No AI touches the endpoint."
 "PowerShell detects. AI explains. Human acts."
 

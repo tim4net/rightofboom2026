@@ -52,7 +52,7 @@ const SafeSweepHowItWorksSlide = ({ theme: t }) => {
                 <div className="flex items-center gap-6">
                   <Database className="w-8 h-8 text-amber-400 flex-shrink-0" />
                   <div className="text-2xl font-bold text-amber-400">COLLECT</div>
-                  <div className="text-xl text-slate-400">PowerShell runs 65+ checks</div>
+                  <div className="text-xl text-slate-400">PowerShell runs 60+ checks</div>
                   <div className="text-xl text-amber-300 ml-auto font-mono">→ JSON output</div>
                 </div>
               </div>
