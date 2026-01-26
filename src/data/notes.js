@@ -113,10 +113,11 @@ export const notes = {
 "You ask a question. The AI decides what tool to call. The tool executes. Real change happens in your environment."
 "Notice where the AI is in this chain — it's making decisions. What tool to call. What arguments to pass. It can be wrong about both."
 
-**MSP Examples** (15 sec)
+**Fully Automatic Today** (20 sec)
 → Point to the tool grid
-"These are tools you already have in your stack. Disable accounts in Entra. Create tickets in ConnectWise. Isolate endpoints via Defender. Delete phishing emails."
-"When AI has access to these tools, it's not just giving you advice — it's executing."
+"These aren't hypotheticals — this is shipping in products today."
+"Alert triage. Malware quarantine. Phishing blocks. Risky sign-in lockouts. Endpoint isolation. Token revocation. Ticket routing. Auto-patching."
+"All of this runs without a human clicking approve."
 
 **The Threat Model Shift** (20 sec)
 → Tap the red warning box
@@ -132,7 +133,17 @@ export const notes = {
 **Bridge to Guardrails** (5 sec)
 "This is why we need guardrails. That's next."
 
-⏱ ~80 seconds | 👁 The threat model shift is the 'aha moment' — pause after "prompt EXECUTION"`,
+⏱ ~80 seconds | 👁 The threat model shift is the 'aha moment' — pause after "prompt EXECUTION"
+
+**Q&A Reference — Vendor Examples:**
+- Triage alerts: MS Defender, Stellar Cyber, Dropzone AI
+- Quarantine malware: CrowdStrike Falcon, SentinelOne, MS Defender
+- Block phishing: Abnormal Security, Proofpoint, MS Defender for Office 365
+- Lock risky sign-ins: MS Entra Identity Protection, Okta
+- Isolate endpoints: CrowdStrike, SentinelOne, MS Defender for Endpoint
+- Revoke app tokens: MS Defender for Cloud Apps, Netskope
+- Route tickets: ConnectWise Sidekick, SuperOps.ai, Freshservice
+- Auto-patch: Datto RMM, NinjaOne, Intune`,
 
   sandwich: `**Quick callback** (5 sec)
 "This is the architecture that makes everything we just discussed manageable."

@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Brain, Wrench, Zap, ChevronRight, AlertTriangle, UserX, Ticket, Shield, Mail, Scroll } from 'lucide-react';
+import { User, Brain, Wrench, Zap, ChevronRight, AlertTriangle, UserX, Ticket, Shield, MailX, KeyRound, Package, Unplug } from 'lucide-react';
 
 /**
  * How Agentic AI Acts Slide
@@ -7,13 +7,16 @@ import { User, Brain, Wrench, Zap, ChevronRight, AlertTriangle, UserX, Ticket, S
  * Positioned after "Three Words You'll Hear" to deepen understanding of "Agentic"
  */
 const ToolUseSlide = ({ theme: t }) => {
+  // Real fully-automatic AI capabilities shipping today
   const tools = [
-    { icon: UserX, label: 'Disable accounts', color: 'text-blue-400' },
-    { icon: Ticket, label: 'Create tickets', color: 'text-purple-400' },
-    { icon: Shield, label: 'Isolate endpoints', color: 'text-emerald-400' },
-    { icon: Mail, label: 'Delete emails', color: 'text-red-400' },
-    { icon: Zap, label: 'Run RMM Scripts', color: 'text-yellow-400' },
-    { icon: Scroll, label: 'Update CA Policies', color: 'text-pink-400' },
+    { icon: AlertTriangle, label: 'Triage & classify alerts', color: 'text-blue-400' },
+    { icon: Shield, label: 'Quarantine malware', color: 'text-emerald-400' },
+    { icon: MailX, label: 'Block phishing emails', color: 'text-red-400' },
+    { icon: UserX, label: 'Lock out risky sign-ins', color: 'text-purple-400' },
+    { icon: Unplug, label: 'Isolate endpoints', color: 'text-amber-400' },
+    { icon: KeyRound, label: 'Revoke app tokens', color: 'text-cyan-400' },
+    { icon: Ticket, label: 'Route tickets by intent', color: 'text-pink-400' },
+    { icon: Package, label: 'Deploy critical patches', color: 'text-yellow-400' },
   ];
 
   const vendorQuestions = [
@@ -78,9 +81,9 @@ const ToolUseSlide = ({ theme: t }) => {
         {/* Left: Tool Examples */}
         <div>
           <div className="text-2xl text-slate-500 uppercase tracking-widest mb-5 font-semibold">
-            Common AI Tools in Your Stack
+            Fully Automatic Today
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {tools.map((tool, i) => (
               <div
                 key={i}
