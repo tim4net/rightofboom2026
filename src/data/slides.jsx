@@ -551,11 +551,10 @@ export const slides = [
   // ============================================
 
   { type: 'operationalization' },       // 027
-  { type: 'budget' },                   // 028
-  { type: 'tail' },                     // 029
-  { type: 'insurance' },                // 030
-  { type: 'sources' },                  // 031
-  { type: 'closing' }                   // 032
+  { type: 'tail' },                     // 028
+  { type: 'insurance' },                // 029
+  { type: 'sources' },                  // 030
+  { type: 'closing' }                   // 031
 ];
 
 // Re-export themes from centralized config

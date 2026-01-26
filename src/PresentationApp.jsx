@@ -21,7 +21,6 @@ import {
   OperationalizationSlide,
   LiveDemoSlide,
   IntroSlide,
-  BudgetSlide,
   ShadowAISlide,
   TAILSlide,
   InsuranceSlide,
@@ -336,10 +335,6 @@ const PresentationApp = () => {
             <ClaudeCodeDemo theme={t} />
           </div>
         );
-
-      // New slide types for 2026 content
-      case 'budget':
-        return <BudgetSlide theme={t} />;
 
       // AI Failure Slides (final 2-slide sequence)
       case 'aiCreatesLiability':

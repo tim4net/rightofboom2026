@@ -39,9 +39,8 @@ export { default as AICreatesLiabilitySlide } from './024-WhenAICreatesLiability
 export { default as AIEnablesAttacksSlide } from './025-WhenAIEnablesAttacks';
 export { default as AITabletopSlide } from './026-TabletopReadyForAI';
 
-// Part 4: Monday Morning (027-032)
+// Part 4: Monday Morning (027-031)
 export { default as OperationalizationSlide } from './027-NinetyDayRoadmap';
-export { default as BudgetSlide } from './028-MoneyConversation';
 export { default as TAILSlide } from './029-TAILMethod';
 export { default as InsuranceSlide } from './030-WhatInsurerWants';
 export { default as SourcesSlide } from './031-SourcesReferences';
