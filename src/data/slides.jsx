@@ -93,6 +93,10 @@ export const slides = [
 "Deterministic is what you've built your career on. Same input, same output. Your firewall rules, your if-then scripts, your compliance checks. You can audit it, prove it, trust it."
 → Gesture to code: "IP in blocklist? Block. Every time. No surprises."
 
+**Why Probabilistic?** (10 sec)
+"So why do we care about probabilistic systems at all? Because you can't write a rule for every attack that hasn't happened yet."
+"Rules only catch what you've already seen. Probabilistic systems can generalize."
+
 **Probabilistic** (20 sec)
 "Probabilistic is where AI lives. It doesn't give you yes or no — it gives you likelihood. 'This looks 94% like phishing.' That's powerful — you can catch things you've never seen before."
 → Pause: "But it also means it can be wrong. Confidently wrong."
@@ -101,7 +105,7 @@ export const slides = [
 "AI is probabilistic — it predicts. Sometimes brilliantly, sometimes it hallucinates. That's not a bug, it's the nature of the technology."
 "Your job? Wrap that probabilistic engine in deterministic guardrails. That's what the next slide is about."
 
-⏱ ~60 seconds | 👁 Make eye contact on "confidently wrong" — that's the moment that lands.` },  // 005
+⏱ ~65 seconds | 👁 Make eye contact on "confidently wrong" — that's the moment that lands.` },  // 005
   { type: 'aiVocabTerms', notes: `**Quick transition** (3 sec)
 "Now that you understand the split, here are three terms you'll hear in every AI security conversation."
 
@@ -392,7 +396,7 @@ export const slides = [
   { type: 'safeEndpointTesting', notes: `**Tension-Building Opener** (15 sec)
 "Welcome back from break."
 → Read the subtitle aloud, let it sink in
-"9 categories. 66 settings. Hundreds of endpoints. How do you validate them all?"
+"12 categories. 60+ checks. Hundreds of endpoints. How do you validate them all?"
 → Pause. This is the problem statement.
 
 **MITRE ATT&CK Context** (20 sec)
@@ -409,55 +413,58 @@ export const slides = [
 "Step 4: Your technician gets prioritized fixes. Not a wall of raw data."
 
 **The Memorable Number** (10 sec)
-→ Point to bottom: "66 MITRE-mapped settings validated per endpoint"
-"66 settings. Every one mapped to a MITRE mitigation. Automated."
+→ Point to bottom: "60+ MITRE-mapped checks validated per endpoint"
+"60 checks. Every one mapped to a MITRE mitigation. Automated."
 
 **Transition** (5 sec)
-"Let's look at the actual script..."
+"What would an attacker check first?"
 
-⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "66 settings" is the retellable number.` },  // 018
+⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "60 checks" is the retellable number.` },  // 018
 
-  { type: 'powershellCode', notes: `**Show the Real Code** (60-90 sec)
-"Let me show you what's actually running. No black box. No magic."
-→ The full script loads with syntax highlighting — scroll through it
-
-**Scroll through key sections** (as audience interest dictates)
-→ Lines 1-30: Help documentation and parameters
-→ Lines 80-125: Add-TestResult function — how every check is recorded
-→ Lines 210-300: Antivirus category — EICAR test, exclusion audit
-→ Lines 465-575: ASR rules — all 15 critical rules validated
-→ Lines 580-680: Credential protection — LSASS, Credential Guard, WDigest
-→ Lines 680-820: Network security — firewall, SMB signing, LLMNR
-→ Lines 1160-1246: Main execution and JSON output
-
-**The Point** (20 sec)
-"This is 1,246 lines of PowerShell. No AI in the detection loop."
-"You can read every line. You can audit every check. You can fork it and customize it."
-"That's the 'deterministic' in 'deterministic detection.'"
-
-**Transition** (10 sec)
-"Now you've seen the code. Let me show you what it actually checks..."
-
-⏱ ~60-90 seconds | 👁 Don't read every line — scroll to show scale, pause on interesting bits` },  // 018b
-
-  { type: 'attackerChecklist', notes: `**The Attacker's Checklist** (15 sec)
-"When an attacker lands on an endpoint, they run recon. These are the exact 23 things they check."
-→ Pause: "We check the same things. We just check faster."
+  { type: 'attackerChecklist' },  // 019 - Original
+  { type: 'mirrorDesign' },       // 019a - The Mirror
+  { type: 'interrogationDesign' }, // 019b - The Interrogation
+  { type: 'scorecardDesign' },    // 019c - Security Scorecard
+  { type: 'countdownDesign' },    // 019d - 60-Second Audit
+  { type: 'playbookTheftDesign', notes: `**The STAR Moment** (15 sec)
+→ Point to the visual showing attacker_recon.ps1 = SafeEndpointValidation.ps1
+"When an attacker lands, they run recon. These are the exact checks they run."
+→ Pause for effect: "Same checklist. We just run it first."
 
 **Walk the Columns** (50 sec)
-→ Point to each column, left to right
-"Can I Stay Hidden? — AV status, exclusions, ASR rules, logging. Weak here = malware runs undetected."
-"Can I Steal Credentials? — LSASS protection, Credential Guard, WDigest. The keys to every account."
-"Can I Spread? — LLMNR, NetBIOS, SMB signing. One machine becomes the whole network."
-"Can I Hold Data Hostage? — BitLocker, backups, recovery. Your ransomware resilience."
+→ Point to each column, emphasize the attacker's question
+"Evade Detection — 'Can I hide?' AV status, tamper protection, ASR rules, logging."
+"Steal Credentials — 'Can I harvest?' LSASS protection, Credential Guard, WDigest."
+"Move Laterally — 'Can I spread?' SMB signing, RDP NLA, LLMNR poisoning."
+"Execute & Persist — 'Can I stay?' PowerShell controls, UAC, macros, autorun."
 
 **The Key Numbers** (15 sec)
-→ Point to the badge at the bottom
-"23 checks. 60 seconds. Pure PowerShell. We check faster than they do."
-"No agent required. Works on any Windows endpoint."
-"But raw data isn't actionable..."
+→ Point to the stats badge
+"60+ checks. 12 categories. 60 seconds per endpoint."
+"Same checklist as the attacker. We check faster."
 
-⏱ ~80 seconds | 👁 "We check the same things. We just check faster." is the competitive framing` },  // 019
+**Transition** (5 sec)
+"But raw JSON isn't actionable..."
+
+⏱ ~85 seconds | 👁 "Same checklist. We just run it first." is the STAR moment` },  // 019
+
+  { type: 'powershellCode', notes: `**OPTIONAL DEPTH** — Skip if short on time or low technical interest
+
+**Show the Real Code** (60-90 sec)
+"For those interested, here's the actual script. No black box."
+→ The full script loads with syntax highlighting — scroll through if audience wants
+
+**Key sections to show** (as interest dictates)
+→ Lines 1-30: Help documentation and parameters
+→ Lines 190-300: Antivirus category — EICAR test, exclusion audit
+→ Lines 590-750: Credential protection — LSASS, Credential Guard, WDigest
+→ Lines 1360-1580: Lateral movement — SMB, RDP, WinRM checks
+
+**The Point** (20 sec)
+"Every check is auditable. You can read it, fork it, customize it."
+"MIT licensed, no magic, pure PowerShell."
+
+⏱ ~60-90 seconds | 👁 This is proof/credibility — move through quickly unless asked` },  // 019b
 
   { type: 'endpointSandwich', notes: `**Connect to the Architecture** (10 sec)
 "Remember the guardrail sandwich from earlier? This is how Safe Sweep implements it."
@@ -465,7 +472,7 @@ export const slides = [
 
 **Walk the Layers** (45 sec)
 → Point to each layer, top to bottom
-"INPUT: PowerShell runs 23 checks, outputs JSON. Deterministic, read-only, no AI involved."
+"INPUT: PowerShell runs 60+ checks, outputs JSON. Deterministic, read-only, no AI involved."
 "AI LAYER: Claude or GPT analyzes the JSON. Correlates findings. Grades severity. Explains in plain English."
 → Pause, tap the AI layer: "But notice — AI only processes structured data. It never touches the endpoint."
 "OUTPUT: Human reviews the graded report. Approves remediation. Takes action."

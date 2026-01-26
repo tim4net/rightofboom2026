@@ -12,11 +12,6 @@
   - CTX.ai_response: JSON from AI with executive_summary, critical_findings, recommendations
   - ORG.VARIABLES.name: Your MSP name
   - ORG.VARIABLES.logo_url: URL to your logo (optional)
-
-  Rewst Brand Colors:
-  - Primary Purple: #504384
-  - Accent Teal: #1EAFAF
-  - Dark: #141121
 -->
 <html>
 <head>
@@ -152,11 +147,7 @@
                       {{ result.name }}
                       {% if result.mitreAttackId %}
                         <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
-                          {% if result.mitreAttackId.startswith('T') %}
-                          <a href="https://attack.mitre.org/techniques/{{ result.mitreAttackId | replace('.', '/') }}/" style="color: #FA4443; text-decoration: none;">({{ result.mitreAttackId }})</a>
-                          {% else %}
-                          ({{ result.mitreAttackId }})
-                          {% endif %}
+                          ({% for tid in result.mitreAttackId.split(',') %}{% set tid_clean = tid | trim %}{% if tid_clean.startswith('T') %}<a href="https://attack.mitre.org/techniques/{{ tid_clean | replace('.', '/') }}/" style="color: #FA4443; text-decoration: none;">{{ tid_clean }}</a>{% else %}{{ tid_clean }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %})
                         </span>
                       {% endif %}
                     </div>

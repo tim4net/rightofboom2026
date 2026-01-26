@@ -24,7 +24,7 @@
 
 .NOTES
     Version: 1.3.0
-    Author: Right of Boom 2026
+    Author: Tim Fournet (tim@rewst.io)
     License: MIT
 
     For use with Rewst automation workflows.
@@ -489,23 +489,24 @@ function Test-ASRCategory {
         return
     }
 
-    # ASR Rule definitions with criticality ratings
+    # ASR Rule definitions with criticality ratings and MITRE ATT&CK mappings
+    # MITRE mappings from: https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference
     $asrRuleDefinitions = @{
-        "56a863a9-875e-4185-98a7-b882c64b5ce5" = @{ name = "Block Office apps from creating executable content"; critical = $true }
-        "7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c" = @{ name = "Block Adobe Reader from creating child processes"; critical = $true }
-        "d4f940ab-401b-4efc-aadc-ad5f3c50688a" = @{ name = "Block Office apps from creating child processes"; critical = $true }
-        "9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2" = @{ name = "Block credential stealing from LSASS"; critical = $true }
-        "be9ba2d9-53ea-4cdc-84e5-9b1eeee46550" = @{ name = "Block executable content from email client and webmail"; critical = $true }
-        "01443614-cd74-433a-b99e-2ecdc07bfc25" = @{ name = "Block executable files from running unless they meet criteria"; critical = $false }
-        "5beb7efe-fd9a-4556-801d-275e5ffc04cc" = @{ name = "Block execution of potentially obfuscated scripts"; critical = $true }
-        "d3e037e1-3eb8-44c8-a917-57927947596d" = @{ name = "Block JavaScript or VBScript from launching downloaded content"; critical = $true }
-        "3b576869-a4ec-4529-8536-b80a7769e899" = @{ name = "Block Office apps from injecting code into other processes"; critical = $true }
-        "75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84" = @{ name = "Block Office communication apps from creating child processes"; critical = $false }
-        "26190899-1602-49e8-8b27-eb1d0a1ce869" = @{ name = "Block Office communication apps from creating child processes"; critical = $false }
-        "e6db77e5-3df2-4cf1-b95a-636979351e5b" = @{ name = "Block persistence through WMI event subscription"; critical = $true }
-        "b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4" = @{ name = "Block untrusted and unsigned processes from USB"; critical = $false }
-        "92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b" = @{ name = "Block Win32 API calls from Office macros"; critical = $true }
-        "c1db55ab-c21a-4637-bb3f-a12568109d35" = @{ name = "Use advanced protection against ransomware"; critical = $true }
+        "56a863a9-875e-4185-98a7-b882c64b5ce5" = @{ name = "Block Office apps from creating executable content"; critical = $true; mitreId = "T1204.002" }
+        "7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c" = @{ name = "Block Adobe Reader from creating child processes"; critical = $true; mitreId = "T1204.002" }
+        "d4f940ab-401b-4efc-aadc-ad5f3c50688a" = @{ name = "Block Office apps from creating child processes"; critical = $true; mitreId = "T1204.002" }
+        "9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2" = @{ name = "Block credential stealing from LSASS"; critical = $true; mitreId = "T1003.001" }
+        "be9ba2d9-53ea-4cdc-84e5-9b1eeee46550" = @{ name = "Block executable content from email client and webmail"; critical = $true; mitreId = "T1566.001" }
+        "01443614-cd74-433a-b99e-2ecdc07bfc25" = @{ name = "Block executable files from running unless they meet criteria"; critical = $false; mitreId = "T1204" }
+        "5beb7efe-fd9a-4556-801d-275e5ffc04cc" = @{ name = "Block execution of potentially obfuscated scripts"; critical = $true; mitreId = "T1027" }
+        "d3e037e1-3eb8-44c8-a917-57927947596d" = @{ name = "Block JavaScript or VBScript from launching downloaded content"; critical = $true; mitreId = "T1059.005,T1059.007" }
+        "3b576869-a4ec-4529-8536-b80a7769e899" = @{ name = "Block Office apps from injecting code into other processes"; critical = $true; mitreId = "T1055" }
+        "75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84" = @{ name = "Block Office communication apps from creating child processes"; critical = $false; mitreId = "T1204.002" }
+        "26190899-1602-49e8-8b27-eb1d0a1ce869" = @{ name = "Block Office communication apps from creating child processes"; critical = $false; mitreId = "T1204.002" }
+        "e6db77e5-3df2-4cf1-b95a-636979351e5b" = @{ name = "Block persistence through WMI event subscription"; critical = $true; mitreId = "T1546.003" }
+        "b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4" = @{ name = "Block untrusted and unsigned processes from USB"; critical = $false; mitreId = "T1091" }
+        "92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b" = @{ name = "Block Win32 API calls from Office macros"; critical = $true; mitreId = "T1106" }
+        "c1db55ab-c21a-4637-bb3f-a12568109d35" = @{ name = "Use advanced protection against ransomware"; critical = $true; mitreId = "T1486" }
     }
 
     try {
@@ -518,6 +519,7 @@ function Test-ASRCategory {
         $disabledCount = 0
         $missingCritical = @()
         $ruleDetails = @()
+        $allMitreIds = @()
 
         foreach ($ruleId in $asrRuleDefinitions.Keys) {
             $ruleDef = $asrRuleDefinitions[$ruleId]
@@ -544,13 +546,27 @@ function Test-ASRCategory {
                 $missingCritical += $ruleDef.name
             }
 
+            # Collect unique MITRE IDs (handles comma-separated values per rule)
+            if ($ruleDef.mitreId) {
+                foreach ($id in ($ruleDef.mitreId -split ',')) {
+                    $id = $id.Trim()
+                    if ($id -and $allMitreIds -notcontains $id) {
+                        $allMitreIds += $id
+                    }
+                }
+            }
+
             $ruleDetails += @{
                 id       = $ruleId
                 name     = $ruleDef.name
                 action   = $actionName
                 critical = $ruleDef.critical
+                mitreId  = $ruleDef.mitreId
             }
         }
+
+        # Join MITRE IDs into comma-separated string, sorted for consistency
+        $mitreIdString = ($allMitreIds | Sort-Object) -join ","
 
         Add-TestResult `
             -Id "asr-rules" `
@@ -568,7 +584,7 @@ function Test-ASRCategory {
                 rules           = $ruleDetails
             } `
             -Reference "https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference" `
-            -MitreId "Multiple" `
+            -MitreId $mitreIdString `
             -Remediation @{
                 PowerShell = 'Set-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2,56a863a9-875e-4185-98a7-b882c64b5ce5,d4f940ab-401b-4efc-aadc-ad5f3c50688a -AttackSurfaceReductionRules_Actions Enabled,Enabled,Enabled'
                 GPO = 'Computer Configuration > Administrative Templates > Windows Components > Microsoft Defender Antivirus > Microsoft Defender Exploit Guard > Attack Surface Reduction > Configure Attack Surface Reduction rules'
@@ -678,7 +694,7 @@ function Test-CredentialsCategory {
             UseLogonCredential = $useLogonCred
             keyExists          = ($null -ne $useLogonCred)
         } `
-        -Reference "https://blog.stealthbits.com/wdigest-clear-text-passwords-stealing-more-than-a-hash/" `
+        -Reference "https://www.stealthbits.com/blog/wdigest-clear-text-passwords-stealing-more-than-a-hash/" `
         -MitreId "T1003.001" `
         -Remediation @{
             PowerShell = 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" -Name "UseLogonCredential" -Value 0 -Type DWord'
@@ -1111,7 +1127,7 @@ function Test-ExecutionControlsCategory {
             EnableSmartScreen = $smartScreenPolicy
             SmartScreenEnabled = $smartScreenShell
         } `
-        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-smartscreen/windows-defender-smartscreen-overview" `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/" `
         -MitreId "T1204" `
         -Remediation @{
             PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableSmartScreen" -Value 1 -Type DWord'
@@ -1130,7 +1146,7 @@ function Test-ExecutionControlsCategory {
         -Status $(if ($wshDisabled) { "PASS" } else { "WARN" }) `
         -Detail $(if ($wshDisabled) { "Windows Script Host is disabled" } else { "Windows Script Host is enabled (VBScript/JS execution allowed)" }) `
         -Evidence @{ WSHEnabled = $wshEnabled } `
-        -Reference "https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-smartscreen/windows-script-host" `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/script-enforcement" `
         -MitreId "T1059.005" `
         -Remediation @{
             PowerShell = 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Force | Out-Null; Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Name "Enabled" -Value 0 -Type DWord'
@@ -1237,7 +1253,7 @@ function Test-ExecutionControlsCategory {
         -Status $(if ($wmiLogStatus) { "PASS" } else { "WARN" }) `
         -Detail $(if ($wmiLogStatus) { "WMI Activity Operational log is enabled" } else { "WMI Activity Operational log is disabled" }) `
         -Evidence @{ WmiLogEnabled = $wmiLogEnabled } `
-        -Reference "https://learn.microsoft.com/en-us/windows/win32/wmisdk/enable-wmi-activity-tracing" `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/wmisdk/monitoring-and-responding-to-events-with-standard-consumers" `
         -MitreId "T1047" `
         -Remediation @{
             PowerShell = 'wevtutil sl "Microsoft-Windows-WMI-Activity/Operational" /e:true'
@@ -1769,7 +1785,7 @@ function Test-DefenseEvasionCategory {
             appLockerEnforced = $applockerEnforced
             appLockerAudit    = $applockerAudit
         } `
-        -Reference "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/applocker/applocker-overview" `
+        -Reference "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/applocker/applocker-overview" `
         -MitreId "T1218" `
         -Remediation @{
             PowerShell = 'New-AppLockerPolicy -DefaultRule -RuleType Exe, Script, Msi, Appx -User "Everyone" -XMLPolicy ".\\AppLocker.xml"; Set-AppLockerPolicy -XMLPolicy ".\\AppLocker.xml" -Merge'
@@ -1798,7 +1814,7 @@ function Test-PersistenceCategory {
         -Status $autoRunStatus `
         -Detail $(if ($autoRunDisabled) { "AutoRun is disabled for all drives (NoDriveTypeAutoRun=0xFF)" } else { "AutoRun not fully disabled (NoDriveTypeAutoRun=$autoRunValue)" }) `
         -Evidence @{ NoDriveTypeAutoRun = $autoRunValue } `
-        -Reference "https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autoplay" `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/shell/autoplay-reg" `
         -MitreId "T1547.001" `
         -Remediation @{
             PowerShell = 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoDriveTypeAutoRun" -Value 255 -Type DWord'
@@ -1865,7 +1881,7 @@ function Test-PersistenceCategory {
         -Status $(if ($startupItems.Count -eq 0) { "PASS" } else { "WARN" }) `
         -Detail $(if ($startupItems.Count -eq 0) { "No startup folder items detected" } else { "$($startupItems.Count) startup item(s) detected" }) `
         -Evidence @{ items = $startupItems } `
-        -Reference "https://learn.microsoft.com/en-us/windows/win32/shell/shell-startup" `
+        -Reference "https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns" `
         -MitreId "T1547.001" `
         -Remediation @{
             PowerShell = 'Get-ChildItem "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"'
@@ -1897,7 +1913,7 @@ function Test-PersistenceCategory {
         -Status $(if ($runEntries.Count -eq 0) { "PASS" } else { "WARN" }) `
         -Detail $(if ($runEntries.Count -eq 0) { "No Run/RunOnce entries detected" } else { "$($runEntries.Count) Run/RunOnce entry(ies) detected" }) `
         -Evidence @{ entries = $runEntries } `
-        -Reference "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-startup-keys" `
+        -Reference "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys" `
         -MitreId "T1547.001" `
         -Remediation @{
             PowerShell = 'Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run"'
@@ -1921,7 +1937,7 @@ function Test-PersistenceCategory {
                 filters  = @($wmiFilters | ForEach-Object { $_.Name })
                 bindings = @($wmiBindings | ForEach-Object { $_.Filter })
             } `
-            -Reference "https://learn.microsoft.com/en-us/windows/win32/wmisdk/monitoring-and-managing-events" `
+            -Reference "https://learn.microsoft.com/en-us/windows/win32/wmisdk/monitoring-events" `
             -MitreId "T1546.003" `
             -Remediation @{
                 PowerShell = 'Get-CimInstance -Namespace root\subscription -ClassName __EventFilter'
