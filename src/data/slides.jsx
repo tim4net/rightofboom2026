@@ -396,7 +396,7 @@ export const slides = [
   { type: 'safeEndpointTesting', notes: `**Tension-Building Opener** (15 sec)
 "Welcome back from break."
 → Read the subtitle aloud, let it sink in
-"12 categories. 60+ checks. Hundreds of endpoints. How do you validate them all?"
+"13 categories. 60+ checks. Hundreds of endpoints. How do you validate them all?"
 → Pause. This is the problem statement.
 
 **MITRE ATT&CK Context** (20 sec)
@@ -421,7 +421,6 @@ export const slides = [
 
 ⏱ ~80 seconds | 👁 "How do you validate them all?" builds tension. "60 checks" is the retellable number.` },  // 018
 
-  { type: 'attackerChecklist' },  // 019 - Original
   { type: 'mirrorDesign', notes: `**The Complete Picture** (10 sec)
 "Here's everything the script checks — 75 individual security controls, organized by attack chain."
 
@@ -453,30 +452,6 @@ export const slides = [
 "We just ask them first — and fix the gaps before they find them."
 
 ⏱ ~120 seconds | 👁 Let them scan the pills while you talk — the visual density makes the point` },  // 019a - The Mirror
-  { type: 'interrogationDesign' }, // 019b - The Interrogation
-  { type: 'scorecardDesign' },    // 019c - Security Scorecard
-  { type: 'countdownDesign' },    // 019d - 60-Second Audit
-  { type: 'playbookTheftDesign', notes: `**The STAR Moment** (15 sec)
-→ Point to the visual showing attacker_recon.ps1 = SafeEndpointValidation.ps1
-"When an attacker lands, they run recon. These are the exact checks they run."
-→ Pause for effect: "Same checklist. We just run it first."
-
-**Walk the Columns** (50 sec)
-→ Point to each column, emphasize the attacker's question
-"Evade Detection — 'Can I hide?' AV status, tamper protection, ASR rules, logging."
-"Steal Credentials — 'Can I harvest?' LSASS protection, Credential Guard, WDigest."
-"Move Laterally — 'Can I spread?' SMB signing, RDP NLA, LLMNR poisoning."
-"Execute & Persist — 'Can I stay?' PowerShell controls, UAC, macros, autorun."
-
-**The Key Numbers** (15 sec)
-→ Point to the stats badge
-"60+ checks. 12 categories. 60 seconds per endpoint."
-"Same checklist as the attacker. We check faster."
-
-**Transition** (5 sec)
-"But raw JSON isn't actionable..."
-
-⏱ ~85 seconds | 👁 "Same checklist. We just run it first." is the STAR moment` },  // 019
 
   { type: 'powershellCode', notes: `**OPTIONAL DEPTH** — Skip if short on time or low technical interest
 
@@ -616,7 +591,18 @@ export const slides = [
 
   { type: 'governance' },               // 022
   { type: 'shadowAI' },                 // 023
-  { type: 'failureModes' },             // 024
+  // === FINAL AI FAILURE SLIDES (2-slide sequence) ===
+  { type: 'aiCreatesLiability' },       // 024a: Legal/liability cases
+  { type: 'aiEnablesAttacks' },         // 024b: Security/attack cases
+  // === CANDIDATE SLIDES FOR COMPARISON (remove after selecting) ===
+  { type: 'failureModes' },             // Original (non-AI incidents)
+  { type: 'whenAIGoesWrong' },          // Combined version
+  { type: 'aiLiabilityTrifecta' },      // C1
+  { type: 'attackSurfaceExpansion' },   // C2
+  { type: 'dataTrustBetrayed' },        // C3
+  { type: 'the25MVideoCall' },          // C4
+  { type: 'aiFailureModes' },           // C5
+  // === END CANDIDATES ===
 
   { type: 'aiTabletop', notes: `**Transition from Failure Modes** (10 sec)
 "We've talked about how AI can fail. Now let's talk about preparing your team for it."

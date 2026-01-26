@@ -47,18 +47,23 @@ import {
   // NEW: Endpoint Protection Testing Section
   SafeEndpointTestingSlide,
   PowerShellCodeSlide,
-  AttackerChecklistSlide,
   // Design variants for slide 019
   MirrorSlide,
-  InterrogationSlide,
-  ScorecardSlide,
-  CountdownSlide,
-  PlaybookTheftSlide,
   EndpointSandwichSlide,
   SafeSweepResultsSlide,
   SafeSweepReportDemoSlide,
   // NEW: AI Tabletop Exercises
-  AITabletopSlide
+  AITabletopSlide,
+  // AI Failure Slides (final 2-slide sequence)
+  AICreatesLiabilitySlide,
+  AIEnablesAttacksSlide,
+  // AI Failure Slide Candidates
+  WhenAIGoesWrongSlide,
+  AILiabilityTrifectaSlide,
+  AttackSurfaceExpansionSlide,
+  DataTrustBetrayedSlide,
+  The25MVideoCallSlide,
+  AIFailureModesSlide
 } from './components/slides';
 
 // Demo components (interactive demos, not slides)
@@ -366,6 +371,32 @@ const PresentationApp = () => {
       case 'failureModes':
         return <FailureModesSlide theme={t} />;
 
+      // AI Failure Slides (final 2-slide sequence)
+      case 'aiCreatesLiability':
+        return <AICreatesLiabilitySlide theme={t} />;
+
+      case 'aiEnablesAttacks':
+        return <AIEnablesAttacksSlide theme={t} />;
+
+      // AI Failure Slide Candidates - preview all, pick the best
+      case 'whenAIGoesWrong':
+        return <WhenAIGoesWrongSlide theme={t} />;
+
+      case 'aiLiabilityTrifecta':
+        return <AILiabilityTrifectaSlide theme={t} />;
+
+      case 'attackSurfaceExpansion':
+        return <AttackSurfaceExpansionSlide theme={t} />;
+
+      case 'dataTrustBetrayed':
+        return <DataTrustBetrayedSlide theme={t} />;
+
+      case 'the25MVideoCall':
+        return <The25MVideoCallSlide theme={t} />;
+
+      case 'aiFailureModes':
+        return <AIFailureModesSlide theme={t} />;
+
       case 'shadowAI':
         return <ShadowAISlide theme={t} />;
 
@@ -391,24 +422,9 @@ const PresentationApp = () => {
       case 'powershellCode':
         return <PowerShellCodeSlide theme={t} />;
 
-      case 'attackerChecklist':
-        return <AttackerChecklistSlide theme={t} />;
-
       // Design variants for slide 019
       case 'mirrorDesign':
         return <MirrorSlide theme={t} />;
-
-      case 'interrogationDesign':
-        return <InterrogationSlide theme={t} />;
-
-      case 'scorecardDesign':
-        return <ScorecardSlide theme={t} />;
-
-      case 'countdownDesign':
-        return <CountdownSlide theme={t} />;
-
-      case 'playbookTheftDesign':
-        return <PlaybookTheftSlide theme={t} />;
 
       case 'endpointSandwich':
         return <EndpointSandwichSlide theme={t} />;

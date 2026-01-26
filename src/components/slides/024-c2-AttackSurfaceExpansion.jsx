@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, AlertTriangle, CheckCircle, ShieldAlert, MessageSquareWarning } from 'lucide-react';
+import { Terminal, AlertTriangle, CheckCircle, ShieldAlert, MessageSquare } from 'lucide-react';
 
 /**
  * C2: Attack Surface Expansion
@@ -77,7 +77,7 @@ const AttackSurfaceExpansionSlide = ({ theme: t }) => {
             </div>
             <span className="text-red-400 font-bold">→</span>
             <div className="px-4 py-2 bg-slate-700 rounded-lg">
-              <MessageSquareWarning className="w-5 h-5 inline mr-2 text-slate-400" />
+              <MessageSquare className="w-5 h-5 inline mr-2 text-slate-400" />
               Unintended Action
             </div>
           </div>

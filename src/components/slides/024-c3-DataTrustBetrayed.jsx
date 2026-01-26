@@ -1,5 +1,5 @@
 import React from 'react';
-import { Database, AlertTriangle, CheckCircle, FileWarning, Upload } from 'lucide-react';
+import { Database, AlertTriangle, CheckCircle, FileX, Upload } from 'lucide-react';
 
 /**
  * C3: Data Trust Betrayed
@@ -43,7 +43,7 @@ const DataTrustBetrayedSlide = ({ theme: t }) => {
       impact: "PII from training data recoverable",
       fix: "Avoid putting secrets in any AI prompt",
       color: "purple",
-      icon: FileWarning
+      icon: FileX
     }
   ];
 

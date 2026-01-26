@@ -29,13 +29,8 @@ export { default as BreakSlide } from './017-BreakSlide';
 // Endpoint Protection Testing Section
 export { default as SafeEndpointTestingSlide } from './018-SafeEndpointTestingSlide';
 export { default as PowerShellCodeSlide } from './018b-PowerShellCodeSlide';
-export { default as AttackerChecklistSlide } from './019-WhatAttackersCheckFirst';
 // Design variants for slide 019
 export { default as MirrorSlide } from './019a-MirrorSlide';
-export { default as InterrogationSlide } from './019b-InterrogationSlide';
-export { default as ScorecardSlide } from './019c-ScorecardSlide';
-export { default as CountdownSlide } from './019d-CountdownSlide';
-export { default as PlaybookTheftSlide } from './019e-PlaybookTheftSlide';
 export { default as EndpointSandwichSlide } from './020-EndpointValidationSandwich';
 export { default as SafeSweepResultsSlide } from './021-SafeSweepResults';
 export { default as SafeSweepReportDemoSlide } from './021b-SafeSweepReportDemo';
@@ -44,6 +39,16 @@ export { default as SafeSweepReportDemoSlide } from './021b-SafeSweepReportDemo'
 export { default as GovernanceSlide } from './022-AIGovernanceQuestion';
 export { default as ShadowAISlide } from './023-ShadowAIGovernance';
 export { default as FailureModesSlide } from './024-WhenAutomationGoesWrong';
+// Final AI failure slides (2-slide sequence)
+export { default as AICreatesLiabilitySlide } from './024a-AICreatesLiability';
+export { default as AIEnablesAttacksSlide } from './024b-AIEnablesAttacks';
+// Candidate slides for comparison
+export { default as WhenAIGoesWrongSlide } from './024-WhenAIGoesWrong';
+export { default as AILiabilityTrifectaSlide } from './024-c1-AILiabilityTrifecta';
+export { default as AttackSurfaceExpansionSlide } from './024-c2-AttackSurfaceExpansion';
+export { default as DataTrustBetrayedSlide } from './024-c3-DataTrustBetrayed';
+export { default as The25MVideoCallSlide } from './024-c4-The25MVideoCall';
+export { default as AIFailureModesSlide } from './024-c5-AIFailureModes';
 export { default as AITabletopSlide } from './025-TabletopReadyForAI';
 
 // Part 4: Monday Morning
