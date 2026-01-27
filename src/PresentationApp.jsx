@@ -481,9 +481,6 @@ const PresentationApp = () => {
           <div className="relative z-10 w-full h-full flex items-center justify-center">
             <BreakSlide theme={t} />
           </div>
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-slate-500 text-sm">
-            Press <kbd className="px-2 py-1 bg-slate-800 rounded">B</kbd> or <kbd className="px-2 py-1 bg-slate-800 rounded">Esc</kbd> to return
-          </div>
         </div>
       )}
 
