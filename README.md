@@ -45,7 +45,7 @@ Open http://localhost:2026
 - **31 slides** with hardcoded content (no external data dependencies)
 - **4 Themes**: Corporate (blue), Terminal (green), Dramatic (red), Bayou (teal)
 - **Presenter Notes**: Toggle with `N` key
-- **Break Overlay**: Press `B` anytime for flexible break timing
+- **Break Overlay**: Press `B` anytime - rotating AI quotes and XKCD comics carousel
 - **Attack Lab Demo**: Simulated attack chain walkthrough (slide 004)
 
 ## Tech Stack
@@ -63,6 +63,43 @@ Open http://localhost:2026
 | `npm run build` | Production build to `dist/` |
 | `npm run preview` | Preview production build |
 | `npm run pdf` | Generate PDF (requires Puppeteer) |
+
+## Downloadable Resources
+
+Resources for attendees are available in `public/resources/` (served at `/resources/` when running):
+
+### Rewst Workflow Bundles
+| Bundle | Description |
+|--------|-------------|
+| [`Endpoint_Posture_Checks.bundle.json`](public/resources/bundles/Endpoint_Posture_Checks.bundle.json) | Rewst workflow for endpoint posture validation |
+| [`safe-sweep-workflow.bundle.json`](public/resources/bundles/safe-sweep-workflow.bundle.json) | Full Safe Sweep workflow bundle |
+
+### PowerShell Scripts
+| Script | Description |
+|--------|-------------|
+| [`Invoke-SafeEndpointValidation.ps1`](public/resources/scripts/Invoke-SafeEndpointValidation.ps1) | Main endpoint validation script |
+| [`Invoke-SafeEndpointValidation-Wrapper.ps1`](public/resources/scripts/Invoke-SafeEndpointValidation-Wrapper.ps1) | Wrapper for Rewst integration |
+| [`endpoint-collector.ps1`](public/resources/scripts/endpoint-collector.ps1) | Endpoint data collection script |
+| [`rewst-oneliner.ps1`](public/resources/scripts/rewst-oneliner.ps1) | Quick Rewst deployment one-liner |
+
+### Lab Setup Scripts
+| Script | Description |
+|--------|-------------|
+| [`lab-demo/setup-lab-vm.ps1`](public/resources/scripts/lab-demo/setup-lab-vm.ps1) | Set up lab VM for demo |
+| [`lab-demo/stage-gaps.ps1`](public/resources/scripts/lab-demo/stage-gaps.ps1) | Stage security gaps for testing |
+| [`lab-demo/teardown-lab-vm.ps1`](public/resources/scripts/lab-demo/teardown-lab-vm.ps1) | Clean up lab VM |
+
+### Templates
+| Template | Description |
+|----------|-------------|
+| [`safe-sweep-aggregate.jinja`](public/resources/scripts/safe-sweep-aggregate.jinja) | Jinja template for aggregating results |
+| [`safe-sweep-email-template.jinja`](public/resources/scripts/safe-sweep-email-template.jinja) | Email report template |
+| [`safe-sweep-narrative-prompt.jinja`](public/resources/scripts/safe-sweep-narrative-prompt.jinja) | AI narrative generation prompt |
+
+### Sample Reports
+| Report | Description |
+|--------|-------------|
+| [`safe-sweep-report-example.html`](public/resources/reports/safe-sweep-report-example.html) | Example Safe Sweep HTML report |
 
 ## AI Incident References (Slides 23-24)
 

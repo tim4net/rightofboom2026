@@ -4,8 +4,8 @@ const TitleSlide = ({ theme: t }) => {
   const title = "Think Like an Attacker";
   const subtitle = "Automating Red Team Simulations and AI Testing";
   const presenters = [
-    { name: "Tim Fournet", role: "Automation Evangelist @ Rewst", headshot: "/images/tim-fournet.jpg", logo: "/images/rewst-logo.png" },
-    { name: "Roddy Bergeron", role: "Cybersecurity Fellow @ Sherweb", headshot: "/images/roddy-bergeron.jpg", logo: "/images/sherweb-logo-white.svg" }
+    { name: "Tim Fournet", role: "Automation Evangelist @ Rewst", headshot: "/speakers/tim-fournet.jpg", logo: "/images/rewst-logo.png" },
+    { name: "Roddy Bergeron", role: "Cybersecurity Fellow @ Sherweb", headshot: "/speakers/roddy-bergeron.jpg", logo: "/images/sherweb-logo-white.svg" }
   ];
   const venue = "Right of Boom 2026 | Las Vegas";
 

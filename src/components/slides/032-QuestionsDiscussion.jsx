@@ -4,8 +4,8 @@ const ClosingSlide = ({ theme: t }) => {
   const title = "Questions & Discussion";
   const subtitle = "Let's talk";
   const presenters = [
-    { name: "Tim Fournet", role: "@TimFournet", linkedin: "https://www.linkedin.com/in/tfournet", headshot: "/images/tim-fournet.jpg" },
-    { name: "Roddy Bergeron", role: "@RoddyBergeron", linkedin: "https://www.linkedin.com/in/roddy-bergeron-cissp-ccsp-csap-33432573", headshot: "/images/roddy-bergeron.jpg" }
+    { name: "Tim Fournet", role: "@TimFournet", linkedin: "https://www.linkedin.com/in/tfournet", headshot: "/speakers/tim-fournet.jpg" },
+    { name: "Roddy Bergeron", role: "@RoddyBergeron", linkedin: "https://www.linkedin.com/in/roddy-bergeron-cissp-ccsp-csap-33432573", headshot: "/speakers/roddy-bergeron.jpg" }
   ];
   const venue = "Right of Boom 2026 | Las Vegas";
 

@@ -16,7 +16,7 @@ const SafeSweepReportDemoSlide = ({ theme: t }) => {
           Live Report Output
         </h2>
         <a
-          href="/samples/safe-sweep-report-example.html"
+          href="/resources/reports/safe-sweep-report-example.html"
           target="_blank"
           rel="noopener noreferrer"
           className={`flex items-center gap-2 text-lg ${t.accentColor} hover:underline`}
@@ -28,7 +28,7 @@ const SafeSweepReportDemoSlide = ({ theme: t }) => {
       {/* Report iframe - takes most of the slide */}
       <div className="flex-1 rounded-xl overflow-hidden border border-slate-600 shadow-2xl bg-white">
         <iframe
-          src="/samples/safe-sweep-report-example.html"
+          src="/resources/reports/safe-sweep-report-example.html"
           className="w-full h-full"
           title="Safe Sweep Security Report"
           style={{ minHeight: '600px' }}

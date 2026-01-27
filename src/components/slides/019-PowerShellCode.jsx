@@ -150,7 +150,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
   };
 
   useEffect(() => {
-    fetch('/scripts/Invoke-SafeEndpointValidation.ps1')
+    fetch('/resources/scripts/Invoke-SafeEndpointValidation.ps1')
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.text();
@@ -196,7 +196,7 @@ const PowerShellCodeSlide = ({ theme: t }) => {
         </div>
         <div className="text-right">
           <div className="text-sm text-amber-400 font-mono">
-            /scripts/Invoke-SafeEndpointValidation.ps1
+            /resources/scripts/Invoke-SafeEndpointValidation.ps1
           </div>
           <div className="text-sm text-slate-500">
             {lineCount > 0 ? `${lineCount.toLocaleString()} lines` : ''} • MIT Licensed

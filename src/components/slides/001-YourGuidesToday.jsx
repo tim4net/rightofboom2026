@@ -8,7 +8,7 @@ const IntroSlide = ({ theme: t }) => {
     {
       name: "Tim Fournet",
       role: "Automation Evangelist @ Rewst",
-      headshot: "/images/tim-fournet.jpg",
+      headshot: "/speakers/tim-fournet.jpg",
       credentials: [
         "Former CISO - MSP/MSSP space",
         "Serial automator and builder of things",
@@ -18,7 +18,7 @@ const IntroSlide = ({ theme: t }) => {
     {
       name: "Roddy Bergeron",
       role: "Cybersecurity Fellow @ Sherweb",
-      headshot: "/images/roddy-bergeron.jpg",
+      headshot: "/speakers/roddy-bergeron.jpg",
       credentials: [
         "Former CISO - Enterprise & MSP",
         "CISSP, CCSP, CSAP certified",
