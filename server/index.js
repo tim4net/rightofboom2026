@@ -1118,9 +1118,7 @@ function handleAttackerTerminal(ws, url) {
       sessionId: newSessionId,
       reconnected: false
     }));
-    ws.send(`\r\n\x1b[31m=== ATTACKER TERMINAL ===\x1b[0m\r\n`);
-    ws.send(`\x1b[33mSession ID: ${newSessionId.slice(0, 8)}\x1b[0m\r\n`);
-    ws.send(`\x1b[33mAI writes the exploits. You just run them.\x1b[0m\r\n\r\n`);
+    ws.send(`\r\n\x1b[33mSession ID: ${newSessionId.slice(0, 8)}\x1b[0m\r\n\r\n`);
   }
 
   const ptyProcess = session.pty;
