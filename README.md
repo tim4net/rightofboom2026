@@ -2,7 +2,7 @@
 
 **"Think Like an Attacker: Automating Red Team Simulations and AI Testing"**
 
-A 3-hour security presentation for the Right of Boom 2026 conference in Las Vegas.
+A presentation on the intersection of AI, automation, and security for the Right of Boom 2026 conference in Las Vegas.
 
 📥 **[Download Presentation PDF](https://github.com/tim4net/rightofboom2026/releases/latest/download/presentation.pdf)**
 
