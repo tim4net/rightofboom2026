@@ -1,0 +1,379 @@
+/* Import Goldplay font */
+@import './fonts/fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   RIGHT OF BOOM 2026 - Global Styles
+   =============================================================================
+   Design: Rewst Brand Guidelines
+   - Ops Indigo (#141121) backgrounds
+   - Bot Teal (#1EAFAF) primary accent
+   - Trigger Amber (#F9A100) highlights
+   - Goldplay for titles, Montserrat for body
+   ============================================================================= */
+
+/* Grid background pattern - subtle on dark backgrounds */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(30, 175, 175, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 175, 175, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Terminal theme - green grid */
+.theme-terminal .bg-grid {
+  background-image:
+    linear-gradient(rgba(52, 211, 153, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 211, 153, 0.05) 1px, transparent 1px);
+}
+
+/* Dramatic theme - coral grid */
+.theme-dramatic .bg-grid {
+  background-image:
+    linear-gradient(rgba(241, 91, 91, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(241, 91, 91, 0.04) 1px, transparent 1px);
+}
+
+/* Warning theme - amber grid */
+.theme-warning .bg-grid {
+  background-image:
+    linear-gradient(rgba(249, 161, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249, 161, 0, 0.04) 1px, transparent 1px);
+}
+
+/* Scan line effect - subtle CRT aesthetic */
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255, 255, 255, 0.01) 3px,
+    rgba(255, 255, 255, 0.01) 6px
+  );
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.theme-terminal .scanlines::after {
+  opacity: 0.4;
+}
+
+/* =============================================================================
+   GLOW EFFECTS - Rewst Brand Colors
+   ============================================================================= */
+
+/* Bot Teal glow (primary) */
+.glow-teal {
+  box-shadow: 0 0 20px rgba(30, 175, 175, 0.4), 0 0 40px rgba(30, 175, 175, 0.15);
+}
+
+/* Trigger Amber glow (highlights) */
+.glow-amber {
+  box-shadow: 0 0 20px rgba(249, 161, 0, 0.4), 0 0 40px rgba(249, 161, 0, 0.15);
+}
+
+/* Alert Coral glow (warnings) */
+.glow-coral {
+  box-shadow: 0 0 20px rgba(241, 91, 91, 0.4), 0 0 40px rgba(241, 91, 91, 0.15);
+}
+
+/* Legacy glows for compatibility */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.15);
+}
+
+.glow-green {
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.4), 0 0 40px rgba(52, 211, 153, 0.15);
+}
+
+.glow-red {
+  box-shadow: 0 0 20px rgba(248, 113, 113, 0.4), 0 0 40px rgba(248, 113, 113, 0.15);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(34, 211, 238, 0.15);
+}
+
+.glow-orange {
+  box-shadow: 0 0 20px rgba(251, 146, 60, 0.4), 0 0 40px rgba(251, 146, 60, 0.15);
+}
+
+/* Legacy glow for compatibility */
+.glow-bayou {
+  box-shadow: 0 0 20px rgba(30, 175, 175, 0.4), 0 0 40px rgba(30, 175, 175, 0.15);
+}
+
+/* Text glow effects */
+.text-glow-teal {
+  text-shadow: 0 0 10px rgba(30, 175, 175, 0.6), 0 0 20px rgba(30, 175, 175, 0.3);
+}
+
+.text-glow-amber {
+  text-shadow: 0 0 10px rgba(249, 161, 0, 0.6), 0 0 20px rgba(249, 161, 0, 0.3);
+}
+
+.text-glow-coral {
+  text-shadow: 0 0 10px rgba(241, 91, 91, 0.6), 0 0 20px rgba(241, 91, 91, 0.3);
+}
+
+.text-glow-blue {
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.6), 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.text-glow-green {
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.6), 0 0 20px rgba(52, 211, 153, 0.3);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.6), 0 0 20px rgba(248, 113, 113, 0.3);
+}
+
+/* Legacy text glow */
+.text-glow-bayou {
+  text-shadow: 0 0 10px rgba(30, 175, 175, 0.6), 0 0 20px rgba(30, 175, 175, 0.3);
+}
+
+/* =============================================================================
+   ANIMATIONS
+   ============================================================================= */
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-cursor {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: currentColor; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-scan {
+  animation: scan 3s linear infinite;
+}
+
+.animate-flicker {
+  animation: flicker 4s linear infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* =============================================================================
+   TYPOGRAPHY - Rewst Brand
+   Goldplay for headings, Montserrat for body
+   ============================================================================= */
+
+h1, h2, h3 {
+  font-family: 'Goldplay', 'Montserrat', system-ui, sans-serif;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+
+body {
+  font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* =============================================================================
+   PRESENTATION MINIMUM FONT SIZES
+   Readable from 30+ feet on a projector
+
+   We enforce MINIMUMS only - never cap maximums.
+   Banned classes get forced to readable sizes.
+   ============================================================================= */
+
+/* Banned classes: force to minimum readable size (24px) */
+.presentation-container .text-xs:not(.presenter-notes *),
+.presentation-container .text-sm:not(.presenter-notes *),
+.presentation-container .text-base:not(.presenter-notes *),
+.presentation-container .text-lg:not(.presenter-notes *) {
+  font-size: 1.5rem !important;  /* 24px minimum */
+  line-height: 1.4 !important;
+}
+
+/* Code blocks: minimum 20px (except in presenter notes) */
+.presentation-container code:not(.presenter-notes *),
+.presentation-container pre:not(.presenter-notes *),
+.presentation-container .font-mono:not(.presenter-notes *) {
+  font-size: max(1.25rem, inherit);
+}
+
+/* Presenter notes: exempt from minimum font sizes */
+.presenter-notes,
+.presenter-notes * {
+  font-size: revert !important;
+  line-height: revert !important;
+}
+
+/* =============================================================================
+   TERMINAL THEME OVERRIDES
+   ============================================================================= */
+
+.theme-terminal {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.theme-terminal h1,
+.theme-terminal h2,
+.theme-terminal h3 {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* =============================================================================
+   NOISE TEXTURE - Subtle film grain effect
+   ============================================================================= */
+
+.noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+}
+
+/* =============================================================================
+   DRAMATIC THEME - Pulsing border effect (coral)
+   ============================================================================= */
+
+.theme-dramatic .pulse-border {
+  position: relative;
+}
+
+.theme-dramatic .pulse-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #F15B5B, #F9A100, #F15B5B);
+  border-radius: inherit;
+  z-index: -1;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* =============================================================================
+   SCROLLBAR HIDING
+   ============================================================================= */
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+/* =============================================================================
+   CARD HOVER STATES - Subtle elevation
+   ============================================================================= */
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* =============================================================================
+   BUTTON STYLES - Rewst Brand (Pill-shaped)
+   ============================================================================= */
+
+.btn-primary {
+  font-family: 'Goldplay', 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  background-color: #1EAFAF;
+  color: white;
+  transition: background-color 0.2s;
+}
+.btn-primary:hover {
+  background-color: #1A9999;
+}
+
+.btn-secondary {
+  font-family: 'Goldplay', 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  background-color: #282242;
+  color: white;
+  border: 1px solid #1EAFAF;
+  transition: background-color 0.2s;
+}
+.btn-secondary:hover {
+  background-color: #382D5E;
+}
+
+.btn-warning {
+  font-family: 'Goldplay', 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  background-color: #F9A100;
+  color: #3F2900;
+  transition: background-color 0.2s;
+}
+.btn-warning:hover {
+  background-color: #E09000;
+}
+
+.btn-danger {
+  font-family: 'Goldplay', 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  background-color: #F15B5B;
+  color: white;
+  transition: background-color 0.2s;
+}
+.btn-danger:hover {
+  background-color: #D94D4D;
+}

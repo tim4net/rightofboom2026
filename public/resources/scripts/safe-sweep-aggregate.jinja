@@ -1,0 +1,137 @@
+{#
+  Safe Sweep Results Aggregator
+  Aggregates endpoint security validation results from multiple hosts.
+
+  EDUCATIONAL NOTES FOR SECURITY AUTOMATION LEARNERS:
+  - This template processes JSON output from PowerShell validation scripts
+  - It groups findings by test ID to show which security gaps affect multiple endpoints
+  - Scoring model: A≥90, B≥80, C≥70, D≥60, F<60 (same as PowerShell)
+
+  JINJA SCOPING: Variables set with {% set %} inside loops create NEW loop-scoped
+  variables that don't persist outside. We use namespace() objects to work around this.
+  List mutations (.append) DO persist, which is why failure_list works without namespace.
+#}
+
+{#- Initialize counters using namespace for loop mutation -#}
+{#- Without namespace, these counters would stay at 0 after the loop! -#}
+{%- set endpoint_count = CTX.review_results | default([]) | length -%}
+{%- set ns = namespace(score_sum=0, grade_a=0, grade_b=0, grade_c=0, grade_d=0, grade_f=0) -%}
+
+{#- Build a simple list of all failures -#}
+{%- set failure_list = [] -%}
+
+{%- for result in CTX.review_results | default([]) -%}
+  {#- Accumulate score -#}
+  {%- set ns.score_sum = ns.score_sum + (result.summary.score | default(0)) -%}
+
+  {#- Count this endpoint's grade -#}
+  {%- set g = result.summary.grade | default('F') | upper -%}
+  {%- if g == 'A' -%}{%- set ns.grade_a = ns.grade_a + 1 -%}
+  {%- elif g == 'B' -%}{%- set ns.grade_b = ns.grade_b + 1 -%}
+  {%- elif g == 'C' -%}{%- set ns.grade_c = ns.grade_c + 1 -%}
+  {%- elif g == 'D' -%}{%- set ns.grade_d = ns.grade_d + 1 -%}
+  {%- else -%}{%- set ns.grade_f = ns.grade_f + 1 -%}
+  {%- endif -%}
+
+  {#- Collect failures -#}
+  {%- for test in result.tests | default([]) -%}
+    {%- set st = test.status | default('') | lower -%}
+    {%- if st == 'fail' or st == 'warn' -%}
+      {%- set _ = failure_list.append(
+        (test.id | default('unknown') | string) ~ '|||' ~
+        (test.name | default('Unknown')) ~ '|||' ~
+        (test.category | default('General')) ~ '|||' ~
+        st ~ '|||' ~
+        (test.mitreAttackId | default('')) ~ '|||' ~
+        (result.metadata.hostname | default('Unknown'))
+      ) -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{#- Calculate average score -#}
+{%- set avg_score = (ns.score_sum / endpoint_count) | round(1) if endpoint_count > 0 else 0 -%}
+
+{#- Determine overall grade -#}
+{%- if avg_score >= 90 -%}{%- set overall_grade = 'A' -%}
+{%- elif avg_score >= 80 -%}{%- set overall_grade = 'B' -%}
+{%- elif avg_score >= 70 -%}{%- set overall_grade = 'C' -%}
+{%- elif avg_score >= 60 -%}{%- set overall_grade = 'D' -%}
+{%- else -%}{%- set overall_grade = 'F' -%}
+{%- endif -%}
+
+{#- TWO-PASS AGGREGATION STRATEGY:
+    Pass 1 (above): Collected all failures into failure_list with delimited fields
+    Pass 2 (below): Group by test ID to count how many endpoints failed each test
+
+    This shows which security gaps are widespread vs isolated incidents.
+    For example, "LSASS protection disabled" affecting 8/10 endpoints is a priority.
+-#}
+{%- set seen_ids = [] -%}
+{%- set aggregated = [] -%}
+
+{%- for item in failure_list -%}
+  {%- set parts = item.split('|||') -%}
+  {%- set tid = parts[0] -%}
+
+  {%- if tid not in seen_ids -%}
+    {%- set _ = seen_ids.append(tid) -%}
+
+    {#- Count how many times this test failed (using namespace for loop mutation) -#}
+    {%- set inner = namespace(fail_count=0, has_fail=false, remediation={}) -%}
+    {%- set hosts = [] -%}
+
+    {%- for item2 in failure_list -%}
+      {%- set p2 = item2.split('|||') -%}
+      {%- if p2[0] == tid -%}
+        {%- set inner.fail_count = inner.fail_count + 1 -%}
+        {%- if p2[3] == 'fail' -%}{%- set inner.has_fail = true -%}{%- endif -%}
+        {%- if hosts | length < 10 -%}
+          {%- set _ = hosts.append(p2[5]) -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {#- Look up remediation from original data -#}
+    {%- for result in CTX.review_results | default([]) -%}
+      {%- for test in result.tests | default([]) -%}
+        {%- if (test.id | default('') | string) == tid and test.remediation -%}
+          {%- set inner.remediation = test.remediation -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+
+    {%- set _ = aggregated.append({
+      'test_id': tid,
+      'test_name': parts[1],
+      'category': parts[2],
+      'severity': 'fail' if inner.has_fail else 'warn',
+      'mitreAttackId': parts[4],
+      'remediation': inner.remediation,
+      'failed_count': inner.fail_count,
+      'endpoint_count': endpoint_count,
+      'affected_hosts': hosts
+    }) -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{#- Output result -#}
+{{
+  {
+    'org_name': CTX.org_name | default('Organization'),
+    'endpoint_count': endpoint_count,
+    'summary': {
+      'average_score': avg_score,
+      'overall_grade': overall_grade,
+      'endpoints_by_grade': {
+        'A': ns.grade_a,
+        'B': ns.grade_b,
+        'C': ns.grade_c,
+        'D': ns.grade_d,
+        'F': ns.grade_f
+      },
+      'total_findings': aggregated | length
+    },
+    'aggregated_findings': aggregated
+  }
+}}

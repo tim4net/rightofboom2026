@@ -1,0 +1,245 @@
+#Requires -RunAsAdministrator
+<#
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  ██     ██  █████  ██████  ███    ██ ██ ███    ██  ██████                     ║
+║  ██     ██ ██   ██ ██   ██ ████   ██ ██ ████   ██ ██                          ║
+║  ██  █  ██ ███████ ██████  ██ ██  ██ ██ ██ ██  ██ ██   ███                    ║
+║  ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██                    ║
+║   ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████                     ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  THIS SCRIPT MODIFIES SYSTEM SECURITY SETTINGS                               ║
+║                                                                              ║
+║  - Installs Atomic Red Team (attack simulation framework)                    ║
+║  - Downloads Mimikatz (credential dumping tool)                              ║
+║  - Adds Defender exclusions for attack tools                                 ║
+║                                                                              ║
+║  FOR ISOLATED LAB VMs ONLY - NEVER RUN ON PRODUCTION SYSTEMS                 ║
+║                                                                              ║
+║  After demo, run: teardown-lab-vm.ps1                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+.SYNOPSIS
+    Bootstrap script for Right of Boom 2026 Lab VM Setup
+
+.DESCRIPTION
+    This stub downloads the full setup scripts from the latest GitHub release
+    and configures the VM for the Attack Path Validator demo.
+
+    WARNING: This script installs offensive security tools and modifies
+    Windows Defender settings. Only use on isolated lab VMs.
+
+.NOTES
+    Repository: https://github.com/tim4net/rightofboom2026
+    Run as Administrator in PowerShell
+
+.EXAMPLE
+    iex (irm https://github.com/tim4net/rightofboom2026/releases/latest/download/setup-lab-vm.ps1)
+#>
+
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+
+$RepoOwner = "tim4net"
+$RepoName = "rightofboom2026"
+$ScriptsDir = "C:\LabScripts"
+$artPath = Join-Path $env:USERPROFILE "AtomicRedTeam"
+
+function Ensure-DefenderExclusion {
+    param([string]$Path)
+    if (-not (Get-Command Add-MpPreference -ErrorAction SilentlyContinue)) { return }
+    $prefs = Get-MpPreference -ErrorAction SilentlyContinue
+    if (-not $prefs -or $prefs.ExclusionPath -notcontains $Path) {
+        Add-MpPreference -ExclusionPath $Path -ErrorAction SilentlyContinue
+    }
+}
+
+Write-Host @"
+
++===================================================================+
+|         RIGHT OF BOOM 2026 - LAB VM SETUP                        |
+|         Attack Path Validator Demo Environment                    |
++===================================================================+
+
+"@ -ForegroundColor Cyan
+
+# Check for admin rights
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isAdmin) {
+    Write-Host "[ERROR] This script must be run as Administrator!" -ForegroundColor Red
+    Write-Host "        Right-click PowerShell and select 'Run as Administrator'" -ForegroundColor Yellow
+    exit 1
+}
+
+Write-Host "[*] Checking for latest release..." -ForegroundColor Cyan
+
+# Get latest release from GitHub API
+try {
+    $releaseUrl = "https://api.github.com/repos/$RepoOwner/$RepoName/releases/latest"
+    $release = Invoke-RestMethod -Uri $releaseUrl -Headers @{ "User-Agent" = "PowerShell" }
+    $version = $release.tag_name
+    Write-Host "[+] Found release: $version" -ForegroundColor Green
+} catch {
+    Write-Host "[!] Could not fetch latest release, using 'latest' tag" -ForegroundColor Yellow
+    $version = "latest"
+}
+
+# Create scripts directory
+Write-Host "[*] Creating $ScriptsDir..." -ForegroundColor Cyan
+New-Item -ItemType Directory -Force -Path $ScriptsDir | Out-Null
+
+# Define files to download
+$baseUrl = if ($version -and $version -ne "latest") {
+    "https://github.com/$RepoOwner/$RepoName/releases/download/$version"
+} else {
+    "https://github.com/$RepoOwner/$RepoName/releases/latest/download"
+}
+$files = @(
+    @{ Name = "stage-gaps.ps1"; Description = "Gap staging script" },
+    @{ Name = "teardown-lab-vm.ps1"; Description = "Cleanup script" },
+    @{ Name = "endpoint-collector.ps1"; Description = "Config collector" }
+)
+
+# Download each file
+foreach ($file in $files) {
+    Write-Host "[*] Downloading $($file.Name)..." -ForegroundColor Cyan
+    try {
+        $url = "$baseUrl/$($file.Name)"
+        $dest = Join-Path $ScriptsDir $file.Name
+        if (-not (Test-Path $dest)) {
+            Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+            Write-Host "[+] $($file.Description) saved to $dest" -ForegroundColor Green
+        } else {
+            Write-Host "[+] $($file.Description) already present - skipping download" -ForegroundColor Green
+        }
+    } catch {
+        Write-Host "[!] Failed to download $($file.Name): $_" -ForegroundColor Red
+        Write-Host "    You may need to download manually from:" -ForegroundColor Yellow
+        Write-Host "    $url" -ForegroundColor Yellow
+    }
+}
+
+# Run the staging script
+$stageScript = Join-Path $ScriptsDir "stage-gaps.ps1"
+if (Test-Path $stageScript) {
+    Write-Host ""
+    Write-Host "[*] Running gap staging script..." -ForegroundColor Cyan
+    Write-Host "    This will create intentional security gaps for the demo." -ForegroundColor Yellow
+    Write-Host ""
+
+    & $stageScript
+} else {
+    Write-Host "[!] stage-gaps.ps1 not found - skipping gap staging" -ForegroundColor Yellow
+}
+
+# Install Atomic Red Team
+Write-Host ""
+Write-Host "[*] Installing Atomic Red Team..." -ForegroundColor Cyan
+
+try {
+    # Check if already installed
+    if (Get-Module -ListAvailable -Name invoke-atomicredteam) {
+        Write-Host "[+] Atomic Red Team module already installed" -ForegroundColor Green
+    } else {
+        Install-Module -Name invoke-atomicredteam -Scope CurrentUser -Force -AllowClobber
+        Write-Host "[+] Atomic Red Team module installed" -ForegroundColor Green
+    }
+
+    # Add Defender exclusion for AtomicRedTeam BEFORE downloading (prevents quarantine)
+    Write-Host "[*] Adding Defender exclusion for AtomicRedTeam folder..." -ForegroundColor Cyan
+    Ensure-DefenderExclusion -Path $artPath
+    Write-Host "[+] Defender exclusion added: $artPath" -ForegroundColor Green
+
+    # Install atomics if not present
+    $atomicsPath = "$artPath\atomics"
+    if (-not (Test-Path $atomicsPath)) {
+        Write-Host "[*] Downloading atomic test definitions..." -ForegroundColor Cyan
+        # Download and run the installer script first
+        IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing)
+        Install-AtomicRedTeam -getAtomics -Force
+        Write-Host "[+] Atomic test definitions installed" -ForegroundColor Green
+    } else {
+        Write-Host "[+] Atomic test definitions already present" -ForegroundColor Green
+    }
+
+    # Download prerequisites (ProcDump, etc.) for the tests we'll use
+    Write-Host "[*] Downloading test prerequisites (ProcDump, etc.)..." -ForegroundColor Cyan
+    Import-Module invoke-atomicredteam -Force
+    Invoke-AtomicTest T1003.001 -GetPrereqs -ErrorAction SilentlyContinue
+    Invoke-AtomicTest T1059.001 -GetPrereqs -ErrorAction SilentlyContinue
+    Invoke-AtomicTest T1027 -GetPrereqs -ErrorAction SilentlyContinue
+    Write-Host "[+] Test prerequisites downloaded" -ForegroundColor Green
+} catch {
+    Write-Host "[!] Failed to install Atomic Red Team: $_" -ForegroundColor Red
+    Write-Host "    You can install manually with:" -ForegroundColor Yellow
+    Write-Host "    Install-Module -Name invoke-atomicredteam -Scope CurrentUser -Force" -ForegroundColor Yellow
+}
+
+# Install Mimikatz for credential extraction demo
+Write-Host ""
+Write-Host "[*] Installing Mimikatz for credential extraction demo..." -ForegroundColor Cyan
+try {
+    $mimikatzDir = "$ScriptsDir\mimikatz"
+
+    # Add Defender exclusions BEFORE downloading
+    $atomicPayloads = Join-Path $artPath "ExternalPayloads"
+    Ensure-DefenderExclusion -Path $mimikatzDir
+    Ensure-DefenderExclusion -Path $atomicPayloads
+    Write-Host "[+] Defender exclusions added for Mimikatz paths" -ForegroundColor Green
+
+    # Download and extract
+    $mimikatzZip = "$ScriptsDir\mimikatz.zip"
+    $mimikatzExe = Join-Path $mimikatzDir "x64\mimikatz.exe"
+    if (-not (Test-Path $mimikatzExe)) {
+        Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/latest/download/mimikatz_trunk.zip" -OutFile $mimikatzZip -UseBasicParsing
+        Expand-Archive -Path $mimikatzZip -DestinationPath $mimikatzDir -Force
+        Remove-Item $mimikatzZip -Force
+        Write-Host "[+] Mimikatz downloaded to $mimikatzDir" -ForegroundColor Green
+    } else {
+        Write-Host "[+] Mimikatz already present at $mimikatzExe" -ForegroundColor Green
+    }
+
+    # Copy to Atomic Red Team ExternalPayloads (where Atomic tests expect it)
+    New-Item -ItemType Directory -Force -Path "$atomicPayloads\x64" | Out-Null
+    Copy-Item "$mimikatzDir\x64\*" "$atomicPayloads\x64\" -Recurse -Force
+    Write-Host "[+] Mimikatz copied to $atomicPayloads\x64\ for Atomic tests" -ForegroundColor Green
+} catch {
+    Write-Host "[!] Failed to install Mimikatz: $_" -ForegroundColor Red
+    Write-Host "    You can install manually from:" -ForegroundColor Yellow
+    Write-Host "    https://github.com/gentilkiwi/mimikatz/releases/latest" -ForegroundColor Yellow
+}
+
+# Create desktop shortcut
+Write-Host ""
+Write-Host "[*] Creating desktop shortcut..." -ForegroundColor Cyan
+$desktopPath = [Environment]::GetFolderPath("Desktop")
+$shortcutPath = Join-Path $desktopPath "Lab Scripts.lnk"
+
+try {
+    $shell = New-Object -ComObject WScript.Shell
+    $shortcut = $shell.CreateShortcut($shortcutPath)
+    $shortcut.TargetPath = $ScriptsDir
+    $shortcut.Description = "Right of Boom Lab Scripts"
+    $shortcut.Save()
+    Write-Host "[+] Desktop shortcut created" -ForegroundColor Green
+} catch {
+    Write-Host "[!] Could not create shortcut: $_" -ForegroundColor Yellow
+}
+
+# Summary
+Write-Host ""
+Write-Host @"
++===================================================================+
+|                        SETUP COMPLETE                             |
++===================================================================+
+"@ -ForegroundColor Green
+
+Write-Host "Scripts installed to: $ScriptsDir" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Next steps:" -ForegroundColor Yellow
+Write-Host "  1. Verify gaps:    & $ScriptsDir\endpoint-collector.ps1" -ForegroundColor White
+Write-Host "  2. Take a snapshot named 'Demo Ready'" -ForegroundColor White
+Write-Host "  3. Review the demo at slide 22 in the presentation" -ForegroundColor White
+Write-Host ""
+Write-Host "To teardown after demo:" -ForegroundColor Yellow
+Write-Host "  & $ScriptsDir\teardown-lab-vm.ps1" -ForegroundColor White
+Write-Host ""

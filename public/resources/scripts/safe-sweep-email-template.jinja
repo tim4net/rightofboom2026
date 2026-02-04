@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<!--
+  Safe Sweep Email Template
+  Version: 1.3.0 - Rewst Branded
+
+  Usage in Rewst:
+  - Copy this entire template into your "Send Email" action's HTML body
+
+  Expected context variables:
+  - CTX.org_name: Organization name
+  - CTX.review_results: Array of endpoint results from PowerShell script
+  - CTX.ai_response: JSON from AI with executive_summary, critical_findings, recommendations
+  - ORG.VARIABLES.name: Your MSP name
+  - ORG.VARIABLES.logo_url: URL to your logo (optional)
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--[if mso]>
+  <style type="text/css">
+    table { border-collapse: collapse; }
+    .fallback-font { font-family: Arial, sans-serif; }
+  </style>
+  <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; background-color: #F4F4F7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
+
+  <!-- Wrapper Table -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #F4F4F7;">
+    <tr>
+      <td align="center" style="padding: 20px 10px;">
+
+        <!-- Main Content Table -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+
+          <!-- Header with Rewst Purple -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #504384 0%, #3D3266 100%); background-color: #504384; padding: 30px 40px; text-align: center;">
+              {% if ORG.VARIABLES.logo_url %}
+              <img src="{{ ORG.VARIABLES.logo_url }}" alt="{{ ORG.VARIABLES.name | default('') }}" style="max-height: 50px; margin-bottom: 15px;">
+              {% endif %}
+              <h1 style="margin: 0; color: #FFFFFF; font-size: 28px; font-weight: 600;">Security Posture Report</h1>
+              <p style="margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 16px;">
+                {{ CTX.org_name | default('Organization') }} &bull; {{ CTX.report_date }}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Score Badge -->
+          <tr>
+            <td style="padding: 30px 40px; text-align: center; background-color: #FAFAFA; border-bottom: 1px solid #E6E6E6;">
+              {%- set grade = CTX.ai_response.overall_grade | default('F') -%}
+              {%- set grade_bg = '#1EAFAF' if grade == 'A' else '#78CFCF' if grade == 'B' else '#F9A100' if grade == 'C' else '#F15B5B' if grade == 'D' else '#792E2E' -%}
+              {%- set grade_fg = '#FFFFFF' if grade != 'B' else '#005655' -%}
+              <table role="presentation" cellpadding="0" cellspacing="0" align="center">
+                <tr>
+                  <td style="background-color: {{ grade_bg }}; color: {{ grade_fg }}; padding: 20px 50px; border-radius: 12px; text-align: center;">
+                    <span style="font-size: 56px; font-weight: 700; display: block;">{{ grade }}</span>
+                    <span style="font-size: 18px; opacity: 0.9;">{{ CTX.ai_response.average_score | default(0) | round(1) }}/100</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Stats Row -->
+          <tr>
+            <td style="padding: 25px 20px; border-bottom: 1px solid #E6E6E6;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="33%" style="text-align: center; padding: 10px;">
+                    <div style="background-color: #F5F5F5; border-radius: 8px; padding: 15px;">
+                      <div style="font-size: 32px; font-weight: 700; color: #504384;">{{ CTX.endpoint_count | default(CTX.review_results | length | default(0)) }}</div>
+                      <div style="font-size: 13px; color: #666666; margin-top: 4px;">Endpoints</div>
+                    </div>
+                  </td>
+                  <td width="33%" style="text-align: center; padding: 10px;">
+                    <div style="background-color: #F0FAF9; border-radius: 8px; padding: 15px;">
+                      <div style="font-size: 32px; font-weight: 700; color: #1EAFAF;">{{ CTX.ai_response.total_passed | default('—') }}</div>
+                      <div style="font-size: 13px; color: #666666; margin-top: 4px;">Passed</div>
+                    </div>
+                  </td>
+                  <td width="33%" style="text-align: center; padding: 10px;">
+                    <div style="background-color: #FEF0F0; border-radius: 8px; padding: 15px;">
+                      <div style="font-size: 32px; font-weight: 700; color: #F15B5B;">{{ CTX.ai_response.total_failed | default('—') }}</div>
+                      <div style="font-size: 13px; color: #666666; margin-top: 4px;">Failed</div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Executive Summary -->
+          <tr>
+            <td style="padding: 30px 40px;">
+              <h2 style="margin: 0 0 15px; font-size: 20px; color: #504384; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px;">Executive Summary</h2>
+              <div style="background-color: #F8F7FA; border-left: 4px solid #504384; padding: 20px; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.6; color: #333333;">
+                {{ CTX.ai_response.executive_summary | default('No summary available.') }}
+              </div>
+            </td>
+          </tr>
+
+          <!-- Critical Findings -->
+          {% if CTX.ai_response.critical_findings %}
+          <tr>
+            <td style="padding: 0 40px 30px;">
+              <h2 style="margin: 0 0 15px; font-size: 20px; color: #504384; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px;">Critical Findings</h2>
+              {% for finding in CTX.ai_response.critical_findings | default([]) %}
+              {%- set sev = finding.severity | default('fail') | lower -%}
+              {%- set border_color = '#F15B5B' if sev == 'fail' else '#F9A100' -%}
+              {%- set bg_color = '#FEF0F0' if sev == 'fail' else '#FFF8E6' -%}
+              <div style="background-color: {{ bg_color }}; border-left: 4px solid {{ border_color }}; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                <div style="font-weight: 600; color: #141121; margin-bottom: 5px;">{{ finding.name }}</div>
+                <div style="color: #666666; font-size: 14px; line-height: 1.5;">{{ finding.detail }}</div>
+              </div>
+              {% endfor %}
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Recommendations -->
+          {% if CTX.ai_response.recommendations %}
+          <tr>
+            <td style="padding: 0 40px 30px;">
+              <h2 style="margin: 0 0 15px; font-size: 20px; color: #504384; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px;">Recommended Actions</h2>
+              <div style="background-color: #F5F5F5; padding: 20px; border-radius: 8px; font-size: 14px; line-height: 1.7; color: #333333;">
+                {{ CTX.ai_response.recommendations }}
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Remediation Steps -->
+          <tr>
+            <td style="padding: 0 40px 30px;">
+              <h2 style="margin: 0 0 10px; font-size: 20px; color: #504384; border-bottom: 2px solid #1EAFAF; padding-bottom: 10px;">Remediation Steps</h2>
+              <p style="color: #666666; font-style: italic; font-size: 13px; margin: 0 0 15px;">Commands from validated security baselines — copy and run directly.</p>
+
+              {% for endpoint in CTX.review_results | default([]) %}
+                {% for result in endpoint.tests | default([]) %}
+                  {%- set st = result.status | default('') | upper -%}
+                  {% if st in ['FAIL', 'WARN'] and result.remediation %}
+                  <div style="background-color: #FEF0F0; border-left: 4px solid #F15B5B; padding: 15px 20px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+                    <div style="font-weight: 600; color: #792E2E; margin-bottom: 8px;">
+                      {{ result.name }}
+                      {% if result.mitreAttackId %}
+                        <span style="font-size: 12px; color: #FA4443; font-weight: normal; margin-left: 8px;">
+                          ({% for tid in result.mitreAttackId.split(',') %}{% set tid_clean = tid | trim %}{% if tid_clean.startswith('T') %}<a href="https://attack.mitre.org/techniques/{{ tid_clean | replace('.', '/') }}/" style="color: #FA4443; text-decoration: none;">{{ tid_clean }}</a>{% else %}{{ tid_clean }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %})
+                        </span>
+                      {% endif %}
+                    </div>
+                    {% if result.detail %}
+                    <div style="color: #666666; font-size: 13px; margin-bottom: 10px;">{{ result.detail }}</div>
+                    {% endif %}
+
+                    {% if result.remediation.PowerShell %}
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">PowerShell:</span>
+                      <code style="display: block; background-color: #141121; color: #1EAFAF; padding: 10px 12px; margin-top: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;">{{ result.remediation.PowerShell }}</code>
+                    </div>
+                    {% endif %}
+
+                    {% if result.remediation.GPO %}
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Group Policy:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">{{ result.remediation.GPO }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if result.remediation.Intune %}
+                    <div style="margin: 8px 0;">
+                      <span style="font-weight: 600; color: #141121; font-size: 12px;">Intune:</span>
+                      <span style="display: block; color: #504384; font-size: 12px; margin-top: 2px;">{{ result.remediation.Intune }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if result.reference %}
+                    <a href="{{ result.reference }}" style="color: #1EAFAF; font-size: 12px; text-decoration: none; margin-top: 8px; display: inline-block;">Microsoft Documentation →</a>
+                    {% endif %}
+                  </div>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #504384; padding: 25px 40px; text-align: center;">
+              <p style="margin: 0 0 8px; color: rgba(255,255,255,0.9); font-size: 14px;">
+                Report generated by <strong>{{ ORG.ATTRIBUTES.name | default('Your MSP') }}</strong>
+              </p>
+              <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">
+                {{ CTX.report_date | default('') }} &bull; Powered by Rewst &bull; Safe Sweep v1.3.0
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Main Content Table -->
+
+      </td>
+    </tr>
+  </table>
+  <!-- /Wrapper Table -->
+
+</body>
+</html>
